@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/views/SearchBus.dart';
+import 'package:flutter_app/views/SearchMRT.dart';
+
 
 class SearchPage extends StatefulWidget {
   @override
   _SearchPageState createState() => _SearchPageState();
 }
 
-class _SearchPageState extends State<SearchPage> {
-  List<Widget> containers =  [
-    Container(
-      child: new Text("This is Bus"),
-      alignment: Alignment(0.0, 0.0),
-    ),
-    Container(
-      child: new Text("This is MRT"),
-      alignment: Alignment(0.0, 0.0),
-    ),
-  ];
+class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateMixin{
+
+  // List<Widget> containers =  [
+  //   Container(
+  //     child: new Text("This is Bus"),
+  //     alignment: Alignment(0.0, 0.0),
+  //
+  //   ),
+  //   Container(
+  //     child: new Text("This is MRT"),
+  //     alignment: Alignment(0.0, 0.0),
+  //   ),
+  // ];
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +43,10 @@ class _SearchPageState extends State<SearchPage> {
           )
         ),
         body: TabBarView(
-          children: containers,
+          children: <Widget>[
+            SearchBus(),
+            SearchMRT(),
+          ],
         ),
       ),
     );
