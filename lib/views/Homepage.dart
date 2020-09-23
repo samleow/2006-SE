@@ -22,7 +22,7 @@ class _MCListState extends State<MCList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("App (TBC)")),
+      //appBar: AppBar(title: Text("App (TBC)")),
       body:_children[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         onTap: onTabTapped,

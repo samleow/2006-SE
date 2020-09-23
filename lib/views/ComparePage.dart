@@ -33,9 +33,9 @@ class _ComparePageState extends State<ComparePage> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: new AppBar(
-      //   title:new Text("Compare Page"),
-      // ),
+       appBar: new AppBar(
+         title:new Text("AppName (TBC)"),
+       ),
       body: Builder(
         builder: (_)
     {

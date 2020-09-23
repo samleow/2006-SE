@@ -6,14 +6,40 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+  List<Widget> containers =  [
+    Container(
+      child: new Text("This is Bus"),
+      alignment: Alignment(0.0, 0.0),
+    ),
+    Container(
+      child: new Text("This is MRT"),
+      alignment: Alignment(0.0, 0.0),
+    ),
+  ];
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      //appBar: new AppBar(
-      //title:new Text("Search Page"),
-      //),
-      body:new Center(
-          child: new Text("This is Search Page")
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('AppName (TBC)'),
+          bottom: TabBar(
+            tabs: <Widget>[
+              Tab(
+                icon: Icon(Icons.directions_bus),
+                text: 'BUS',
+              ),
+              Tab(
+                icon: Icon(Icons.train),
+                text: 'MRT',
+              ),
+            ]
+          )
+        ),
+        body: TabBarView(
+          children: containers,
+        ),
       ),
     );
   }

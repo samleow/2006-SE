@@ -9,9 +9,9 @@ class _TripsPageState extends State<TripsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: new AppBar(
-      //   title:new Text("Trips Page"),
-      // ),
+        appBar: new AppBar(
+         title:new Text("AppName (TBC)"),
+       ),
       body:new Center(
           child: new Text("This is Trips Page")
       ),
