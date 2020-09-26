@@ -3,12 +3,12 @@ import 'package:flutter_app/views/ComparePage.dart';
 import 'package:flutter_app/views/SearchPage.dart';
 import 'package:flutter_app/views/TripsPage.dart';
 
-class MCList extends StatefulWidget {
+class Homepage extends StatefulWidget {
   @override
-  _MCListState createState() => _MCListState();
+  _HomepageState createState() => _HomepageState();
 }
 
-class _MCListState extends State<MCList> {
+class _HomepageState extends State<Homepage> {
   int _currentIndex = 0;
   final List<Widget> _children = [
     // PlaceholderWidget(Colors.white),

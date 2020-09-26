@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/models/MClist.dart';
 import 'package:flutter_app/views/Homepage.dart';
 import 'package:get_it/get_it.dart';
-import 'package:flutter_app/services/MClist_service.dart';
+import 'package:flutter_app/services/CallAPIServices.dart';
 
 void setupLocator() {
-  GetIt.instance.registerLazySingleton(() => MClistService());
+  GetIt.instance.registerLazySingleton(() => CallAPIServices());
 }
 
 void main() {
@@ -22,7 +21,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MCList(),
+      home: Homepage(),
     );
   }
 }

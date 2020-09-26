@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/models/BusFares.dart';
+import 'package:flutter_app/models/MClist.dart';
 import 'package:flutter_app/models/api_response.dart';
 import 'package:get_it/get_it.dart';
-import 'package:flutter_app/models/MClist.dart';
-import 'package:flutter_app/services/MClist_service.dart';
+import 'package:flutter_app/services/CallAPIServices.dart';
 
 class ComparePage extends StatefulWidget {
   _ComparePageState createState() => _ComparePageState();
 }
 
 class _ComparePageState extends State<ComparePage> {
-  MClistService get service => GetIt.I<MClistService>();
-  APIResponse<List<Records>> _apiResponse;
+  CallAPIServices get service => GetIt.I<CallAPIServices>();
+  APIResponse<List<BusFares>> _apiResponse;
   bool _isLoading = false;
 
   @override
@@ -24,7 +25,7 @@ class _ComparePageState extends State<ComparePage> {
       _isLoading = true;
     });
 
-    _apiResponse = await service.getMCList();
+    _apiResponse = await service.getBusFares();
 
     setState(() {
       _isLoading = false;
@@ -50,7 +51,7 @@ class _ComparePageState extends State<ComparePage> {
         itemBuilder: (_, index) {
           return ListTile(
             title: Text(
-              _apiResponse.data[index].cardholders,
+              _apiResponse.data[0].BusFarePrice[index],
               style: TextStyle(color: Theme
                   .of(context)
                   .primaryColor),
@@ -58,15 +59,13 @@ class _ComparePageState extends State<ComparePage> {
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(_apiResponse.data[index].busPrice ?? 'Null'),
-                Text(_apiResponse.data[index].trainPrice ?? 'Null'),
-                Text(_apiResponse.data[index].hybridPrice ?? 'Null'),
+
               ],
             ),
               isThreeLine: true,
           );
         },
-        itemCount: _apiResponse.data.length,
+        itemCount: _apiResponse.data[0].BusFarePrice.length,
       );
   },
       )
