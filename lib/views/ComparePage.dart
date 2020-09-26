@@ -55,7 +55,15 @@ class _ComparePageState extends State<ComparePage> {
                   .of(context)
                   .primaryColor),
             ),
-            subtitle: Text(_apiResponse.data[index].busPrice ?? 'Null'),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(_apiResponse.data[index].busPrice ?? 'Null'),
+                Text(_apiResponse.data[index].trainPrice ?? 'Null'),
+                Text(_apiResponse.data[index].hybridPrice ?? 'Null'),
+              ],
+            ),
+              isThreeLine: true,
           );
         },
         itemCount: _apiResponse.data.length,
