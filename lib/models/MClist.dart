@@ -6,11 +6,13 @@ class Records {
   String busPrice;
 
   Records(
-      {this.hybridPrice,
+      {
+        this.hybridPrice,
         this.trainPrice,
         this.iId,
         this.cardholders,
-        this.busPrice});
+        this.busPrice
+      });
 
   Records.fromJson(Map<String, dynamic> json) {
     hybridPrice = json['hybrid_price'];

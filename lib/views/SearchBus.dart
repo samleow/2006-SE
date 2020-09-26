@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/db/database_helper.dart';
 
 class SearchBus extends StatefulWidget {
   @override
@@ -34,7 +35,7 @@ class _SearchBusState extends State<SearchBus> {
               TextFormField(
                 controller: busNoController,
                 decoration: const InputDecoration(
-                  hintText: 'Search for Bus no.',
+                  hintText: 'Search for Bus Service no.',
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.search),
                 ),
@@ -76,18 +77,34 @@ class _SearchBusState extends State<SearchBus> {
       ),
       floatingActionButton: FloatingActionButton(
           onPressed: () {
-            return showDialog(
-              context: context,
-              builder: (context){
-                return AlertDialog(
-                    content: Text('Values:\n' + busNoController.text + '\n' + toTextController.text + '\n' + toTextController.text),
-                );
-              },
-            );
+            // return showDialog(
+            //   context: context,
+            //   builder: (context){
+            //     return AlertDialog(
+            //         content: Text('Values:\n' + busNoController.text + '\n' + toTextController.text + '\n' + toTextController.text),
+            //
+            //     );
+            //   },
+            // );
+            testObject();
           },
         tooltip: 'Show me the Values',
         child: Icon(Icons.add),
       ),
     );
+  }
+
+  void testObject() async{
+    int i = await DatabaseHelper.instance.insert({
+      DatabaseHelper.busNo : busNoController.text,
+      DatabaseHelper.fromStop: fromTextController.text,
+      DatabaseHelper.toStop: toTextController.text,
+      DatabaseHelper.fare: 5.0, //hard-coded for now
+      DatabaseHelper.tripID: 1 //hard-coded for now
+    });
+    print('the inserted id is $i');
+
+    List<Map<String,dynamic>> queryRows = await DatabaseHelper.instance.queryAll();
+    print(queryRows);
   }
 }

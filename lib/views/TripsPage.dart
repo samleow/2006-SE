@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/db/database_helper.dart';
+import 'package:flutter_app/models/Route.dart';
 
 class TripsPage extends StatefulWidget {
   @override
@@ -6,15 +8,16 @@ class TripsPage extends StatefulWidget {
 }
 
 class _TripsPageState extends State<TripsPage> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: new AppBar(
          title:new Text("AppName (TBC)"),
        ),
-      body:new Center(
-          child: new Text("This is Trips Page")
-      ),
+        body: Container(
+
+        )
     );
   }
 }

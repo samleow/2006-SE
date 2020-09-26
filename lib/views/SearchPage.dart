@@ -10,18 +10,6 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateMixin{
 
-  // List<Widget> containers =  [
-  //   Container(
-  //     child: new Text("This is Bus"),
-  //     alignment: Alignment(0.0, 0.0),
-  //
-  //   ),
-  //   Container(
-  //     child: new Text("This is MRT"),
-  //     alignment: Alignment(0.0, 0.0),
-  //   ),
-  // ];
-
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
