@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/models/BusFares.dart';
+import 'package:flutter_app/models/BusRoutes.dart';
+import 'package:flutter_app/models/MonthlyConcession.dart';
 import 'package:flutter_app/models/api_response.dart';
 import 'package:get_it/get_it.dart';
-import 'package:flutter_app/models/MClist.dart';
-import 'package:flutter_app/services/MClist_service.dart';
+import 'package:flutter_app/services/CallAPIServices.dart';
 
 class ComparePage extends StatefulWidget {
   _ComparePageState createState() => _ComparePageState();
 }
 
 class _ComparePageState extends State<ComparePage> {
-  MClistService get service => GetIt.I<MClistService>();
-  APIResponse<List<Records>> _apiResponse;
+  CallAPIServices get service => GetIt.I<CallAPIServices>();
+  APIResponse<List<BusRoutes>> _apiResponse;
   bool _isLoading = false;
 
   @override
@@ -24,7 +26,7 @@ class _ComparePageState extends State<ComparePage> {
       _isLoading = true;
     });
 
-    _apiResponse = await service.getMCList();
+    _apiResponse = await service.getBusRoutes();
 
     setState(() {
       _isLoading = false;
@@ -50,7 +52,7 @@ class _ComparePageState extends State<ComparePage> {
         itemBuilder: (_, index) {
           return ListTile(
             title: Text(
-              _apiResponse.data[index].cardholders,
+              "Bus Stop Code " + _apiResponse.data[index].busStopCode,
               style: TextStyle(color: Theme
                   .of(context)
                   .primaryColor),
@@ -58,9 +60,9 @@ class _ComparePageState extends State<ComparePage> {
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(_apiResponse.data[index].busPrice ?? 'Null'),
-                Text(_apiResponse.data[index].trainPrice ?? 'Null'),
-                Text(_apiResponse.data[index].hybridPrice ?? 'Null'),
+                Text("Service No: " + _apiResponse.data[index].serviceNo ?? 'Null'),
+                Text("Bus Stop Sequence " + _apiResponse.data[index].stopSequence.toString() ?? 'Null'),
+                Text("Bus Distance Travelled " + _apiResponse.data[index].distance.toString() ?? 'Null'),
               ],
             ),
               isThreeLine: true,
