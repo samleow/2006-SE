@@ -23,6 +23,7 @@ class _SearchBusState extends State<SearchBus> {
   }
 
   final scaffoldKey = new GlobalKey<ScaffoldState>();
+  int dropdownValue = 1;
 
   //Routes route = new Routes("", "", "", 0,0);
   String busNo;
@@ -80,25 +81,53 @@ class _SearchBusState extends State<SearchBus> {
                 padding: EdgeInsets.all(10.0),
                 //child: Text('Hello World!'),
               ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    Text('Save under trip : ',
+                        style: TextStyle(
+                          fontSize:20,
+                        )),
+
+                    DropdownButton<int>(
+                      value: dropdownValue,
+                      elevation: 12,
+                      underline: Container(
+                        height: 2,
+                        color: Colors.deepPurpleAccent,
+                      ),
+                      onChanged: (int newValue) {
+                        setState(() {
+                          dropdownValue = newValue;
+                        });
+                      },
+                      items: <int>[1,2,3,4]
+                          .map<DropdownMenuItem<int>>((int value) {
+                        return DropdownMenuItem<int>(
+                            value: value,
+                            child: SizedBox(
+                              width:100,
+                              child: Text(value.toString(), textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize:20,
+                                    color: Colors.deepPurple,
+
+                                  )),
+                            ));
+                      }).toList(),
+                    ),
+                    ]
+              ),
               Divider(
                 color: Colors.black26,
                 thickness: 1.5,
-              )
+              ),
             ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
           onPressed: () {
-            // return showDialog(
-            //   context: context,
-            //   builder: (context){
-            //     return AlertDialog(
-            //         content: Text('Values:\n' + busNoController.text + '\n' + toTextController.text + '\n' + toTextController.text),
-            //
-            //     );
-            //   },
-            // );
-            testObject();
+            saveBusRouteToDatabase();
           },
         tooltip: 'Show me the Values',
         child: Icon(Icons.add),
@@ -106,7 +135,7 @@ class _SearchBusState extends State<SearchBus> {
     );
   }
 
-  void testObject() async{
+  void saveBusRouteToDatabase() async{
     // int i = await DatabaseHelper.instance.insert({
     //   DatabaseHelper.busNo : busNoController.text,
     //   DatabaseHelper.fromStop: fromTextController.text,
@@ -121,8 +150,6 @@ class _SearchBusState extends State<SearchBus> {
     busNo = busNoController.text;
     fromStop = fromTextController.text;
     toStop = toTextController.text;
-    //fare = '5';
-    //tripID = '1';
 
     //var route = Routes(1,busNo,fromStop,toStop,5,1);
     var dbHelper = DBHelper();
@@ -131,10 +158,10 @@ class _SearchBusState extends State<SearchBus> {
       DBHelper.fromStop: fromTextController.text,
       DBHelper.toStop: toTextController.text,
       DBHelper.fare: 5.0, //hard-coded for now
-      DBHelper.tripID: 1 //hard-coded for now
+      DBHelper.tripID: dropdownValue,
     });
     _showSnackBar("Data saved successfully");
-    var route = Routes(i,busNo,fromStop,toStop,5,1);
+    //var route = Routes(i,busNo,fromStop,toStop,5,1);
   }
 
   void _showSnackBar(String text) {
