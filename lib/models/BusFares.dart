@@ -33,7 +33,7 @@
 }*/
 
 
-
+/*
 class BusFares {
   List BusFarePrice;
 
@@ -50,5 +50,17 @@ class BusFares {
         BusFarePrice: busfareprice,
       );
 
+  }*/
+class BusFares {
+  String BusFarePrice;
+
+  BusFares({
+    this.BusFarePrice
+  });
+
+  factory BusFares.fromJson(Map<String, dynamic> item) {
+    return BusFares(
+      BusFarePrice: item['adult_card_fare_per_ride'],
+    );
   }
 }

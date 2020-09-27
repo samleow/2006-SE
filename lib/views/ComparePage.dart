@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/models/BusFares.dart';
+import 'package:flutter_app/models/BusRoutes.dart';
 import 'package:flutter_app/models/MClist.dart';
 import 'package:flutter_app/models/api_response.dart';
 import 'package:get_it/get_it.dart';
@@ -11,7 +12,7 @@ class ComparePage extends StatefulWidget {
 
 class _ComparePageState extends State<ComparePage> {
   CallAPIServices get service => GetIt.I<CallAPIServices>();
-  APIResponse<List<BusFares>> _apiResponse;
+  APIResponse<List<BusRoutes>> _apiResponse;
   bool _isLoading = false;
 
   @override
@@ -25,7 +26,7 @@ class _ComparePageState extends State<ComparePage> {
       _isLoading = true;
     });
 
-    _apiResponse = await service.getBusFares();
+    _apiResponse = await service.getBusRoutes();
 
     setState(() {
       _isLoading = false;
@@ -51,7 +52,7 @@ class _ComparePageState extends State<ComparePage> {
         itemBuilder: (_, index) {
           return ListTile(
             title: Text(
-              _apiResponse.data[0].BusFarePrice[index],
+              "Bus Stop Code " + _apiResponse.data[index].busStopCode,
               style: TextStyle(color: Theme
                   .of(context)
                   .primaryColor),
@@ -59,13 +60,15 @@ class _ComparePageState extends State<ComparePage> {
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-
+                Text("Service No: " + _apiResponse.data[index].serviceNo ?? 'Null'),
+                Text("Bus Stop Sequence " + _apiResponse.data[index].stopSequence.toString() ?? 'Null'),
+                Text("Bus Distance Travelled " + _apiResponse.data[index].distance.toString() ?? 'Null'),
               ],
             ),
               isThreeLine: true,
           );
         },
-        itemCount: _apiResponse.data[0].BusFarePrice.length,
+        itemCount: _apiResponse.data.length,
       );
   },
       )
