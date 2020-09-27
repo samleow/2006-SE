@@ -86,7 +86,23 @@ class DBHelper{
     for (int i = 0; i < list.length; i++) {
       route.add(new Routes(list[i]["_routeID"], list[i]["busNo"], list[i]["fromStop"], list[i]["toStop"], list[i]["fare"],list[i]["tripID"]));
     }
-    print(route.length);
+    print('route length is '+ route.length.toString());
     return route;
+  }
+
+  Future<List<Routes>> getRouteByTripID(int id) async {
+    var dbClient = await db;
+    List<Map> list = await dbClient.rawQuery(' SELECT * FROM $_tablename WHERE $tripID LIKE "%$id%" ');
+    List<Routes> route = new List();
+    for (int i = 0; i < list.length; i++) {
+      route.add(new Routes(list[i]["_routeID"], list[i]["busNo"], list[i]["fromStop"], list[i]["toStop"], list[i]["fare"],list[i]["tripID"]));
+    }
+    print('route length is '+ route.length.toString());
+    return route;
+  }
+
+  Future<int> deleteRoute(int id) async{
+    var dbClient = await db;
+    return await dbClient.delete(_tablename,where:'$routeID = ?',whereArgs:[id]);
   }
 }
