@@ -1,12 +1,12 @@
-class Route {
+class Routes {
   int routeID;
   String busNo;
   String fromStop;
   String toStop;
   double fare;
-  String tripID;
+  int tripID;
 
-  Route(
+  Routes(
       this.routeID,
       this.busNo,
       this.fromStop,
@@ -15,25 +15,25 @@ class Route {
       this.tripID
    );
 
-  Map<String,dynamic> toMap() {
-    return {
-      '_routeID' : routeID,
-      'busNo' : busNo,
-      'fromStop' : fromStop,
-      'toStop' : toStop,
-      'fare' : fare,
-      'tripID' : tripID,
-    };
-  }
-
-  // Route.fromMap(dynamic obj){
-  //   this.routeID = obj["_routeID"];
-  //   this.busNo = obj["busNo"];
-  //   this.fromStop = obj["fromStop"];
-  //   this.toStop = obj["toStop"];
-  //   this.fare = obj["fare"];
-  //   this.tripID = obj["tripID"];
+  // Map<String,dynamic> toMap() {
+  //   return {
+  //     '_routeID' : routeID,
+  //     'busNo' : busNo,
+  //     'fromStop' : fromStop,
+  //     'toStop' : toStop,
+  //     'fare' : fare,
+  //     'tripID' : tripID,
+  //   };
   // }
+
+  Routes.fromMap(Map map){
+    routeID = map["_routeID"];
+    busNo = map["busNo"];
+    fromStop = map["fromStop"];
+    toStop = map["toStop"];
+    fare = map["fare"];
+    tripID = map["tripID"];
+  }
   //
   // Map<String,dynamic> toMap(){
   //   var map = new Map<String, dynamic>();
