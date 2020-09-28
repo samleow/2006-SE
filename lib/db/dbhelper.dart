@@ -14,6 +14,8 @@ class DBHelper{
   static final toStop = 'toStop';
   static final fare = 'fare';
   static final tripID = 'tripID';
+  static final _tripsTable = 'tripsTable';
+  static final totalFare = 'totalFare';
 
   Future<Database> get db async {
     if (_db != null) return _db;
@@ -30,7 +32,7 @@ class DBHelper{
 
   void _onCreate(Database db, int version) async {
     // When creating the db, create the table
-    await db..execute(
+    await db.execute(
         '''
       CREATE TABLE $_tablename(
       $routeID INTEGER PRIMARY KEY,
@@ -41,7 +43,17 @@ class DBHelper{
       $tripID INTEGER ); 
       '''
     );
-    print("Created tables");
+    print("Created route tables");
+
+    // await db.execute(
+    //     '''
+    //   CREATE TABLE $_tripsTable(
+    //   $tripID INTEGER PRIMARY KEY,
+    //   $totalFare DOUBLE,
+    //   );
+    //   '''
+    // );
+    // print("Created trips tables");
   }
 
   // void saveRoute(Routes route) async {
@@ -80,6 +92,20 @@ class DBHelper{
     return await dbClient.insert(_tablename, row);
   }
 
+  // Future<int> addToTrips(Map<String,dynamic> row) async{
+  //   // Database db =  await instance.database;
+  //   // return await db.insert(_tablename, row);
+  //   var dbClient = await db;
+  //   await dbClient.transaction((txn) async {
+  //
+  //   }
+  // }
+
+  // Future<int> saveTrip(Map<String,dynamic> row) async{
+  //   var dbClient = await db;
+  //   return await dbClient.insert(_tripsTable, row);
+  // }
+
   Future<List<Routes>> getRoute() async {
     var dbClient = await db;
     List<Map> list = await dbClient.rawQuery(' SELECT * FROM $_tablename ');
@@ -100,6 +126,12 @@ class DBHelper{
     }
     print('route length is '+ route.length.toString());
     return route;
+  }
+  
+  Future<List<Map>> getFaresByTripsID(int id) async{
+    var dbClient = await db;
+    List<Map> list = await dbClient.rawQuery('SELECT SUM(fare) FROM $_tablename WHERE $tripID LIKE  "%$id%"');
+    return list;
   }
 
   Future<int> deleteRoute(int id) async{
