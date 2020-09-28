@@ -60,6 +60,7 @@ class _SearchBusState extends State<SearchBus> {
   double fare;
   int tripID;
 
+  int dropdownValue = 1;
   String _dist = "0.0";
 
   @override
@@ -74,70 +75,157 @@ class _SearchBusState extends State<SearchBus> {
       key: scaffoldKey,
       body: Container(
         margin: const EdgeInsets.only(right: 15, left: 15),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(10.0),
-              //child: Text('Hello World!'),
-            ),
-            TextFormField(
-              controller: busNoController,
-              decoration: const InputDecoration(
-                hintText: 'Search for Bus Service no.',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.search),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.all(10.0),
+                //child: Text('Hello World!'),
               ),
-              keyboardType: TextInputType.number,
-              onChanged: (v)=>setState((){_dist=distanceTravelled().toString();}),
-            ),
+              TextFormField(
+                controller: busNoController,
+                decoration: const InputDecoration(
+                  hintText: 'Search for Bus Service no.',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.search),
+                ),
+                onChanged: (v)=>setState((){_dist=distanceTravelled().toString();}),
+              ),
 
-            Padding(
-              padding: EdgeInsets.all(10.0),
-              //child: Text('Hello World!'),
-            ),
-            TextFormField(
-              controller: fromTextController,
-              decoration: const InputDecoration(
-                labelText: 'From',
-                hintText: 'Search Bus Stop',
-                border: OutlineInputBorder(),
+              Padding(
+                padding: EdgeInsets.all(10.0),
+                //child: Text('Hello World!'),
               ),
-              maxLength: 5,
-              keyboardType: TextInputType.number,
-              onChanged: (v)=>setState((){_dist=distanceTravelled().toString();}),
-            ),
-            Padding(
-              padding: EdgeInsets.all(10.0),
-              //child: Text('Hello World!'),
-            ),
-            TextFormField(
-              controller: toTextController,
-              decoration: const InputDecoration(
-                labelText: 'To',
-                hintText: 'Search Bus Stop',
-                border: OutlineInputBorder(),
+              TextFormField(
+                controller: fromTextController,
+                decoration: const InputDecoration(
+                  labelText: 'From',
+                  hintText: 'Search Bus Stop',
+                  border: OutlineInputBorder(),
+                ),
+                maxLength: 5,
+                keyboardType: TextInputType.number,
+                onChanged: (v)=>setState((){_dist=distanceTravelled().toString();}),
               ),
-              maxLength: 5,
-              keyboardType: TextInputType.number,
-              onChanged: (v)=>setState((){_dist=distanceTravelled().toString();}),
-            ),
+              Padding(
+                padding: EdgeInsets.all(10.0),
+                //child: Text('Hello World!'),
+              ),
+              TextFormField(
+                controller: toTextController,
+                decoration: const InputDecoration(
+                  labelText: 'To',
+                  hintText: 'Search Bus Stop',
+                  border: OutlineInputBorder(),
+                ),
+                maxLength: 5,
+                keyboardType: TextInputType.number,
+                onChanged: (v)=>setState((){_dist=distanceTravelled().toString();}),
+              ),
 
-            Padding(
-              padding: EdgeInsets.all(10.0),
-              //child: Text('Hello World!'),
-            ),
-            Divider(
-              color: Colors.black26,
-              thickness: 1.5,
-            ),
-            Text("Distance travelled: "+_dist
-            ),
-             Text('Bus Fare Price: ${calculateFares(_dist)}'
-             ),
-          ],
+              Padding(
+                padding: EdgeInsets.all(10.0),
+                //child: Text('Hello World!'),
+              ),
+              Divider(
+                color: Colors.black26,
+                thickness: 1.5,
+              ),
+              Padding(
+                padding: EdgeInsets.all(10.0),
+              ),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    Text("Distance travelled: ",
+                    style: TextStyle(
+                        color: Colors.grey[800],
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20)
+                ),
+                    Expanded(
+                        child: Text(
+                          _dist +"km",
+                          textDirection: TextDirection.ltr,
+                          textAlign: TextAlign.right,
+                          style:TextStyle(
+                            color: Colors.grey[800],
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20)
+                        ))
+                ]
+              ),
+              Padding(
+                padding: EdgeInsets.all(10.0),
+              ),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    Text("Bus Fare Price: ",
+                        style: TextStyle(
+                            color: Colors.grey[800],
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20)
+                    ),
+                    Expanded(
+                        child: Text(
+                            '\$${calculateFares(_dist)}',
+                            textDirection: TextDirection.ltr,
+                            textAlign: TextAlign.right,
+                            style:TextStyle(
+                                color: Colors.grey[800],
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20)
+                        ))
+                  ]
+              ),
+
+              Padding(
+                padding: EdgeInsets.all(10.0),
+              ),
+
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    Text('Save under trip : ',
+                        style: TextStyle(
+                          fontSize:20,
+                        )),
+
+                    DropdownButton<int>(
+                      value: dropdownValue,
+                      elevation: 12,
+                      underline: Container(
+                        height: 2,
+                        color: Colors.deepPurpleAccent,
+                      ),
+                      onChanged: (int newValue) {
+                        setState(() {
+                          dropdownValue = newValue;
+                        });
+                      },
+                      items: <int>[1,2,3,4]
+                          .map<DropdownMenuItem<int>>((int value) {
+                        return DropdownMenuItem<int>(
+                            value: value,
+                            child: SizedBox(
+                              width:100,
+                              child: Text(value.toString(), textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize:20,
+                                    color: Colors.deepPurple,
+                                  )),
+                            ));
+                      }).toList(),
+                    ),
+                  ]
+              ),
+            ],
+          ),
         ),
       ),
+
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // return showDialog(
@@ -150,7 +238,6 @@ class _SearchBusState extends State<SearchBus> {
           //   },
           // );
           testObject();
-          //calculateFares();
         },
         tooltip: 'Show me the Values',
         child: Icon(Icons.add),
@@ -217,7 +304,8 @@ class _SearchBusState extends State<SearchBus> {
         break;
       }
     }
-    return double.parse(_getBusFares.data[j].BusFarePrice);
+
+    return double.parse(_getBusFares.data[j].BusFarePrice)/100;
   }
 
   void testObject() async{
@@ -244,11 +332,12 @@ class _SearchBusState extends State<SearchBus> {
       DBHelper.busNo : busNoController.text,
       DBHelper.fromStop: fromTextController.text,
       DBHelper.toStop: toTextController.text,
-      DBHelper.fare: 5.0, //hard-coded for now
-      DBHelper.tripID: 1 //hard-coded for now
+      //Edited into not hard-coded anymore
+      DBHelper.fare: calculateFares(distanceTravelled().toString()), //hard-coded for now
+      DBHelper.tripID: dropdownValue //hard-coded for now
     });
     _showSnackBar("Data saved successfully");
-    var route = Routes(i,busNo,fromStop,toStop,5,1);
+    var route = Routes(i,busNo,fromStop,toStop,fare,dropdownValue);
   }
 
   void _showSnackBar(String text) {

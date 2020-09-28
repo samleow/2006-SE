@@ -117,10 +117,11 @@ class _TripsPageState extends State<TripsPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Padding(padding: EdgeInsets.all(3.0),),
-                                  Text(snapshot.data[index].busNo),
+                                  Text('Bus No: ' + snapshot.data[index].busNo),
                                   Text('From : ' + snapshot.data[index].fromStop),
                                   Text('To : ' + snapshot.data[index].toStop),
                                   Text('Trip : ' + snapshot.data[index].tripID.toString()),
+                                  Text('Fare: \S' + snapshot.data[index].fare.toString()),
                                   //Padding(padding: EdgeInsets.all(5.0),),
                                   //Divider(),
                                 ],
