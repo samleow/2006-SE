@@ -45,6 +45,8 @@ class _ComparePageState extends State<ConcessionPage> {
   List<int> _currentDaySelected =[1,1]; // <-- the number of list must be followed buy the number of trips
   List<int> _currentTripSelected =[1,1]; // <-- the number of list must be followed buy the number of trips
   List<double> _price = [2.10, 4.00]; // <-- the number of list must be followed buy the number of trips
+  List<double> _originalDBPrice = [2.10, 4.00]; // <-- the number of list must be followed buy the number of trips from DB
+  List<bool> _checkbox = [true, true];
   //double price = 2.10;
   double totalPrice = 0;
 
@@ -197,67 +199,88 @@ class _ComparePageState extends State<ConcessionPage> {
       child: Card(
         child: Padding(
             padding: const EdgeInsets.all(16.0),
+
             child: Column(
               children: <Widget>[
-                Text("Trip " + tripsList[index].toString() + ": SGD" + _price[index].toString(),
-                    style: TextStyle(
-                        fontSize: 20.0,
-                        color: Colors.blue)),
-                SizedBox(
-                  height: 20.0,
+                CheckboxListTile(
+                    value: _checkbox[index],
+                    title: Text("Trip " + tripsList[index].toString()),
+                    onChanged: (bool value) {
+                      setState(() {
+                        _checkbox[index] = value;
+                        if (value == false) {
+                          _price[index] = 0;
+                        }
+                        else {
+                          _price[index] =
+                          _originalDBPrice[index]; // <-- _originalDBPrice[index] must be from database value
+                        }
+                      });
+                    }
                 ),
-                Text("Number of days per month"),
-                DropdownButton<int>(
-                  items: list.map((int dropDownIntItem) {
-                    return DropdownMenuItem<int>(
-                      value: dropDownIntItem,
-                      child: Text(dropDownIntItem.toString()),
-                    );
-                  }
-                  ).toList(),
-                  onChanged: (int newValue) {
-                    setState(() {
-                      //this._currentDaySelected = newValue;
-                      _currentDaySelected[index] = newValue;
-                    });
-                  },
+                if(_checkbox[index]) // if statement is to control the Column according to the checkbox
+                  Column(
+                      children: <Widget>[
+                        Text("Trip " + tripsList[index].toString() + ": SGD" +
+                            _price[index].toString(),
+                            style: TextStyle(
+                                fontSize: 20.0,
+                                color: Colors.blue)),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        Text("Number of days per month"),
+                        DropdownButton<int>(
+                          items: list.map((int dropDownIntItem) {
+                            return DropdownMenuItem<int>(
+                              value: dropDownIntItem,
+                              child: Text(dropDownIntItem.toString()),
+                            );
+                          }
+                          ).toList(),
+                          onChanged: (int newValue) {
+                            setState(() {
+                              //this._currentDaySelected = newValue;
+                              _currentDaySelected[index] = newValue;
+                            });
+                          },
 
-                  //value: _currentDaySelected,
-                  value: _currentDaySelected[index],
 
-                ),
-                SizedBox(
-                  height: 20.0,
-                ),
-                Text("Number of Trips per day"),
-                DropdownButton<int>(
-                  items: list.map((int dropDownIntItem) {
-                    return DropdownMenuItem<int>(
-                      value: dropDownIntItem,
-                      child: Text(dropDownIntItem.toString()),
-                    );
-                  }
-                  ).toList(),
-                  onChanged: (int newValue) {
-                    setState(() {
-                      //this._currentTripSelected = newValue;
+                          //value: _currentDaySelected,
+                          value: _currentDaySelected[index],
 
-                      _currentTripSelected[index] = newValue;
+                        ),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        Text("Number of Trips per day"),
+                        DropdownButton<int>(
+                          items: list.map((int dropDownIntItem) {
+                            return DropdownMenuItem<int>(
+                              value: dropDownIntItem,
+                              child: Text(dropDownIntItem.toString()),
+                            );
+                          }
+                          ).toList(),
+                          onChanged: (int newValue) {
+                            setState(() {
+                              //this._currentTripSelected = newValue;
 
-                    });
-                  },
+                              _currentTripSelected[index] = newValue;
+                            });
+                          },
 
-                  //value: _currentTripSelected,
-                  value: _currentTripSelected[index],
+                          //value: _currentTripSelected,
+                          value: _currentTripSelected[index],
 
-                ),
+                        ),
+                      ]
+                  )
               ],
             )
         ),
       ),
-
     );
-
   }
 
   @override
