@@ -17,6 +17,10 @@ class _CompareTripsState extends State<CompareTrips> {
   List<int> tripsList = [1, 2, 3, 4]; //<-- must get from Database number of trips
   List<double> _originalDBPrice = [2.10, 4.00, 5.00, 1.00]; // <-- the number of list must be followed buy the number of trips from DB
 
+  var list = new List<int>.generate(10, (i) => i + 1);
+  int _currentDaySelected =1; // <-- the number of list must be followed by the number of trips
+  int _currentTripSelected =1; // <-- the number of list must be followed by the number of trips
+
   List <double> selectedPrice =[2.10, 4.00]; //<-- temp storage to save the dropdown selected Price
   List<int> selectedTrip = [1, 1]; //<-- this is temp storage for dropdownlist to separate onchange
   double totalFares;
@@ -121,7 +125,7 @@ class _CompareTripsState extends State<CompareTrips> {
             //margin: EdgeInsets.all(24),
             child: Form(
               child: Column(
-                  //mainAxisAlignment: MainAxisAlignment.center,
+                //mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     SizedBox(
                       height: 300,
@@ -133,32 +137,126 @@ class _CompareTripsState extends State<CompareTrips> {
                         },
                       ),
                     ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Container(
+                            child: Text('Number of days per month : ',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                )),
+                          ),
+                        ),
+                        DropdownButton<int>(
+                          items: list.map((int dropDownIntItem) {
+                            return DropdownMenuItem<int>(
+                              value: dropDownIntItem,
+                              child: SizedBox(
+                                width: 20,
+                                child: Text("${dropDownIntItem}",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.blueAccent,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+                          ).toList(),
+                          onChanged: (int newValue) {
+                            setState(() {
+                              //this._currentDaySelected = newValue;
+                              _currentDaySelected = newValue;
+                            });
+                          },
+
+
+                          //value: _currentDaySelected,
+                          value: _currentDaySelected,
+
+                        ),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        Padding(padding: EdgeInsets.only(bottom: 70)),
+                      ],
+                    ),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                              child: Text('Number of Trips per day : ',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                  )),
+                            ),
+                          ),
+                          DropdownButton<int>(
+                            items: list.map((int dropDownIntItem) {
+                              return DropdownMenuItem<int>(
+                                value: dropDownIntItem,
+                                child: SizedBox(
+                                  width: 20,
+                                  child: Text("${dropDownIntItem}",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.blueAccent,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }
+                            ).toList(),
+                            onChanged: (int newValue) {
+                              setState(() {
+                                //this._currentTripSelected = newValue;
+
+                                _currentTripSelected = newValue;
+                              });
+                            },
+
+                            //value: _currentTripSelected,
+                            value: _currentTripSelected,
+
+                          ),
+                          SizedBox(
+                            height: 20.0,
+                          ),
+                          Padding(padding: EdgeInsets.only(bottom: 70)),
+                        ]),
                   ]),
             ),
           );
         },
       ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            return showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    title: Text("Message"),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Text(comparePrice(selectedPrice[0],selectedPrice[1])),
-                      ],
-                    ),
-                  );
-                }
-            );
-          },
-          child: Icon(Icons.navigate_next),
-        ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          return showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: Text("Message"),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Text(comparePrice(selectedPrice[0], selectedPrice[1],
+                          _currentDaySelected, _currentTripSelected)),
+                    ],
+                  ),
+                );
+              }
+          );
+        },
+        child: Icon(Icons.navigate_next),
+      ),
 
-      );
+    );
   }
 
   // get index to know the actual price from list
@@ -177,7 +275,7 @@ class _CompareTripsState extends State<CompareTrips> {
   }
 
   // compare Price
-  String comparePrice(double fprice, double sprice) {
+  String comparePrice(double fprice, double sprice, int numDay, int numTrips) {
     if(fprice == 0){
       return "First trip is empty";
     }
@@ -186,10 +284,12 @@ class _CompareTripsState extends State<CompareTrips> {
     }
     if (fprice < sprice) {
       double diffprice = sprice - fprice;
+      diffprice = diffprice * numDay * numTrips;
       return "First Trip is cheaper, you saved \$${diffprice.toStringAsFixed(2)}";
     }
     if (fprice > sprice){
       double diffprices = fprice - sprice;
+      diffprices = diffprices * numDay * numTrips;
       return "Second Trip is cheaper, difference is \$${diffprices.toStringAsFixed(2)}";
     }
     else{
