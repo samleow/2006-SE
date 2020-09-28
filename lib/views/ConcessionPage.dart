@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/db/dbhelper.dart';
 import 'package:flutter_app/models/BusFares.dart';
 import 'package:flutter_app/models/BusRoutes.dart';
 import 'package:flutter_app/models/MonthlyConcession.dart';
@@ -18,6 +19,7 @@ class _ComparePageState extends State<ConcessionPage> {
 
   final List<String> tripsList = ["one", "two"];
   final GlobalKey<AnimatedListState> _listKey = GlobalKey();
+  double totalFares;
 
   @override
   void initState() {
@@ -37,16 +39,22 @@ class _ComparePageState extends State<ConcessionPage> {
     });
   }
 
+  Future<double> fetchRoutesByTripIdFromDatabase(int id) async {
+    var dbHelper = DBHelper();
+    List<Map> list = await dbHelper.getFaresByTripsID(id);
+    totalFares = list[0]['SUM(fare)'];
+    print(totalFares);
+    return totalFares;
+  }
 
   var list = new List<int>.generate(10, (i) => i + 1);
   // int _currentDaySelected = 1,
   //     _currentTripSelected = 1;
 
-  List<int> _currentDaySelected =[1,1]; // <-- the number of list must be followed buy the number of trips
-  List<int> _currentTripSelected =[1,1]; // <-- the number of list must be followed buy the number of trips
-  List<double> _price = [2.10, 4.00]; // <-- the number of list must be followed buy the number of trips
-  List<double> _originalDBPrice = [2.10, 4.00]; // <-- the number of list must be followed buy the number of trips from DB
-  List<bool> _checkbox = [true, true];
+  List<int> _currentDaySelected =[1,1]; // <-- the number of list must be followed by the number of trips
+  List<int> _currentTripSelected =[1,1]; // <-- the number of list must be followed by the number of trips
+  List<double> _price = [0,0]; // <-- the number of list must be followed by the number of trips
+  List<bool> _checkbox = [false, false];
   //double price = 2.10;
   double totalPrice = 0;
 
@@ -177,7 +185,6 @@ class _ComparePageState extends State<ConcessionPage> {
         break;
       }
     }
-
     return price;
   }
 
@@ -199,83 +206,105 @@ class _ComparePageState extends State<ConcessionPage> {
       child: Card(
         child: Padding(
             padding: const EdgeInsets.all(16.0),
-
             child: Column(
               children: <Widget>[
-                CheckboxListTile(
-                    value: _checkbox[index],
-                    title: Text("Trip " + tripsList[index].toString()),
-                    onChanged: (bool value) {
-                      setState(() {
-                        _checkbox[index] = value;
-                        if (value == false) {
-                          _price[index] = 0;
-                        }
-                        else {
-                          _price[index] =
-                          _originalDBPrice[index]; // <-- _originalDBPrice[index] must be from database value
-                        }
-                      });
+                FutureBuilder(
+                    future: fetchRoutesByTripIdFromDatabase(index+1),
+                    builder: (context, snapshot) {
+                      if(snapshot.hasData){
+                        return Column(
+                            children: <Widget>[
+                              CheckboxListTile(
+                              value: _checkbox[index],
+                                  title: Text("Trip " + (index+1).toString() + "  \$" +snapshot.data.toString(), //+snapshot.data.toString(),
+                                    style: TextStyle(
+                                        fontSize: 20.0,
+                                        color: Colors.blue),),
+                                  onChanged: (bool value) {
+                                    setState(() {
+                                      _checkbox[index] = value;
+                                      if (value == false) {
+                                        _price[index] = 0;
+                                      }
+                                      else {
+                                        _price[index] = snapshot.data; // <-- _originalDBPrice[index] must be from database value
+                                      }
+                                    });
+                                  }
+                              ),
+                              if(_checkbox[index]) // if statement is to control the Column according to the checkbox
+                                Column(
+                                    children: <Widget>[
+                                      // Text("Trip " + tripsList[index].toString() + ": SGD" +
+                                      //     _price[index].toString(),
+                                      //     style: TextStyle(
+                                      //         fontSize: 20.0,
+                                      //         color: Colors.blue)),
+                                      SizedBox(
+                                        height: 20.0,
+                                      ),
+                                      Text("Number of days per month"),
+                                      DropdownButton<int>(
+                                        items: list.map((int dropDownIntItem) {
+                                          return DropdownMenuItem<int>(
+                                            value: dropDownIntItem,
+                                            child: Text(dropDownIntItem.toString()),
+                                          );
+                                        }
+                                        ).toList(),
+                                        onChanged: (int newValue) {
+                                          setState(() {
+                                            //this._currentDaySelected = newValue;
+                                            _currentDaySelected[index] = newValue;
+                                          });
+                                        },
+
+
+                                        //value: _currentDaySelected,
+                                        value: _currentDaySelected[index],
+
+                                      ),
+                                      SizedBox(
+                                        height: 20.0,
+                                      ),
+                                      Text("Number of Trips per day"),
+                                      DropdownButton<int>(
+                                        items: list.map((int dropDownIntItem) {
+                                          return DropdownMenuItem<int>(
+                                            value: dropDownIntItem,
+                                            child: Text(dropDownIntItem.toString()),
+                                          );
+                                        }
+                                        ).toList(),
+                                        onChanged: (int newValue) {
+                                          setState(() {
+                                            //this._currentTripSelected = newValue;
+
+                                            _currentTripSelected[index] = newValue;
+                                          });
+                                        },
+
+                                        //value: _currentTripSelected,
+                                        value: _currentTripSelected[index],
+
+                                      ),
+                                    ]
+                                )
+                            ]
+                        );
+                      }
+                      else if (snapshot.hasError) {
+                        return Text("${snapshot.error}");
+                      } else if (snapshot.data == null){
+                        return Text("No Trips");
+                      }
+                      // By default, show a loading spinner
+                      return CircularProgressIndicator();
                     }
                 ),
-                if(_checkbox[index]) // if statement is to control the Column according to the checkbox
-                  Column(
-                      children: <Widget>[
-                        Text("Trip " + tripsList[index].toString() + ": SGD" +
-                            _price[index].toString(),
-                            style: TextStyle(
-                                fontSize: 20.0,
-                                color: Colors.blue)),
-                        SizedBox(
-                          height: 20.0,
-                        ),
-                        Text("Number of days per month"),
-                        DropdownButton<int>(
-                          items: list.map((int dropDownIntItem) {
-                            return DropdownMenuItem<int>(
-                              value: dropDownIntItem,
-                              child: Text(dropDownIntItem.toString()),
-                            );
-                          }
-                          ).toList(),
-                          onChanged: (int newValue) {
-                            setState(() {
-                              //this._currentDaySelected = newValue;
-                              _currentDaySelected[index] = newValue;
-                            });
-                          },
 
 
-                          //value: _currentDaySelected,
-                          value: _currentDaySelected[index],
 
-                        ),
-                        SizedBox(
-                          height: 20.0,
-                        ),
-                        Text("Number of Trips per day"),
-                        DropdownButton<int>(
-                          items: list.map((int dropDownIntItem) {
-                            return DropdownMenuItem<int>(
-                              value: dropDownIntItem,
-                              child: Text(dropDownIntItem.toString()),
-                            );
-                          }
-                          ).toList(),
-                          onChanged: (int newValue) {
-                            setState(() {
-                              //this._currentTripSelected = newValue;
-
-                              _currentTripSelected[index] = newValue;
-                            });
-                          },
-
-                          //value: _currentTripSelected,
-                          value: _currentTripSelected[index],
-
-                        ),
-                      ]
-                  )
               ],
             )
         ),
@@ -285,9 +314,9 @@ class _ComparePageState extends State<ConcessionPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Scaffold (
       appBar: new AppBar(
-        title: new Text('Total Price: SGD ${calculatedTotalPrice(
+        title: new Text('Total Price: \$ ${calculatedTotalPrice(
             _price, _currentDaySelected, _currentTripSelected)}'),
       ),
       body: Builder(

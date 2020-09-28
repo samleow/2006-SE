@@ -138,4 +138,10 @@ class DBHelper{
     var dbClient = await db;
     return await dbClient.delete(_tablename,where:'$routeID = ?',whereArgs:[id]);
   }
+
+  Future<List<Map>> getFaresByTripsID(int id) async{
+    var dbClient = await db;
+    List<Map> list = await dbClient.rawQuery('SELECT SUM(fare) FROM $_tablename WHERE $tripID LIKE  "%$id%"');
+    return list;
+  }
 }
