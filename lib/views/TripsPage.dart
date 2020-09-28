@@ -13,6 +13,7 @@ class _TripsPageState extends State<TripsPage> {
 
   final scaffoldKey = new GlobalKey<ScaffoldState>();
   int dropdownValue = 1;
+  //double totalFares = 1.1;
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +29,9 @@ class _TripsPageState extends State<TripsPage> {
         child: Column(
             children: <Widget>[
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
+                  Padding(padding: EdgeInsets.only(left: 0)),
                   Text('Select trip : ',
                     style: TextStyle(
                       fontSize:20,
@@ -155,15 +157,19 @@ class _TripsPageState extends State<TripsPage> {
     );
   }
 
-  Future<List<Routes>> fetchRoutesFromDatabase() async {
-    var dbHelper = DBHelper();
-    Future<List<Routes>> route = dbHelper.getRoute();
-    return route;
-  }
+  // Future<List<Routes>> fetchRoutesFromDatabase() async {
+  //   var dbHelper = DBHelper();
+  //   Future<List<Routes>> route = dbHelper.getRoute();
+  //   return route;
+  // }
 
   Future<List<Routes>> fetchRoutesByTripIdFromDatabase(int id) async {
     var dbHelper = DBHelper();
     Future<List<Routes>> route = dbHelper.getRouteByTripID(id);
+
+    // List<Map> list = await dbHelper.getFaresByTripsID(id);
+    // totalFares = list[0]['SUM(fare)'];
+    // print('total fares are: ' + totalFares.toString());
     return route;
   }
 

@@ -68,7 +68,7 @@ class _SearchMRTState extends State<SearchMRT> {
               //child: Text('Hello World!'),
             ),
             Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text('Save under trip : ',
                       style: TextStyle(
