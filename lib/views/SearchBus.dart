@@ -100,8 +100,8 @@ class _SearchBusState extends State<SearchBus> {
               TextFormField(
                 controller: fromTextController,
                 decoration: const InputDecoration(
-                  labelText: 'From',
-                  hintText: 'Search Bus Stop',
+                  labelText: 'Boarding at',
+                  hintText: 'Enter Bus Stop code',
                   border: OutlineInputBorder(),
                 ),
                 maxLength: 5,
@@ -115,8 +115,8 @@ class _SearchBusState extends State<SearchBus> {
               TextFormField(
                 controller: toTextController,
                 decoration: const InputDecoration(
-                  labelText: 'To',
-                  hintText: 'Search Bus Stop',
+                  labelText: 'Alighting at',
+                  hintText: 'Enter Bus Stop code',
                   border: OutlineInputBorder(),
                 ),
                 maxLength: 5,
@@ -141,7 +141,7 @@ class _SearchBusState extends State<SearchBus> {
                     Text("Distance travelled: ",
                     style: TextStyle(
                         color: Colors.grey[800],
-                        fontWeight: FontWeight.bold,
+                        //fontWeight: FontWeight.bold,
                         fontSize: 20)
                 ),
                     Expanded(
@@ -152,6 +152,7 @@ class _SearchBusState extends State<SearchBus> {
                           style:TextStyle(
                             color: Colors.grey[800],
                             fontWeight: FontWeight.bold,
+                              decoration: TextDecoration.underline,
                             fontSize: 20)
                         ))
                 ]
@@ -165,7 +166,7 @@ class _SearchBusState extends State<SearchBus> {
                     Text("Bus Fare Price: ",
                         style: TextStyle(
                             color: Colors.grey[800],
-                            fontWeight: FontWeight.bold,
+                            //fontWeight: FontWeight.bold,
                             fontSize: 20)
                     ),
                     Expanded(
@@ -176,6 +177,7 @@ class _SearchBusState extends State<SearchBus> {
                             style:TextStyle(
                                 color: Colors.grey[800],
                                 fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.underline,
                                 fontSize: 20)
                         ))
                   ]
@@ -186,12 +188,15 @@ class _SearchBusState extends State<SearchBus> {
               ),
 
               Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text('Save under trip : ',
                         style: TextStyle(
-                          fontSize:20,
-                        )),
+                                color: Colors.grey[800],
+                                //fontWeight: FontWeight.bold,
+                                //decoration: TextDecoration.underline,
+                                fontSize: 20)
+                        ),
 
                     DropdownButton<int>(
                       value: dropdownValue,
@@ -293,7 +298,6 @@ class _SearchBusState extends State<SearchBus> {
     if (distanceTravelled == '0.0'){
       return 0;
     }
-
     // loops through the busFare list to get the distance range
     int j=0;
     for (int i = 0; i < _getBusFares.data.length; i++)
@@ -336,6 +340,9 @@ class _SearchBusState extends State<SearchBus> {
       DBHelper.fare: calculateFares(distanceTravelled().toString()), //hard-coded for now
       DBHelper.tripID: dropdownValue //hard-coded for now
     });
+
+
+
     _showSnackBar("Data saved successfully");
     var route = Routes(i,busNo,fromStop,toStop,fare,dropdownValue);
   }
