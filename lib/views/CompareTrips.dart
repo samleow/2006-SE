@@ -154,7 +154,7 @@ class _CompareTripsState extends State<CompareTrips> {
                             return DropdownMenuItem<int>(
                               value: dropDownIntItem,
                               child: SizedBox(
-                                width: 20,
+                                width: 30,
                                 child: Text("${dropDownIntItem}",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
@@ -201,7 +201,7 @@ class _CompareTripsState extends State<CompareTrips> {
                               return DropdownMenuItem<int>(
                                 value: dropDownIntItem,
                                 child: SizedBox(
-                                  width: 20,
+                                  width: 30,
                                   child: Text("${dropDownIntItem}",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
