@@ -41,19 +41,27 @@ class DBHelper{
       $toStop TEXT,
       $fare DOUBLE,
       $tripID INTEGER ); 
+      
       '''
     );
     print("Created route tables");
 
-    // await db.execute(
-    //     '''
-    //   CREATE TABLE $_tripsTable(
-    //   $tripID INTEGER PRIMARY KEY,
-    //   $totalFare DOUBLE,
-    //   );
-    //   '''
-    // );
-    // print("Created trips tables");
+    await db.execute(
+        '''      
+      CREATE TABLE $_tripsTable(
+      $tripID INTEGER PRIMARY KEY,
+      $totalFare DOUBLE);
+      '''
+    );
+    print("Created trips tables");
+
+    await db.execute(
+        '''
+          INSERT INTO $_tripsTable 
+          VALUES (1,0);
+    
+        ''');
+    print("Inserted default values into trips tables");
   }
 
   // void saveRoute(Routes route) async {
@@ -101,10 +109,16 @@ class DBHelper{
   //   }
   // }
 
-  // Future<int> saveTrip(Map<String,dynamic> row) async{
-  //   var dbClient = await db;
-  //   return await dbClient.insert(_tripsTable, row);
-  // }
+  Future<int> saveTrip(Map<String,dynamic> row) async{
+    var dbClient = await db;
+    return await dbClient.insert(_tripsTable, row);
+  }
+
+  Future<List<Map>> getAllTripsID() async{
+    var dbClient = await db;
+    List<Map> list = await dbClient.rawQuery('SELECT $tripID FROM $_tripsTable ');
+    return list;
+  }
 
   Future<List<Routes>> getRoute() async {
     var dbClient = await db;
