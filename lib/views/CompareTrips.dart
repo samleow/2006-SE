@@ -24,6 +24,7 @@ class _CompareTripsState extends State<CompareTrips> {
   List <double> selectedPrice =[2.10, 4.00]; //<-- temp storage to save the dropdown selected Price
   List<int> selectedTrip = [1, 1]; //<-- this is temp storage for dropdownlist to separate onchange
   double totalFares;
+  int dropdownValue = 1;
 
   Future<double> fetchRoutesByTripIdFromDatabase(int id) async {
     var dbHelper = DBHelper();
@@ -57,29 +58,68 @@ class _CompareTripsState extends State<CompareTrips> {
                             )),
                       ),
                     ),
-                    DropdownButton<int>(
-                      items: tripsList.map((int dropDownTripItem) {
-                        return DropdownMenuItem<int>(
-                          value: dropDownTripItem,
-                          child: SizedBox(
-                            width:20,
-                            child: Text("${dropDownTripItem}",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.blueAccent,
-                            ),
-                            ),
-                        ));
-                      }
-                      ).toList(),
-                      onChanged: (int newValue) {
-                        setState(() {
-                          selectedTrip[index] = newValue;
-                          //selectedPrice[index] = _originalDBPrice[newValue - 1]; // update the selected price
-                        });
+                    // DropdownButton<int>(
+                    //   items: tripsList.map((int dropDownTripItem) {
+                    //     return DropdownMenuItem<int>(
+                    //       value: dropDownTripItem,
+                    //       child: SizedBox(
+                    //         width:20,
+                    //         child: Text("${dropDownTripItem}",
+                    //         textAlign: TextAlign.center,
+                    //         style: TextStyle(
+                    //           fontSize: 20,
+                    //           color: Colors.blueAccent,
+                    //         ),
+                    //         ),
+                    //     ));
+                    //   }
+                    //   ).toList(),
+                    //   onChanged: (int newValue) {
+                    //     setState(() {
+                    //       selectedTrip[index] = newValue;
+                    //       //selectedPrice[index] = _originalDBPrice[newValue - 1]; // update the selected price
+                    //     });
+                    //   },
+                    //   value: selectedTrip[index],
+                    // ),
+                    FutureBuilder(
+                      future: getAllTripsID(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return DropdownButton<dynamic>(
+                            value: dropdownValue,
+                            //elevation: 12,
+                            //   underline: Container(
+                            //     height: 2,
+                            //     color: Colors.deepPurpleAccent,
+                            //   ),
+                            onChanged: (newValue) {
+                              setState(() {
+                                dropdownValue = newValue;
+                              });
+                            },
+                            items: snapshot.data.map<DropdownMenuItem<dynamic>>((
+                                value) {
+                              return DropdownMenuItem<dynamic>(
+                                  value: value,
+                                  child: SizedBox(
+                                    width: 100,
+                                    child: Text(value.toString(),
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          color: Colors.deepPurple,
+                                        )),
+                                  ));
+                            })?.toList() ?? [],
+                          );
+                        } else if (snapshot.hasError) {
+                          return new Text("${snapshot.error}");
+                        }
+                        return new Container(alignment: AlignmentDirectional.center,
+                          child: new CircularProgressIndicator(),
+                        );
                       },
-                      value: selectedTrip[index],
                     ),
                     SizedBox(
                       height: 20.0,
@@ -257,6 +297,13 @@ class _CompareTripsState extends State<CompareTrips> {
       ),
 
     );
+  }
+
+  Future<List<dynamic>> getAllTripsID() async {
+    var dbHelper = DBHelper();
+    List<Map> list = await dbHelper.getAllTripsID();
+    List<dynamic> newList = list.map((m)=>m['tripID']).toList();
+    return(newList);
   }
 
   // get index to know the actual price from list

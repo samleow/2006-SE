@@ -198,31 +198,71 @@ class _SearchBusState extends State<SearchBus> {
                                 fontSize: 20)
                         ),
 
-                    DropdownButton<int>(
-                      value: dropdownValue,
-                      elevation: 12,
-                      underline: Container(
-                        height: 2,
-                        color: Colors.deepPurpleAccent,
-                      ),
-                      onChanged: (int newValue) {
-                        setState(() {
-                          dropdownValue = newValue;
-                        });
+                    // DropdownButton<int>(
+                    //   value: dropdownValue,
+                    //   elevation: 12,
+                    //   underline: Container(
+                    //     height: 2,
+                    //     color: Colors.deepPurpleAccent,
+                    //   ),
+                    //   onChanged: (int newValue) {
+                    //     setState(() {
+                    //       dropdownValue = newValue;
+                    //     });
+                    //   },
+                    //   items: <int>[1,2,3,4]
+                    //       .map<DropdownMenuItem<int>>((int value) {
+                    //     return DropdownMenuItem<int>(
+                    //         value: value,
+                    //         child: SizedBox(
+                    //           width:100,
+                    //           child: Text(value.toString(), textAlign: TextAlign.center,
+                    //               style: TextStyle(
+                    //                 fontSize:20,
+                    //                 color: Colors.deepPurple,
+                    //               )),
+                    //         ));
+                    //   }).toList(),
+                    // ),
+
+                    FutureBuilder(
+                      future: getAllTripsID(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return DropdownButton<dynamic>(
+                            value: dropdownValue,
+                            //elevation: 12,
+                            //   underline: Container(
+                            //     height: 2,
+                            //     color: Colors.deepPurpleAccent,
+                            //   ),
+                            onChanged: (newValue) {
+                              setState(() {
+                                dropdownValue = newValue;
+                              });
+                            },
+                            items: snapshot.data.map<DropdownMenuItem<dynamic>>((
+                                value) {
+                              return DropdownMenuItem<dynamic>(
+                                  value: value,
+                                  child: SizedBox(
+                                    width: 100,
+                                    child: Text(value.toString(),
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          color: Colors.deepPurple,
+                                        )),
+                                  ));
+                            })?.toList() ?? [],
+                          );
+                        } else if (snapshot.hasError) {
+                          return new Text("${snapshot.error}");
+                        }
+                        return new Container(alignment: AlignmentDirectional.center,
+                          child: new CircularProgressIndicator(),
+                        );
                       },
-                      items: <int>[1,2,3,4]
-                          .map<DropdownMenuItem<int>>((int value) {
-                        return DropdownMenuItem<int>(
-                            value: value,
-                            child: SizedBox(
-                              width:100,
-                              child: Text(value.toString(), textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize:20,
-                                    color: Colors.deepPurple,
-                                  )),
-                            ));
-                      }).toList(),
                     ),
                   ]
               ),
@@ -233,15 +273,6 @@ class _SearchBusState extends State<SearchBus> {
 
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // return showDialog(
-          //   context: context,
-          //   builder: (context){
-          //     return AlertDialog(
-          //         content: Text('Values:\n' + busNoController.text + '\n' + toTextController.text + '\n' + toTextController.text),
-          //
-          //     );
-          //   },
-          // );
           testObject();
         },
         tooltip: 'Show me the Values',
@@ -341,10 +372,15 @@ class _SearchBusState extends State<SearchBus> {
       DBHelper.tripID: dropdownValue //hard-coded for now
     });
 
-
-
     _showSnackBar("Data saved successfully");
-    var route = Routes(i,busNo,fromStop,toStop,fare,dropdownValue);
+    //var route = Routes(i,busNo,fromStop,toStop,fare,dropdownValue);
+  }
+
+  Future<List<dynamic>> getAllTripsID() async {
+    var dbHelper = DBHelper();
+    List<Map> list = await dbHelper.getAllTripsID();
+    List<dynamic> newList = list.map((m)=>m['tripID']).toList();
+    return(newList);
   }
 
   void _showSnackBar(String text) {
