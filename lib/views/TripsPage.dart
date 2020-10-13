@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/db/database_helper.dart';
 import 'package:flutter_app/models/Route.dart';
+import 'package:flutter_app/models/Trips.dart';
 import 'package:flutter_app/db/dbhelper.dart';
 import 'package:flutter_app/views/RouteDelete.dart';
 
@@ -36,41 +37,84 @@ class _TripsPageState extends State<TripsPage> {
                     style: TextStyle(
                       fontSize:20,
                     )),
-                  DropdownButton<int>(
-                    value: dropdownValue,
-                    //hint: Text('Her'),
-                    elevation: 12,
-                    underline: Container(
-                      height: 2,
-                      color: Colors.deepPurpleAccent,
-                    ),
-                    onChanged: (int newValue) {
-                      setState(() {
-                        dropdownValue = newValue;
-                      });
+                  // DropdownButton<int>(
+                  //   value: dropdownValue,
+                  //   //hint: Text('Her'),
+                  //   elevation: 12,
+                  //   underline: Container(
+                  //     height: 2,
+                  //     color: Colors.deepPurpleAccent,
+                  //   ),
+                  //   onChanged: (int newValue) {
+                  //     setState(() {
+                  //       dropdownValue = newValue;
+                  //     });
+                  //   },
+                  //   // hint: Text(
+                  //   //   "Please select a trip!",
+                  //   //   style: TextStyle(
+                  //   //     color: Colors.black,
+                  //   //   ),),
+                  //   items: <int>[1,2,3,4].map<DropdownMenuItem<int>>((int value) {
+                  //     return DropdownMenuItem<int>(
+                  //         value: value,
+                  //         child: SizedBox(
+                  //           width:100,
+                  //           child: Text(value.toString(), textAlign: TextAlign.center,
+                  //           style: TextStyle(
+                  //             fontSize:20,
+                  //               color: Colors.deepPurple,
+                  //           )),
+                  //     ));
+                  //   }).toList(),
+                  // ), //DROPDOWN
+                  FutureBuilder(
+                    future: getAllTripsID(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return DropdownButton<dynamic>(
+                          value: dropdownValue,
+                          //elevation: 12,
+                          //   underline: Container(
+                          //     height: 2,
+                          //     color: Colors.deepPurpleAccent,
+                          //   ),
+                          onChanged: (newValue) {
+                            setState(() {
+                              dropdownValue = newValue;
+                            });
+                          },
+                          items: snapshot.data.map<DropdownMenuItem<dynamic>>((
+                              value) {
+                            return DropdownMenuItem<dynamic>(
+                                value: value,
+                                child: SizedBox(
+                                  width: 100,
+                                  child: Text(value.toString(),
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.deepPurple,
+                                      )),
+                                ));
+                          })?.toList() ?? [],
+                        );
+                      } else if (snapshot.hasError) {
+                          return new Text("${snapshot.error}");
+                      }
+                      return new Container(alignment: AlignmentDirectional.center,
+                        child: new CircularProgressIndicator(),
+                      );
                     },
-                    // hint: Text(
-                    //   "Please select a trip!",
-                    //   style: TextStyle(
-                    //     color: Colors.black,
-                    //   ),),
-                    items: <int>[1,2,3,4]
-                        .map<DropdownMenuItem<int>>((int value) {
-                      return DropdownMenuItem<int>(
-                          value: value,
-                          child: SizedBox(
-                            width:100,
-                            child: Text(value.toString(), textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize:20,
-                                color: Colors.deepPurple,
-
-                            )),
-                      ));
-                    }).toList(),
-
                   ),
                   Padding(padding: EdgeInsets.only(bottom: 100)),
+                  IconButton(
+                    icon: Icon(Icons.add_circle_outline),
+                    iconSize: 35.0,
+                    onPressed: () {
+                      addTripId();
+                    },
+                  ),
                 ],
               ),
         Divider(
@@ -94,8 +138,7 @@ class _TripsPageState extends State<TripsPage> {
                           final item = snapshot.data;
                           final itemID = snapshot.data[index].routeID;
                           final snackBar = SnackBar(
-                            content: Text('Deleted Route ' + snapshot.data[index]
-                                .routeID.toString()),
+                            content: Text('Deleted Route ' + snapshot.data[index].routeID.toString()),
                           );
                           return Dismissible(
                             key: Key(itemID.toString()),
@@ -123,7 +166,7 @@ class _TripsPageState extends State<TripsPage> {
                                   Text('From : ' + snapshot.data[index].fromStop),
                                   Text('To : ' + snapshot.data[index].toStop),
                                   Text('Trip : ' + snapshot.data[index].tripID.toString()),
-                                  Text('Fare: \S' + snapshot.data[index].fare.toString()),
+                                  Text('Fare: \$' + snapshot.data[index].fare.toString()),
                                   //Padding(padding: EdgeInsets.all(5.0),),
                                   //Divider(),
                                 ],
@@ -157,11 +200,12 @@ class _TripsPageState extends State<TripsPage> {
     );
   }
 
-  // Future<List<Routes>> fetchRoutesFromDatabase() async {
-  //   var dbHelper = DBHelper();
-  //   Future<List<Routes>> route = dbHelper.getRoute();
-  //   return route;
-  // }
+  Future<List<Map>> fetchAllRoutes() async{
+    var dbHelper = DBHelper();
+    List<Map> list = await dbHelper.getAllTripsID();
+    print(list);
+    return list;
+  }
 
   Future<List<Routes>> fetchRoutesByTripIdFromDatabase(int id) async {
     var dbHelper = DBHelper();
@@ -178,5 +222,31 @@ class _TripsPageState extends State<TripsPage> {
     int i = await dbHelper.deleteRoute(id);
     print(i.toString() + ' record is deleted');
     setState(() {});
+  }
+
+  void addTripId() async {
+    var dbHelper = DBHelper();
+    int i = await dbHelper.saveTrip({
+      DBHelper.totalFare: 0,
+    });
+    print("TripID created: " + i.toString());
+
+    // List<Map> list = await dbHelper.getAllTripsID();
+    // List<dynamic> newList = list.map((m)=>m['tripID']).toList();
+    // print(newList);
+    setState(() {});
+    _showSnackBar("Trip " + i.toString() + " created!");
+  }
+
+  Future<List<dynamic>> getAllTripsID() async {
+    var dbHelper = DBHelper();
+    List<Map> list = await dbHelper.getAllTripsID();
+    List<dynamic> newList = list.map((m)=>m['tripID']).toList();
+    return(newList);
+  }
+
+  void _showSnackBar(String text) {
+    scaffoldKey.currentState
+        .showSnackBar(new SnackBar(content: new Text(text)));
   }
 }
