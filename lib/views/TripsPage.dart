@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/db/database_helper.dart';
 import 'package:flutter_app/models/Route.dart';
-import 'package:flutter_app/models/Trips.dart';
 import 'package:flutter_app/db/dbhelper.dart';
 import 'package:flutter_app/views/RouteDelete.dart';
-import 'package:flutter_app/views/TripDelete.dart';
 
 
 class TripsPage extends StatefulWidget {
