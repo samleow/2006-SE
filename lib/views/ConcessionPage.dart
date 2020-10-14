@@ -303,7 +303,17 @@ class _ComparePageState extends State<ConcessionPage> {
                     }
                 ),
 
-
+// FutureBuilder(
+                //   future: fetchRoutesByTripIdFromDatabase(index+1),
+                //   builder: (context, snapshot) {
+                //     if(snapshot.hasData){
+                //       return Text(snapshot.data.toString());
+                //     }else if (snapshot.hasError) {
+                //       return Text("${snapshot.error}");
+                //     }
+                //       return CircularProgressIndicator();
+                //     }
+                // ),
 
               ],
             )

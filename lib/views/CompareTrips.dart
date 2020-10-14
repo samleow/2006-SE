@@ -24,7 +24,7 @@ class _CompareTripsState extends State<CompareTrips> {
   List <double> selectedPrice =[2.10, 4.00]; //<-- temp storage to save the dropdown selected Price
   List<int> selectedTrip = [1, 1]; //<-- this is temp storage for dropdownlist to separate onchange
   double totalFares;
-  int dropdownValue = 1;
+  int dropdownValue;
 
   Future<double> fetchRoutesByTripIdFromDatabase(int id) async {
     var dbHelper = DBHelper();
@@ -87,7 +87,7 @@ class _CompareTripsState extends State<CompareTrips> {
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           return DropdownButton<dynamic>(
-                            value: dropdownValue,
+                            value: selectedTrip[index],
                             //elevation: 12,
                             //   underline: Container(
                             //     height: 2,
@@ -95,7 +95,7 @@ class _CompareTripsState extends State<CompareTrips> {
                             //   ),
                             onChanged: (newValue) {
                               setState(() {
-                                dropdownValue = newValue;
+                                selectedTrip[index] = newValue;
                               });
                             },
                             items: snapshot.data.map<DropdownMenuItem<dynamic>>((

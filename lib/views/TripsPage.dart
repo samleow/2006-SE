@@ -4,6 +4,8 @@ import 'package:flutter_app/models/Route.dart';
 import 'package:flutter_app/models/Trips.dart';
 import 'package:flutter_app/db/dbhelper.dart';
 import 'package:flutter_app/views/RouteDelete.dart';
+import 'package:flutter_app/views/TripDelete.dart';
+
 
 class TripsPage extends StatefulWidget {
   @override
@@ -115,6 +117,13 @@ class _TripsPageState extends State<TripsPage> {
                       addTripId();
                     },
                   ),
+                  IconButton(
+                    icon: Icon(Icons.delete_forever),
+                    iconSize: 35.0,
+                    onPressed: () {
+                      showAlertDialog(context);
+                    },
+                  ),
                 ],
               ),
         Divider(
@@ -200,6 +209,41 @@ class _TripsPageState extends State<TripsPage> {
     );
   }
 
+  showAlertDialog(BuildContext context) {
+    Widget yesButton = FlatButton(
+      child: Text("Yes"),
+      onPressed:  () {
+        deleteTrip(dropdownValue);
+        dropdownValue = 1;
+        Navigator.of(context).pop();
+        _showSnackBar("Trip successfully deleted!");
+        setState(() {});
+      },
+    );
+    Widget noButton = FlatButton(
+      child: Text("No"),
+      onPressed:  () {
+        Navigator.of(context).pop();
+        setState(() {});
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: Text("Warning"),
+      content: Text("Are you sure you want to delete this trip and all its routes?"),
+      actions: [
+        yesButton,
+        noButton,
+      ],
+    );
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   Future<List<Map>> fetchAllRoutes() async{
     var dbHelper = DBHelper();
     List<Map> list = await dbHelper.getAllTripsID();
@@ -220,8 +264,9 @@ class _TripsPageState extends State<TripsPage> {
   void deleteRouteFromDatabase(int id) async {
     var dbHelper = DBHelper();
     int i = await dbHelper.deleteRoute(id);
+    setState(() {
+    });
     print(i.toString() + ' record is deleted');
-    setState(() {});
   }
 
   void addTripId() async {
@@ -243,6 +288,12 @@ class _TripsPageState extends State<TripsPage> {
     List<Map> list = await dbHelper.getAllTripsID();
     List<dynamic> newList = list.map((m)=>m['tripID']).toList();
     return(newList);
+  }
+
+  void deleteTrip(int id) async {
+    var dbHelper = DBHelper();
+    int i = await dbHelper.deleteTrip(id);
+    print(i.toString() + ' record is deleted');
   }
 
   void _showSnackBar(String text) {

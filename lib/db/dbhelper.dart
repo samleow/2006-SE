@@ -152,4 +152,15 @@ class DBHelper{
     var dbClient = await db;
     return await dbClient.delete(_tablename,where:'$routeID = ?',whereArgs:[id]);
   }
+
+  Future<int> deleteTrip(int id) async{
+    var dbClient = await db;
+
+    if(id == 1){
+      return await dbClient.delete(_tablename,where:'$tripID = ?',whereArgs:[id]);
+    } else {
+      await dbClient.delete(_tripsTable,where:'$tripID = ?',whereArgs:[id]);
+      return await dbClient.delete(_tablename,where:'$tripID = ?',whereArgs:[id]);
+    }
+  }
 }
