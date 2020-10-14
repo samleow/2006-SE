@@ -1,12 +1,16 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/db/database_helper.dart';
 import 'package:flutter_app/db/dbhelper.dart';
 import 'package:flutter_app/models/BusFares.dart';
 import 'package:flutter_app/models/BusRoutes.dart';
+import 'package:flutter_app/models/BusServices.dart';
+import 'package:flutter_app/models/BusStops.dart';
 import 'package:flutter_app/models/Route.dart';
 import 'package:flutter_app/models/api_response.dart';
 import 'package:flutter_app/services/CallAPIServices.dart';
 import 'package:get_it/get_it.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 class SearchBus extends StatefulWidget {
   @override
@@ -17,6 +21,9 @@ class _SearchBusState extends State<SearchBus> {
   CallAPIServices get service => GetIt.I<CallAPIServices>();
   APIResponse<List<BusRoutes>> _getBusRouteData;
   APIResponse<List<BusFares>> _getBusFares;
+  APIResponse<List<BusServices>> _getBusServices;
+  APIResponse<List<BusStops>> _getBusStops;
+
   bool _isLoading = false;
 
   @override
@@ -32,6 +39,8 @@ class _SearchBusState extends State<SearchBus> {
 
     _getBusRouteData = await service.getBusRoutes();
     _getBusFares = await service.getBusFares();
+    _getBusServices = await service.getBusServices();
+    _getBusStops = await service.getBusStops();
 
     setState(() {
       _isLoading = false;
@@ -55,8 +64,8 @@ class _SearchBusState extends State<SearchBus> {
 
   //Routes route = new Routes("", "", "", 0,0);
   String busNo;
-  String fromStop;
-  String toStop;
+  String fromStop = "";
+  String toStop = "";
   double fare;
   int tripID;
 
@@ -83,46 +92,139 @@ class _SearchBusState extends State<SearchBus> {
                 padding: EdgeInsets.all(10.0),
                 //child: Text('Hello World!'),
               ),
-              TextFormField(
-                controller: busNoController,
-                decoration: const InputDecoration(
-                  hintText: 'Search for Bus Service no.',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.search),
+              TypeAheadFormField(
+                textFieldConfiguration: TextFieldConfiguration(
+                    controller: busNoController,
+                    decoration: const InputDecoration(
+                      hintText: 'Search for Bus Service no.',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.search),
+                    ),
                 ),
-                onChanged: (v)=>setState((){_dist=distanceTravelled().toString();}),
+                suggestionsCallback: (pattern) async{ //pattern is user input
+                  return await getBusServicesSuggestions(pattern); // to activate autocomplete list
+                },
+                itemBuilder: (context, suggestion) {
+                  return ListTile(
+                    title: Text(suggestion),
+                  );
+                },
+                onSuggestionSelected: (suggestion) {
+                  busNoController.text = suggestion;
+                },
+
+                //onSaved: (v)=>setState((){_dist=distanceTravelled().toString();}),
+
+
               ),
+              // TextFormField(
+              //   controller: busNoController,
+              //   decoration: const InputDecoration(
+              //     hintText: 'Search for Bus Service no.',
+              //     border: OutlineInputBorder(),
+              //     prefixIcon: Icon(Icons.search),
+              //   ),
+              //   onChanged: (v)=>setState((){_dist=distanceTravelled().toString();}),
+              // ),
 
               Padding(
                 padding: EdgeInsets.all(10.0),
                 //child: Text('Hello World!'),
               ),
-              TextFormField(
-                controller: fromTextController,
-                decoration: const InputDecoration(
-                  labelText: 'Boarding at',
-                  hintText: 'Enter Bus Stop code',
-                  border: OutlineInputBorder(),
+              TypeAheadFormField(
+                textFieldConfiguration: TextFieldConfiguration(
+                  controller: fromTextController,
+                  decoration: const InputDecoration(
+                    labelText: 'Boarding at',
+                    hintText: 'Enter Bus Stop Name',
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.directions_bus),
+                  ),
+                  //maxLength: 5,
+                  //keyboardType: TextInputType.number,
                 ),
-                maxLength: 5,
-                keyboardType: TextInputType.number,
-                onChanged: (v)=>setState((){_dist=distanceTravelled().toString();}),
+                suggestionsCallback: (pattern) async{ //pattern is user input
+                  return await getBoardingSuggestions(pattern, busNoController.text); // to activate autocomplete list
+                },
+                itemBuilder: (context, suggestion) {
+                  return ListTile(
+                    title: Text(suggestion),
+                    //subtitle: Text(getBusStopCode(suggestion)),
+                  );
+                },
+                onSuggestionSelected: (suggestion) {
+
+                  fromTextController.text = suggestion;
+                  //fromStop = getBusStopCode(suggestion);
+                  //setState() run the calculation
+                  setState((){_dist=distanceTravelled().toString();});
+                  
+
+                },
+
+                //onSaved: (v)=>setState((){_dist=distanceTravelled().toString();}),
+
               ),
+              // TextFormField(
+              //   controller: fromTextController,
+              //   decoration: const InputDecoration(
+              //     labelText: 'Boarding at',
+              //     hintText: 'Enter Bus Stop code',
+              //     border: OutlineInputBorder(),
+              //   ),
+              //   maxLength: 5,
+              //   keyboardType: TextInputType.number,
+              //   onChanged: (v)=>setState((){_dist=distanceTravelled().toString();}),
+              // ),
               Padding(
                 padding: EdgeInsets.all(10.0),
                 //child: Text('Hello World!'),
               ),
-              TextFormField(
-                controller: toTextController,
-                decoration: const InputDecoration(
-                  labelText: 'Alighting at',
-                  hintText: 'Enter Bus Stop code',
-                  border: OutlineInputBorder(),
+              TypeAheadFormField(
+                textFieldConfiguration: TextFieldConfiguration(
+                  controller: toTextController,
+                  decoration: const InputDecoration(
+                    labelText: 'Alighting at',
+                    hintText: 'Enter Bus Stop Name',
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.directions_bus),
+                  ),
+                  //maxLength: 5,
+                  //keyboardType: TextInputType.number,
                 ),
-                maxLength: 5,
-                keyboardType: TextInputType.number,
-                onChanged: (v)=>setState((){_dist=distanceTravelled().toString();}),
+                suggestionsCallback: (pattern) async{ //pattern is user input
+                  return await getBoardingSuggestions(pattern, busNoController.text); // to activate autocomplete list
+                },
+                itemBuilder: (context, suggestion) {
+                  return ListTile(
+                    title: Text(suggestion),
+                    //subtitle: Text(getBusStopCode(suggestion)),
+                  );
+                },
+                onSuggestionSelected: (suggestion) {
+                  toTextController.text = suggestion;
+                  //toStop =getBusStopCode(suggestion);
+                  //setState() run the calculation
+                  setState((){_dist=distanceTravelled().toString();});
+
+                },
+
+                //onSaved: (v)=>setState((){_dist=distanceTravelled().toString();}),
+
+
+
               ),
+              // TextFormField(
+              //   controller: toTextController,
+              //   decoration: const InputDecoration(
+              //     labelText: 'Alighting at',
+              //     hintText: 'Enter Bus Stop code',
+              //     border: OutlineInputBorder(),
+              //   ),
+              //   maxLength: 5,
+              //   keyboardType: TextInputType.number,
+              //   onChanged: (v)=>setState((){_dist=distanceTravelled().toString();}),
+              // ),
 
               Padding(
                 padding: EdgeInsets.all(10.0),
@@ -287,6 +389,7 @@ class _SearchBusState extends State<SearchBus> {
     fromStop = fromTextController.text;
     toStop = toTextController.text;
 
+
     //Check for nulls
     if (busNo == '' || fromStop == '' || toStop == '') {
       return 0;
@@ -387,4 +490,112 @@ class _SearchBusState extends State<SearchBus> {
     scaffoldKey.currentState
         .showSnackBar(new SnackBar(content: new Text(text)));
   }
+
+  // Get Bus Numbers
+  Future<List> getBusServicesSuggestions(String searchInput) async
+  {
+    //print(searchInput);
+    // get all BusServices to a List, .toSet() help to remove duplicates in a list
+    Set<String> busServicesList = _getBusServices.data.map((e) => e.serviceNo).toSet();
+
+    // contract the List to match the searchInput
+    List<String> matches = List();
+    matches.addAll(busServicesList);
+    matches.retainWhere((s) => s.contains((searchInput)));
+
+    // if SearchInput is clear
+    if(searchInput == "")
+      {
+        // clear the matching list
+        matches.clear();
+      }
+    return matches;
+  }
+
+  // Get the list of Bus Stop Names
+  Future<List> getBoardingSuggestions(String boardingLocation, String busNo) async
+  {
+
+    //Filter the correct list according to the bus number
+    Set<String> filterbusStopList = _getBusRouteData.data.map((e) // inside here is actually a loop
+    {
+      if(e.serviceNo == busNo)
+        {
+          return e.busStopCode;
+        }
+      else
+        {
+          return "";
+        }
+    }).toSet();
+
+
+    // Filter the description
+    Set<String> busStopDescList = _getBusStops.data.map((e)
+    {
+      for(int i = 0; i< filterbusStopList.length; i++)
+        {
+          if(filterbusStopList.contains(e.busStopCode))
+            {
+              return e.description;
+            }
+          else
+            {
+              return "";
+            }
+        }
+
+    }).toSet();
+
+    // print(filterbusStopList);
+    // print(busNo);
+
+    // validate the List to match the boardingLocation
+    List<String> matches = List();
+    matches.addAll(filterbusStopList); // Swap the list busStopDescList(to display description) or filterbusStopList (to display bus stop code)
+    matches.removeWhere((element) => element == ""); // remove the ""
+    matches.retainWhere((s) => s.contains((boardingLocation)));
+
+    // if SearchInput is clear
+    if(filterbusStopList == "") // Swap the list busStopDescList(to display description) or filterbusStopList (to display bus stop code)
+    {
+      // clear the matching list
+      matches.clear();
+    }
+    return matches;
+
+  }
+
+  // Get Bus Stop Code
+  String getBusStopCode(String busStopDescription)
+  {
+    //print(busStopDescription);
+    int lengthOfBusStop = _getBusStops.data.length;
+    //Filter the correct list according to the bus number
+    // The Set will have lots of null and "" but with 1 correct filter
+    Set<String> filterbusStopCode = _getBusStops.data.map((e) // inside here is actually a loop
+    {
+      for(int i = 0; i<lengthOfBusStop; i++) {
+        if (e.description == busStopDescription) {
+          return e.busStopCode;
+        }
+        if(i == lengthOfBusStop)
+          {
+            return "";
+          }
+      }
+    }).toSet();
+
+    filterbusStopCode.removeWhere((element) => element == ""); // remove ""
+    filterbusStopCode.removeWhere((element) => element == null); // remove null ""
+
+    // to capture the only list to a string ------- .toString() will not work becos it display {}
+    String busStopCode = filterbusStopCode.reduce((value, element) => element);
+
+
+    //print(busStopCode);
+    return busStopCode;
+    
+  }
+
 }

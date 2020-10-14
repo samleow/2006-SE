@@ -1,5 +1,7 @@
 import 'package:flutter_app/models/BusFares.dart';
 import 'package:flutter_app/models/BusRoutes.dart';
+import 'package:flutter_app/models/BusServices.dart';
+import 'package:flutter_app/models/BusStops.dart';
 import 'package:flutter_app/models/MonthlyConcession.dart';
 import 'package:flutter_app/models/api_response.dart';
 import 'package:http/http.dart' as http;
@@ -69,9 +71,44 @@ class CallAPIServices {
     })
         .catchError((_) => APIResponse<List<BusRoutes>>(error: true, errorMessage: 'An error occurred, never return API data'));
   }
+
+
+  //Calling DataMall API to retrieve Bus Services
+  Future<APIResponse<List<BusServices>>> getBusServices() {
+    return http.get('http://datamall2.mytransport.sg/ltaodataservice/BusServices', headers: {'AccountKey': accountkey}).then((data) {
+      if (data.statusCode == 200) {
+        final jsonData = json.decode(data.body);
+        final jsondatabody = jsonData['value'];
+        final BusServicesData = <BusServices>[];
+        for (var item in jsondatabody) {
+          BusServicesData.add(BusServices.fromJson(item));
+        }
+        return APIResponse<List<BusServices>>(data: BusServicesData);
+      }
+      return APIResponse<List<BusServices>>(error: true, errorMessage: 'An error occurred');
+    })
+        .catchError((_) => APIResponse<List<BusServices>>(error: true, errorMessage: 'An error occurred, never return API data'));
+
+  }
+
+  //Calling DataMall API to retrieve Bus Stops
+  Future<APIResponse<List<BusStops>>> getBusStops() {
+    return http.get('http://datamall2.mytransport.sg/ltaodataservice/BusStops', headers: {'AccountKey': accountkey}).then((data) {
+      if (data.statusCode == 200) {
+        final jsonData = json.decode(data.body);
+        final jsondatabody = jsonData['value'];
+        final BusStopsData = <BusStops>[];
+        for (var item in jsondatabody) {
+          BusStopsData.add(BusStops.fromJson(item));
+        }
+        return APIResponse<List<BusStops>>(data: BusStopsData);
+      }
+      return APIResponse<List<BusStops>>(error: true, errorMessage: 'An error occurred');
+    })
+        .catchError((_) => APIResponse<List<BusStops>>(error: true, errorMessage: 'An error occurred, never return API data'));
+
+  }
 }
-
-
 
 
 
