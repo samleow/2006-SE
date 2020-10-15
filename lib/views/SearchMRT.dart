@@ -61,6 +61,7 @@ class _SearchMRTState extends State<SearchMRT> {
   }
 
   final scaffoldKey = new GlobalKey<ScaffoldState>();
+  final _formKey = GlobalKey<FormState>();
 
   //Routes route = new Routes("", "", "", 0,0);
   String MRTLine;
@@ -71,270 +72,294 @@ class _SearchMRTState extends State<SearchMRT> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return Center(child: CircularProgressIndicator());
+    }
+    if ( _getMRTFares.error) {
+      return Center(child: Text(_getMRTFares.errorMessage));
+    }
     return Scaffold(
       key: scaffoldKey,
-      body: Container(
-        margin: const EdgeInsets.only(right: 15, left: 15),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-            Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                    child: Text('MRT Line : ',
-                        style: TextStyle(
-                          fontSize: 20,
-                        )),
-                  ),
-                ),
-              DropdownButton<String>(
-                // get api data to display on drop down list
-                items: mrtstationline.map((item) {
-                  return DropdownMenuItem<String>(
-                    child: Text(item.toString(),
-                        style: TextStyle(color: Colors.blue)),
-                    value: item.toString(),
-                  );
-                }).toList(),
-                onChanged: (String stncode) {
-                  setState(() {
-                    // update the selected value on UI
-                    this._currentSelectedValue = stncode;
-                    fromTextController.clear();
-                    toTextController.clear();
-                  });
-                },
-                // display the selected value on UI
-                value: _currentSelectedValue,
-              ),
-            ],
-            ),
-
-            Padding(
-              padding: EdgeInsets.all(10.0),
-              //child: Text('Hello World!'),
-            ),
-              TypeAheadFormField(
-                textFieldConfiguration: TextFieldConfiguration(
-                  controller: fromTextController,
-                  decoration: const InputDecoration(
-                    labelText: 'Boarding at',
-                    hintText: 'Enter Station Name',
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.train),
-                  ),
-                  //maxLength: 5,
-                  //keyboardType: TextInputType.number,
-                ),
-                suggestionsCallback: (userinput) async{
-                  return await getBoardingSuggestions(userinput, _currentSelectedValue); // to activate autocomplete list
-                },
-                itemBuilder: (context, suggestion) {
-                  return ListTile(
-                    title: Text(suggestion),
-                  );
-                },
-                onSuggestionSelected: (suggestion) {
-                  fromTextController.text = suggestion;
-                  //setState() run the calculation
-                  setState((){_dist=distanceTravelled().toString();});
-                },
-              ),
-
-
-           /* TextFormField(
-              controller: fromTextController,
-              decoration: const InputDecoration(
-                labelText: 'Boarding at',
-                hintText: 'Enter MRT Station Name',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.train)
-              ),
-              onChanged: (v)=>setState((){_dist=distanceTravelled().toString();}),
-            ),*/
-
-
-            Padding(
-              padding: EdgeInsets.all(10.0),
-              //child: Text('Hello World!'),
-            ),
-              TypeAheadFormField(
-                textFieldConfiguration: TextFieldConfiguration(
-                  controller: toTextController,
-                  decoration: const InputDecoration(
-                    labelText: 'Alighting at',
-                    hintText: 'Enter Station Name',
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.train),
-                  ),
-                  //maxLength: 5,
-                  //keyboardType: TextInputType.number,
-                ),
-                suggestionsCallback: (userinput) async{
-                  return await getBoardingSuggestions(userinput, _currentSelectedValue); // to activate autocomplete list
-                },
-                itemBuilder: (context, suggestion) {
-                  return ListTile(
-                    title: Text(suggestion),
-                  );
-                },
-                onSuggestionSelected: (suggestion) {
-                  toTextController.text = suggestion;
-                  //setState() run the calculation
-                  setState((){_dist=distanceTravelled().toString();});
-                },
-              ),
-            /*TextFormField(
-              controller: toTextController,
-              decoration: const InputDecoration(
-                  labelText: 'Alighting at',
-                  hintText: 'Enter MRT Station Name',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.train)
-              ),
-              onChanged: (v)=>setState((){_dist=distanceTravelled().toString();}),
-            ),*/
-            Padding(
-              padding: EdgeInsets.all(10.0),
-              //child: Text('Hello World!'),
-            ),
-
-            Padding(
-              padding: EdgeInsets.all(10.0),
-              //child: Text('Hello World!'),
-            ),
-            Divider(
-              color: Colors.black26,
-              thickness: 1.5,
-            ),
-            Padding(
-              padding: EdgeInsets.all(10.0),
-            ),
-            Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  Text("Distance travelled: ",
-                      style: TextStyle(
-                          color: Colors.grey[800],
-                          //fontWeight: FontWeight.bold,
-                          fontSize: 20)
-                  ),
-                  Expanded(
-                      child: Text(
-                          _dist +"km",
-                          textDirection: TextDirection.ltr,
-                          textAlign: TextAlign.right,
-                          style:TextStyle(
-                              color: Colors.grey[800],
-                              fontWeight: FontWeight.bold,
-                              decoration: TextDecoration.underline,
-                              fontSize: 20)
-                      ))
-                ]
-            ),
-            Padding(
-              padding: EdgeInsets.all(10.0),
-            ),
-
-            //calculate fares
-            Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  Text("MRT Fare Price: ",
-                      style: TextStyle(
-                          color: Colors.grey[800],
-                          //fontWeight: FontWeight.bold,
-                          fontSize: 20)
-                  ),
-                  Expanded(
-                      child: Text(
-                          '\$${calculateFares(_dist)}',
-                          textDirection: TextDirection.ltr,
-                          textAlign: TextAlign.right,
-                          style:TextStyle(
-                              color: Colors.grey[800],
-                              fontWeight: FontWeight.bold,
-                              decoration: TextDecoration.underline,
-                              fontSize: 20)
-                      ))
-                ]
-            ),
-
-            Padding(
-              padding: EdgeInsets.all(10.0),
-            ),
-
-          Padding(
-            padding: EdgeInsets.all(10.0),
-          ),
-
-          Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-              Text('Save under trip : ',
-              style: TextStyle(
-                  color: Colors.grey[800],
-                  //fontWeight: FontWeight.bold,
-                  //decoration: TextDecoration.underline,
-                  fontSize: 20)
-          ),
-
-          FutureBuilder(
-              future: getAllTripsID(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return DropdownButton<dynamic>(
-                    value: dropdownValue,
-                    //elevation: 12,
-                    //   underline: Container(
-                    //     height: 2,
-                    //     color: Colors.deepPurpleAccent,
-                    //   ),
-                    onChanged: (newValue) {
-                      setState(() {
-                        dropdownValue = newValue;
-                      });
-                    },
-                    items: snapshot.data.map<DropdownMenuItem<dynamic>>((
-                        value) {
-                      return DropdownMenuItem<dynamic>(
-                          value: value,
-                          child: SizedBox(
-                            width: 100,
-                            child: Text(value.toString(),
-                                textAlign: TextAlign.center,
+      body: Form(
+        key: _formKey,
+        child: Container(
+          margin: const EdgeInsets.only(right: 15, left: 15),
+            child: SingleChildScrollView(
+              child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                    Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Container(
+                            child: Text('MRT Line : ',
                                 style: TextStyle(
                                   fontSize: 20,
-                                  color: Colors.deepPurple,
                                 )),
-                          ));
-                    })?.toList() ?? [],
-                  );
-                } else if (snapshot.hasError) {
-                  return new Text("${snapshot.error}");
-                }
-                return new Container(alignment: AlignmentDirectional.center,
-                  child: new CircularProgressIndicator(),
-                );
-              }
-              )
-                ]
-            ),
-            Divider(
-              color: Colors.black26,
-                thickness: 1.5,
+                          ),
+                        ),
+                      DropdownButton<String>(
+                        // get api data to display on drop down list
+                        items: mrtstationline.map((item) {
+                          return DropdownMenuItem<String>(
+                            child: Text(item.toString(),
+                                style: TextStyle(color: Colors.blue)),
+                            value: item.toString(),
+                          );
+                        }).toList(),
+                        onChanged: (String stncode) {
+                          setState(() {
+                            // update the selected value on UI
+                            this._currentSelectedValue = stncode;
+                            fromTextController.clear();
+                            toTextController.clear();
+                          });
+                        },
+                        // display the selected value on UI
+                        value: _currentSelectedValue,
+                      ),
+                    ],
+                    ),
+
+                    Padding(
+                      padding: EdgeInsets.all(10.0),
+                      //child: Text('Hello World!'),
+                    ),
+                      TypeAheadFormField(
+                        textFieldConfiguration: TextFieldConfiguration(
+                          controller: fromTextController,
+                          decoration: const InputDecoration(
+                            labelText: 'Boarding at',
+                            hintText: 'Enter Station Name',
+                            border: OutlineInputBorder(),
+                            prefixIcon: Icon(Icons.train),
+                          ),
+                        ),
+                        validator: (String value){
+                          // validate text field
+                          if(value.isEmpty)
+                          {
+                            return "Please Enter MRT Station";
+                          }
+                          return null;
+                        },
+                        suggestionsCallback: (userinput) async{
+                          return await getBoardingSuggestions(userinput, _currentSelectedValue); // to activate autocomplete list
+                        },
+                        itemBuilder: (context, suggestion) {
+                          return ListTile(
+                            title: Text(suggestion),
+                          );
+                        },
+                        onSuggestionSelected: (suggestion) {
+                          fromTextController.text = suggestion;
+                          //setState() run the calculation
+                          setState((){_dist=distanceTravelled().toString();});
+                        },
+                      ),
+
+
+                   /* TextFormField(
+                      controller: fromTextController,
+                      decoration: const InputDecoration(
+                        labelText: 'Boarding at',
+                        hintText: 'Enter MRT Station Name',
+                        border: OutlineInputBorder(),
+                        prefixIcon: Icon(Icons.train)
+                      ),
+                      onChanged: (v)=>setState((){_dist=distanceTravelled().toString();}),
+                    ),*/
+
+
+                    Padding(
+                      padding: EdgeInsets.all(10.0),
+                      //child: Text('Hello World!'),
+                    ),
+                      TypeAheadFormField(
+                        textFieldConfiguration: TextFieldConfiguration(
+                          controller: toTextController,
+                          decoration: const InputDecoration(
+                            labelText: 'Alighting at',
+                            hintText: 'Enter Station Name',
+                            border: OutlineInputBorder(),
+                            prefixIcon: Icon(Icons.train),
+                          ),
+                        ),
+                        validator: (String value){
+                          // validate text field
+                          if(value.isEmpty)
+                          {
+                            return "Please Enter MRT Station";
+                          }
+                          return null;
+                        },
+                        suggestionsCallback: (userinput) async{
+                          return await getBoardingSuggestions(userinput, _currentSelectedValue); // to activate autocomplete list
+                        },
+                        itemBuilder: (context, suggestion) {
+                          return ListTile(
+                            title: Text(suggestion),
+                          );
+                        },
+                        onSuggestionSelected: (suggestion) {
+                          toTextController.text = suggestion;
+                          //setState() run the calculation
+                          setState((){_dist=distanceTravelled().toString();});
+                        },
+                      ),
+                    /*TextFormField(
+                      controller: toTextController,
+                      decoration: const InputDecoration(
+                          labelText: 'Alighting at',
+                          hintText: 'Enter MRT Station Name',
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.train)
+                      ),
+                      onChanged: (v)=>setState((){_dist=distanceTravelled().toString();}),
+                    ),*/
+                    Padding(
+                      padding: EdgeInsets.all(10.0),
+                      //child: Text('Hello World!'),
+                    ),
+
+                    Padding(
+                      padding: EdgeInsets.all(10.0),
+                      //child: Text('Hello World!'),
+                    ),
+                    Divider(
+                      color: Colors.black26,
+                      thickness: 1.5,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(10.0),
+                    ),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          Text("Distance travelled: ",
+                              style: TextStyle(
+                                  color: Colors.grey[800],
+                                  //fontWeight: FontWeight.bold,
+                                  fontSize: 20)
+                          ),
+                          Expanded(
+                              child: Text(
+                                  _dist +"km",
+                                  textDirection: TextDirection.ltr,
+                                  textAlign: TextAlign.right,
+                                  style:TextStyle(
+                                      color: Colors.grey[800],
+                                      fontWeight: FontWeight.bold,
+                                      decoration: TextDecoration.underline,
+                                      fontSize: 20)
+                              ))
+                        ]
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(10.0),
+                    ),
+
+                    //calculate fares
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          Text("MRT Fare Price: ",
+                              style: TextStyle(
+                                  color: Colors.grey[800],
+                                  //fontWeight: FontWeight.bold,
+                                  fontSize: 20)
+                          ),
+                          Expanded(
+                              child: Text(
+                                  '\$${calculateFares(_dist)}',
+                                  textDirection: TextDirection.ltr,
+                                  textAlign: TextAlign.right,
+                                  style:TextStyle(
+                                      color: Colors.grey[800],
+                                      fontWeight: FontWeight.bold,
+                                      decoration: TextDecoration.underline,
+                                      fontSize: 20)
+                              ))
+                        ]
+                    ),
+
+                    Padding(
+                      padding: EdgeInsets.all(10.0),
+                    ),
+
+                  Padding(
+                    padding: EdgeInsets.all(10.0),
                   ),
-                ],
-              ),
-          ),
-        ),
+
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                      Text('Save under trip : ',
+                      style: TextStyle(
+                          color: Colors.grey[800],
+                          //fontWeight: FontWeight.bold,
+                          //decoration: TextDecoration.underline,
+                          fontSize: 20)
+                  ),
+
+                  FutureBuilder(
+                      future: getAllTripsID(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return DropdownButton<dynamic>(
+                            value: dropdownValue,
+                            //elevation: 12,
+                            //   underline: Container(
+                            //     height: 2,
+                            //     color: Colors.deepPurpleAccent,
+                            //   ),
+                            onChanged: (newValue) {
+                              setState(() {
+                                dropdownValue = newValue;
+                              });
+                            },
+                            items: snapshot.data.map<DropdownMenuItem<dynamic>>((
+                                value) {
+                              return DropdownMenuItem<dynamic>(
+                                  value: value,
+                                  child: SizedBox(
+                                    width: 100,
+                                    child: Text(value.toString(),
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          color: Colors.deepPurple,
+                                        )),
+                                  ));
+                            })?.toList() ?? [],
+                          );
+                        } else if (snapshot.hasError) {
+                          return new Text("${snapshot.error}");
+                        }
+                        return new Container(alignment: AlignmentDirectional.center,
+                          child: new CircularProgressIndicator(),
+                        );
+                      }
+                      )
+                        ]
+                    ),
+                    Divider(
+                      color: Colors.black26,
+                        thickness: 1.5,
+                          ),
+                        ],
+                      ),
+                  ),
+                ),
+      ),
+
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          testObject();
+          if(_formKey.currentState.validate()) {
+            testObject();
+          }
         },
         tooltip: 'Show me the Values',
         child: Icon(Icons.add),
@@ -453,15 +478,15 @@ class _SearchMRTState extends State<SearchMRT> {
 
 
   void testObject() async{
-    MRTLine = MRTLineTextController.text;
+    MRTLine = _currentSelectedValue;
     fromStop = fromTextController.text;
     toStop = toTextController.text;
 
     var dbHelper = DBHelper();
     int i = await dbHelper.saveRoute({
-      DBHelper.busNo : MRTLineTextController.text,
-      DBHelper.fromStop: fromTextController.text,
-      DBHelper.toStop: toTextController.text,
+      DBHelper.busNo : MRTLine,
+      DBHelper.fromStop: fromStop,
+      DBHelper.toStop: toStop,
       DBHelper.fare: calculateFares(distanceTravelled().toString()),
       DBHelper.tripID: dropdownValue
     });
