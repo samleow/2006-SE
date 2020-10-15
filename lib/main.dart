@@ -37,7 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // TODO: implement initState
     super.initState();
     Timer(
-      Duration(seconds: 5),
+      Duration(seconds: 1),
           () => Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => Homepage()),

@@ -10,7 +10,6 @@ class BusServices {
   factory BusServices.fromJson(Map<String, dynamic> json) {
     return BusServices (
       serviceNo : json['ServiceNo'],
-
     );
   }
 }
