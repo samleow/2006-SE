@@ -18,6 +18,84 @@ class CallAPIServices {
   static const DataMallAPI = 'http://datamall2.mytransport.sg/ltaodataservice';
   static const accountkey = 'ms77YJ/1TlCm5H79vhT6fA=='; // for DataMall
 
+  // test ==========================================================
+
+  // List of data stored in class
+  // (might need to separate into model class)
+  List<BusFares> busFares = [];
+  List<BusRoutes> busRoutes = [];
+  List<BusServices> busServices = [];
+  List<BusStops> busStops = [];
+
+  // call API to populate list
+  // returns true if successful, else returns false
+  Future<bool> callBusFaresAPI() {
+    return http.get(GovDataAPI +
+        '7a5c22f0-71da-4c24-b419-84322b54ce17&fields=adult_card_fare_per_ride')
+        .then((data) {
+      if (data.statusCode == 200) {
+        final jsonData = json.decode(data.body);
+        final jsondatabody = jsonData['result']['records'];
+        for (var item in jsondatabody) {
+          busFares.add(BusFares.fromJson(item));
+        }
+        return true;//APIResponse<List<BusFares>>(data: BusFareData);
+      }
+      return false;//APIResponse<List<BusFares>>(error: true, errorMessage: 'An error occurred');
+    })
+        .catchError((_) => false);//APIResponse<List<BusFares>>(error: true, errorMessage: 'An error occurred, never return API data'));
+  }
+
+  Future<bool> callBusRoutesAPI() {
+    return http.get('http://datamall2.mytransport.sg/ltaodataservice/BusRoutes',
+        headers: {'AccountKey': accountkey}).then((data) {
+      if (data.statusCode == 200) {
+        final jsonData = json.decode(data.body);
+        final jsondatabody = jsonData['value'];
+        for (var item in jsondatabody) {
+          busRoutes.add(BusRoutes.fromJson(item));
+        }
+        return true;//APIResponse<List<BusRoutes>>(data: BusRoutesData);
+      }
+      return false;//APIResponse<List<BusRoutes>>(error: true, errorMessage: 'An error occurred');
+    })
+        .catchError((_) => false);//APIResponse<List<BusRoutes>>(error: true, errorMessage: 'An error occurred, never return API data'));
+  }
+
+  Future<bool> callBusServicesAPI() {
+    return http.get(
+        'http://datamall2.mytransport.sg/ltaodataservice/BusServices',
+        headers: {'AccountKey': accountkey}).then((data) {
+      if (data.statusCode == 200) {
+        final jsonData = json.decode(data.body);
+        final jsondatabody = jsonData['value'];
+        for (var item in jsondatabody) {
+          busServices.add(BusServices.fromJson(item));
+        }
+        return true;//APIResponse<List<BusServices>>(data: BusServicesData);
+      }
+      return false;//APIResponse<List<BusServices>>(error: true, errorMessage: 'An error occurred');
+    })
+        .catchError((_) => false);//APIResponse<List<BusServices>>(error: true, errorMessage: 'An error occurred, never return API data'));
+  }
+
+  Future<bool> callBusStopsAPI() {
+    return http.get('http://datamall2.mytransport.sg/ltaodataservice/BusStops',
+        headers: {'AccountKey': accountkey}).then((data) {
+      if (data.statusCode == 200) {
+        final jsonData = json.decode(data.body);
+        final jsondatabody = jsonData['value'];
+        for (var item in jsondatabody) {
+          busStops.add(BusStops.fromJson(item));
+        }
+        return true;//APIResponse<List<BusStops>>(data: BusStopsData);
+      }
+      return false;//APIResponse<List<BusStops>>(error: true, errorMessage: 'An error occurred');
+    })
+        .catchError((_) => false);//APIResponse<List<BusStops>>(error: true, errorMessage: 'An error occurred, never return API data'));
+  }
+
+  // test ==========================================================
 
   //Calling Gov Data API to retrieve Monthly Concession Data
   Future<APIResponse<List<MonthlyConcession>>> getMCList() {
