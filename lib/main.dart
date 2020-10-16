@@ -5,10 +5,14 @@ import 'package:flutter_app/services/CallAPIServices.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'dart:async';
 import 'package:flutter_app/controllers/SearchRouteController.dart';
+import 'package:flutter_app/controllers/CompareFareController.dart';
+//import 'package:flutter_app/controllers/CalculateFareController.dart';
 
 void setupLocator() {
   GetIt.instance.registerLazySingleton(() => CallAPIServices());
   GetIt.instance.registerLazySingleton(() => SearchRouteController());
+  GetIt.instance.registerLazySingleton(() => CompareFareController());
+  //GetIt.instance.registerLazySingleton(() => CalculateFareController());
 }
 
 void main() {

@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/db/dbhelper.dart';
+import 'package:get_it/get_it.dart';
+import 'package:flutter_app/controllers/CompareFareController.dart';
 
 class CompareTrips extends StatefulWidget {
   // _CompareTrips createState() => _CompareTrips();
@@ -10,6 +12,7 @@ class CompareTrips extends StatefulWidget {
 }
 
 class _CompareTripsState extends State<CompareTrips> {
+  CompareFareController get _compareFareController => GetIt.I<CompareFareController>();
 
   final GlobalKey<AnimatedListState> _listKey = GlobalKey();
   final List<int> numCompare = [1, 2]; //<-- hardcode the number of compare boxes
@@ -285,7 +288,7 @@ class _CompareTripsState extends State<CompareTrips> {
                   content: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      Text(comparePrice(selectedPrice[0], selectedPrice[1],
+                      Text(_compareFareController.comparePrice(selectedPrice[0], selectedPrice[1],
                           _currentDaySelected, _currentTripSelected)),
                     ],
                   ),
@@ -321,28 +324,6 @@ class _CompareTripsState extends State<CompareTrips> {
     return index;
   }
 
-  // compare Price
-  String comparePrice(double fprice, double sprice, int numDay, int numTrips) {
-    if(fprice == 0){
-      return "First trip is empty";
-    }
-    if(sprice == 0){
-      return "Second trip is empty";
-    }
-    if (fprice < sprice) {
-      double diffprice = sprice - fprice;
-      diffprice = diffprice * numDay * numTrips;
-      return "First Trip is cheaper, you saved \$${diffprice.toStringAsFixed(2)}";
-    }
-    if (fprice > sprice){
-      double diffprices = fprice - sprice;
-      diffprices = diffprices * numDay * numTrips;
-      return "Second Trip is cheaper, difference is \$${diffprices.toStringAsFixed(2)}";
-    }
-    else{
-      return "Both trip is the same price";
-    }
-  }
 }
 
 
