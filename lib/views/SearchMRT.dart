@@ -3,6 +3,7 @@ import 'package:flutter_app/db/dbhelper.dart';
 import 'package:flutter_app/services/CallAPIServices.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get_it/get_it.dart';
+import 'package:flutter_app/controllers/SearchRouteController.dart';
 
 class SearchMRT extends StatefulWidget {
   @override
@@ -12,6 +13,7 @@ class SearchMRT extends StatefulWidget {
 
 class _SearchMRTState extends State<SearchMRT> {
   CallAPIServices get service => GetIt.I<CallAPIServices>();
+  SearchRouteController get _searchRouteController => GetIt.I<SearchRouteController>();
 
   @override
   void initState() {
@@ -128,7 +130,8 @@ class _SearchMRTState extends State<SearchMRT> {
                         onSuggestionSelected: (suggestion) {
                           fromTextController.text = suggestion;
                           //setState() run the calculation
-                          setState((){_dist=distanceTravelled().toString();});
+                          setState((){_dist=_searchRouteController.distanceTravelledMRT(convertLineNamesToCodes(),
+                              fromTextController.text,toTextController.text).toString();});
                         },
                       ),
 
@@ -178,7 +181,8 @@ class _SearchMRTState extends State<SearchMRT> {
                         onSuggestionSelected: (suggestion) {
                           toTextController.text = suggestion;
                           //setState() run the calculation
-                          setState((){_dist=distanceTravelled().toString();});
+                          setState((){_dist=_searchRouteController.distanceTravelledMRT(convertLineNamesToCodes(),
+                              fromTextController.text,toTextController.text).toString();});
                         },
                       ),
                     /*TextFormField(
@@ -245,7 +249,7 @@ class _SearchMRTState extends State<SearchMRT> {
                           ),
                           Expanded(
                               child: Text(
-                                  '\$${calculateFares(_dist)}',
+                                  '\$${_searchRouteController.calculateFaresMRT(_dist)}',
                                   textDirection: TextDirection.ltr,
                                   textAlign: TextAlign.right,
                                   style:TextStyle(
@@ -329,8 +333,11 @@ class _SearchMRTState extends State<SearchMRT> {
 
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          if(_formKey.currentState.validate()) {
-            testObject();
+          if(_formKey.currentState.validate())
+          {
+            _searchRouteController.saveRouteToDB(convertLineNamesToCodes(),
+                fromTextController.text, toTextController.text, dropdownValue, true);
+            _showSnackBar("Data saved successfully");
           }
         },
         tooltip: 'Show me the Values',
@@ -356,65 +363,6 @@ class _SearchMRTState extends State<SearchMRT> {
     } else {
       return "DT";
     }
-  }
-
-  double distanceTravelled() {
-    MRTLine = convertLineNamesToCodes();
-    fromStop = fromTextController.text;
-    toStop = toTextController.text;
-
-    //Check for nulls
-    if (MRTLine == '' || fromStop == '' || toStop == '') {
-      return 0;
-    }
-    String fromDistance = "-1";
-    String toDistance = "-1";
-    bool checkFromDistance = false;
-    bool checkToDistance = false;
-
-    //Get the distance travelled based on the user input
-    for (int i = 0; i < service.mrtRoutes.length; i++) {
-        if (service.mrtRoutes[i].StationCode == MRTLine &&
-            service.mrtRoutes[i].MRTStation == fromStop) {
-          checkFromDistance = true;
-          fromDistance = service.mrtRoutes[i].Distance.toString();
-        }
-        if (service.mrtRoutes[i].StationCode == MRTLine &&
-            service.mrtRoutes[i].MRTStation == toStop) {
-          checkToDistance = true;
-          toDistance = service.mrtRoutes[i].Distance.toString();
-        }
-      //Once got both distance, for loop break
-      if(checkFromDistance&&checkToDistance){
-        break;
-      }
-    }
-    // to check if from or to distance is not found
-    if(double.parse(fromDistance) == -1 || double.parse(toDistance) == -1 ) return 0;
-
-    //Get the distance travelled between the two location
-    double distance = double.parse(toDistance) - double.parse(fromDistance);
-    if(distance < 0){
-      distance*=-1;
-    }
-    return distance;
-  }
-
-  double calculateFares(String distanceTravelled) {
-    if (distanceTravelled == '0.0'){
-      return 0;
-    }
-    // loops through the busFare list to get the distance range
-    int j=0;
-    for (int i = 0; i < service.mrtFares.length; i++)
-    {
-      if(double.parse(distanceTravelled) <= i+3.2)
-      {
-        j=i;
-        break;
-      }
-    }
-    return double.parse(service.mrtFares[j].MRTFarePrice)/100;
   }
 
   Future<List> getBoardingSuggestions(String boardingLocation, String mrtline) async
@@ -446,24 +394,6 @@ class _SearchMRTState extends State<SearchMRT> {
       matches.clear();
     }
     return matches;
-  }
-
-
-  void testObject() async{
-    MRTLine = _currentSelectedValue;
-    fromStop = fromTextController.text;
-    toStop = toTextController.text;
-
-    var dbHelper = DBHelper();
-    int i = await dbHelper.saveRoute({
-      DBHelper.busNo : MRTLine,
-      DBHelper.fromStop: fromStop,
-      DBHelper.toStop: toStop,
-      DBHelper.fare: calculateFares(distanceTravelled().toString()),
-      DBHelper.tripID: dropdownValue
-    });
-
-    _showSnackBar("Data saved successfully");
   }
 
   Future<List<dynamic>> getAllTripsID() async {

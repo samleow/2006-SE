@@ -8,7 +8,7 @@ class SearchRouteController
   CallAPIServices get service => GetIt.I<CallAPIServices>();
 
   //Get the distance travelled
-  double distanceTravelled(String busNo, String fromStop, String toStop) {
+  double distanceTravelledBus(String busNo, String fromStop, String toStop) {
 
     //Check for nulls
     if (busNo == '' || fromStop == '' || toStop == '') {
@@ -49,7 +49,7 @@ class SearchRouteController
   }
 
   //Find the bus fare prices based on the distance travelled
-  double calculateFares(String distanceTravelled) {
+  double calculateFaresBus(String distanceTravelled) {
 
     if (distanceTravelled == '0.0'){
       return 0;
@@ -68,9 +68,67 @@ class SearchRouteController
     return double.parse(service.busFares[j].BusFarePrice)/100;
   }
 
+  double distanceTravelledMRT(String MRTLine, String fromStop, String toStop) {
+    //MRTLine = convertLineNamesToCodes();
+    //fromStop = fromTextController.text;
+    //toStop = toTextController.text;
+
+    //Check for nulls
+    if (MRTLine == '' || fromStop == '' || toStop == '') {
+      return 0;
+    }
+    String fromDistance = "-1";
+    String toDistance = "-1";
+    bool checkFromDistance = false;
+    bool checkToDistance = false;
+
+    //Get the distance travelled based on the user input
+    for (int i = 0; i < service.mrtRoutes.length; i++) {
+      if (service.mrtRoutes[i].StationCode == MRTLine &&
+          service.mrtRoutes[i].MRTStation == fromStop) {
+        checkFromDistance = true;
+        fromDistance = service.mrtRoutes[i].Distance.toString();
+      }
+      if (service.mrtRoutes[i].StationCode == MRTLine &&
+          service.mrtRoutes[i].MRTStation == toStop) {
+        checkToDistance = true;
+        toDistance = service.mrtRoutes[i].Distance.toString();
+      }
+      //Once got both distance, for loop break
+      if(checkFromDistance&&checkToDistance){
+        break;
+      }
+    }
+    // to check if from or to distance is not found
+    if(double.parse(fromDistance) == -1 || double.parse(toDistance) == -1 ) return 0;
+
+    //Get the distance travelled between the two location
+    double distance = double.parse(toDistance) - double.parse(fromDistance);
+    if(distance < 0){
+      distance*=-1;
+    }
+    return distance;
+  }
+
+  double calculateFaresMRT(String distanceTravelled) {
+    if (distanceTravelled == '0.0'){
+      return 0;
+    }
+    // loops through the busFare list to get the distance range
+    int j=0;
+    for (int i = 0; i < service.mrtFares.length; i++)
+    {
+      if(double.parse(distanceTravelled) <= i+3.2)
+      {
+        j=i;
+        break;
+      }
+    }
+    return double.parse(service.mrtFares[j].MRTFarePrice)/100;
+  }
 
   // save route to database
-  void saveRouteToDB(String busNo, String fromStop, String toStop, int dropdownValue) async{
+  void saveRouteToDB(String busNo, String fromStop, String toStop, int dropdownValue, bool isMRT) async{
     // int i = await DatabaseHelper.instance.insert({
     //   DatabaseHelper.busNo : busNoController.text,
     //   DatabaseHelper.fromStop: fromTextController.text,
@@ -85,6 +143,9 @@ class SearchRouteController
     //fare = '5';
     //tripID = '1';
 
+    double _fare = isMRT ? calculateFaresMRT(distanceTravelledMRT(busNo, fromStop, toStop).toString()) :
+      calculateFaresBus(distanceTravelledBus(busNo, fromStop, toStop).toString());
+
     //var route = Routes(1,busNo,fromStop,toStop,5,1);
     var dbHelper = DBHelper();
     int i = await dbHelper.saveRoute({
@@ -92,7 +153,7 @@ class SearchRouteController
       DBHelper.fromStop: fromStop,
       DBHelper.toStop: toStop,
       //Edited into not hard-coded anymore
-      DBHelper.fare: calculateFares(distanceTravelled(busNo, fromStop, toStop).toString()), //hard-coded for now
+      DBHelper.fare: _fare, //hard-coded for now
       DBHelper.tripID: dropdownValue //hard-coded for now
     });
 

@@ -152,7 +152,7 @@ class _SearchBusState extends State<SearchBus> {
                     fromTextController.text = getBusStopCode(suggestion);
 
                     //setState() run the calculation
-                    setState((){_dist=_searchRouteController.distanceTravelled(busNoController.text
+                    setState((){_dist=_searchRouteController.distanceTravelledBus(busNoController.text
                         , fromTextController.text, toTextController.text).toStringAsFixed(2);});
                   },
 
@@ -207,7 +207,7 @@ class _SearchBusState extends State<SearchBus> {
                     toDisplayTextController.text = suggestion;
                     toTextController.text = getBusStopCode(suggestion);
                     //setState() run the calculation
-                    setState((){_dist=_searchRouteController.distanceTravelled(busNoController.text
+                    setState((){_dist=_searchRouteController.distanceTravelledBus(busNoController.text
                         , fromTextController.text, toTextController.text).toStringAsFixed(2);});
 
                   },
@@ -273,7 +273,7 @@ class _SearchBusState extends State<SearchBus> {
                       ),
                       Expanded(
                           child: Text(
-                              '\$${_searchRouteController.calculateFares(_dist)}',
+                              '\$${_searchRouteController.calculateFaresBus(_dist)}',
                               textDirection: TextDirection.ltr,
                               textAlign: TextAlign.right,
                               style:TextStyle(
@@ -380,7 +380,7 @@ class _SearchBusState extends State<SearchBus> {
           if(_formKey.currentState.validate())
             {
               _searchRouteController.saveRouteToDB(busNoController.text,
-                  fromTextController.text, toTextController.text, dropdownValue);
+                  fromTextController.text, toTextController.text, dropdownValue, false);
               _showSnackBar("Data saved successfully");
             }
 
