@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/db/dbhelper.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter_app/services/CallAPIServices.dart';
+import 'package:flutter_app/controllers/CalculateFareController.dart';
 
 class ConcessionPage extends StatefulWidget {
   _ComparePageState createState() => _ComparePageState();
@@ -10,14 +11,39 @@ class ConcessionPage extends StatefulWidget {
 
 class _ComparePageState extends State<ConcessionPage> {
   CallAPIServices get service => GetIt.I<CallAPIServices>();
+  CalculateFareController get _calculateFareController => GetIt.I<CalculateFareController>();
 
-  final List<String> tripsList = ["one", "two"];
+  int tripListLength = -1;
   final GlobalKey<AnimatedListState> _listKey = GlobalKey();
   double totalFares;
 
+  static bool _isLoading = true;
+
   @override
   void initState() {
+    getTripListLength();
     super.initState();
+  }
+
+  getTripListLength() async {
+    setState(() {
+      _isLoading = true;
+    });
+    var dbHelper = DBHelper();
+    List<Map> list = await dbHelper.getAllTripsID();
+    tripListLength = list.length;
+    for(int i=0; i<tripListLength; i++)
+    {
+      _currentDaySelected.add(1);
+      _currentTripSelected.add(1);
+      _price.add(0.0);
+      _checkbox.add(false);
+    }
+    print(_currentDaySelected.length);
+    print(_currentTripSelected.length);
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   Future<double> fetchRoutesByTripIdFromDatabase(int id) async {
@@ -32,16 +58,15 @@ class _ComparePageState extends State<ConcessionPage> {
   // int _currentDaySelected = 1,
   //     _currentTripSelected = 1;
 
-  List<int> _currentDaySelected =[1,1]; // <-- the number of list must be followed by the number of trips
-  List<int> _currentTripSelected =[1,1]; // <-- the number of list must be followed by the number of trips
-  List<double> _price = [0,0]; // <-- the number of list must be followed by the number of trips
-  List<bool> _checkbox = [false, false];
+  List<int> _currentDaySelected =[]; // <-- the number of list must be followed by the number of trips
+  List<int> _currentTripSelected =[]; // <-- the number of list must be followed by the number of trips
+  List<double> _price = []; // <-- the number of list must be followed by the number of trips
+  List<bool> _checkbox = [];
   //double price = 2.10;
   double totalPrice = 0;
 
   String _currentCardholder = "Primary Student";
   //int _cardholderIndex = 0;
-
 
   // Widget buildlist(BuildContext context, int index) {
   //
@@ -142,46 +167,8 @@ class _ComparePageState extends State<ConcessionPage> {
   //   totalPrice = price * numDay * numTrip;
   //   return totalPrice.toStringAsFixed(2);
   // }
-  String calculatedTotalPrice(List<double> price, List<int> numDay, List<int> numTrip) {
-    double temp = 0;
-    totalPrice = 0;
-    for (int i = 0; i< tripsList.length; i++)
-      {
-        temp = price[i] * numDay[i] * numTrip[i];
-        //print(temp);
-        totalPrice += temp;
-        //print(totalPrice);
-      }
-    return totalPrice.toStringAsFixed(2);
-  }
-
-  // method to get the selected concession hybridPrice
-  String getConcessionPrice(String cardholder) {
-    String price = "";
-    for (int i = 0; i < service.mcList.length; i++) {
-      if (cardholder == service.mcList[i].cardholders) {
-        price = service.mcList[i]
-            .hybridPrice; // change hybridPrice to get other price list in the api
-        break;
-      }
-    }
-    return price;
-  }
-
-  // compare Price
-  String comparePrice(String concessionPrice, double totalPrice) {
-    double dConcessionPrice = double.parse(concessionPrice);
-    if (totalPrice < dConcessionPrice) {
-      return "Your current Trip is cheaper.";
-    }
-    else {
-      double differentPrice = totalPrice - dConcessionPrice;
-      return "You can save \$${differentPrice.toStringAsFixed(2)}";
-    }
-  }
 
   Widget buildTripCard(BuildContext context, int index) {
-    final trip = tripsList[index];
     return new Container(
       child: Card(
         child: Padding(
@@ -234,13 +221,10 @@ class _ComparePageState extends State<ConcessionPage> {
                                         ).toList(),
                                         onChanged: (int newValue) {
                                           setState(() {
-                                            //this._currentDaySelected = newValue;
                                             _currentDaySelected[index] = newValue;
                                           });
                                         },
 
-
-                                        //value: _currentDaySelected,
                                         value: _currentDaySelected[index],
 
                                       ),
@@ -258,15 +242,10 @@ class _ComparePageState extends State<ConcessionPage> {
                                         ).toList(),
                                         onChanged: (int newValue) {
                                           setState(() {
-                                            //this._currentTripSelected = newValue;
-
                                             _currentTripSelected[index] = newValue;
                                           });
                                         },
-
-                                        //value: _currentTripSelected,
                                         value: _currentTripSelected[index],
-
                                       ),
                                     ]
                                 )
@@ -304,10 +283,13 @@ class _ComparePageState extends State<ConcessionPage> {
 
   @override
   Widget build(BuildContext context) {
+    if(_isLoading) {
+      return Center(child: CircularProgressIndicator());
+    }
     return Scaffold (
       appBar: new AppBar(
-        title: new Text('Total Price: \$ ${calculatedTotalPrice(
-            _price, _currentDaySelected, _currentTripSelected)}'),
+        title: new Text('Total Price: \$ ${_calculateFareController.calculatedTotalPrice(
+            _price, _currentDaySelected, _currentTripSelected, tripListLength)}'),
       ),
       body: Builder(
         builder: (_) {
@@ -321,7 +303,7 @@ class _ComparePageState extends State<ConcessionPage> {
                       height: 300,
                       child: AnimatedList(
                         key: _listKey,
-                        initialItemCount: tripsList.length,
+                        initialItemCount: tripListLength,
                         itemBuilder: (context, index, animation) {
                           return buildTripCard(context, index);
                         },
@@ -363,12 +345,14 @@ class _ComparePageState extends State<ConcessionPage> {
                   content: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      Text('Total Fares:\$ ${totalPrice.toStringAsFixed(2)}'),
-                      Text('${_currentCardholder}: \$ ${getConcessionPrice(
+                      Text('Total Fares:\$ ${_calculateFareController.calculatedTotalPrice(
+                          _price, _currentDaySelected, _currentTripSelected, tripListLength)}'),
+                      Text('${_currentCardholder}: \$ ${_calculateFareController.getConcessionPrice(
                           _currentCardholder)}'),
-                      Text(comparePrice(
-                          getConcessionPrice(_currentCardholder),
-                          totalPrice)),
+                      Text(_calculateFareController.comparePrice(
+                          _calculateFareController.getConcessionPrice(_currentCardholder),
+                          double.parse(_calculateFareController.calculatedTotalPrice(
+                              _price, _currentDaySelected, _currentTripSelected, tripListLength)))),
                     ],
                   ),
                 );
