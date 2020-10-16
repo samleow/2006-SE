@@ -11,9 +11,6 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   int _currentIndex = 0;
   final List<Widget> _children = [
-    // PlaceholderWidget(Colors.white),
-    // PlaceholderWidget(Colors.deepOrange),
-    // PlaceholderWidget(Colors.green)
     SearchPage(),
     TripsPage(),
     ComparePage(),

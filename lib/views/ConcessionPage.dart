@@ -14,8 +14,6 @@ class ConcessionPage extends StatefulWidget {
 
 class _ComparePageState extends State<ConcessionPage> {
   CallAPIServices get service => GetIt.I<CallAPIServices>();
-  APIResponse<List<MonthlyConcession>> _apiResponse;
-  bool _isLoading = false;
 
   final List<String> tripsList = ["one", "two"];
   final GlobalKey<AnimatedListState> _listKey = GlobalKey();
@@ -23,20 +21,7 @@ class _ComparePageState extends State<ConcessionPage> {
 
   @override
   void initState() {
-    _fetchNotes();
     super.initState();
-  }
-
-  _fetchNotes() async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    _apiResponse = await service.getMCList();
-
-    setState(() {
-      _isLoading = false;
-    });
   }
 
   Future<double> fetchRoutesByTripIdFromDatabase(int id) async {
@@ -175,12 +160,11 @@ class _ComparePageState extends State<ConcessionPage> {
   }
 
   // method to get the selected concession hybridPrice
-  String getConcessionPrice(String cardholder,
-      APIResponse<List<MonthlyConcession>> apiList) {
+  String getConcessionPrice(String cardholder) {
     String price = "";
-    for (int i = 0; i < apiList.data.length; i++) {
-      if (cardholder == apiList.data[i].cardholders) {
-        price = apiList.data[i]
+    for (int i = 0; i < service.mcList.length; i++) {
+      if (cardholder == service.mcList[i].cardholders) {
+        price = service.mcList[i]
             .hybridPrice; // change hybridPrice to get other price list in the api
         break;
       }
@@ -331,13 +315,6 @@ class _ComparePageState extends State<ConcessionPage> {
       ),
       body: Builder(
         builder: (_) {
-          if (_isLoading) {
-            return Center(child: CircularProgressIndicator());
-          }
-          if (_apiResponse.error) {
-            return Center(child: Text(_apiResponse.errorMessage));
-          }
-
           return new Container(
             margin: EdgeInsets.all(24),
             child: Form(
@@ -357,7 +334,7 @@ class _ComparePageState extends State<ConcessionPage> {
                     SizedBox(height: 20.0,),
                     DropdownButton<String>(
                       // get api data to display on drop down list
-                      items: _apiResponse.data.map((item) {
+                      items: service.mcList.map((item) {
                         return DropdownMenuItem<String>(
                           child: Text(item.cardholders,
                               style: TextStyle(color: Colors.blue)),
@@ -385,12 +362,6 @@ class _ComparePageState extends State<ConcessionPage> {
           return showDialog(
               context: context,
               builder: (context) {
-                if (_isLoading) {
-                  return Center(child: CircularProgressIndicator());
-                }
-                if (_apiResponse.error) {
-                  return Center(child: Text(_apiResponse.errorMessage));
-                }
                 return AlertDialog(
                   title: Text("Message"),
                   content: Column(
@@ -398,9 +369,9 @@ class _ComparePageState extends State<ConcessionPage> {
                     children: <Widget>[
                       Text('Total Fares:\$ ${totalPrice.toStringAsFixed(2)}'),
                       Text('${_currentCardholder}: \$ ${getConcessionPrice(
-                          _currentCardholder, _apiResponse)}'),
+                          _currentCardholder)}'),
                       Text(comparePrice(
-                          getConcessionPrice(_currentCardholder, _apiResponse),
+                          getConcessionPrice(_currentCardholder),
                           totalPrice)),
                     ],
                   ),

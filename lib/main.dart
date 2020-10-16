@@ -33,7 +33,6 @@ class MyHomePage extends StatefulWidget {
 }
 class _MyHomePageState extends State<MyHomePage> {
 
-  // test ==========================================================
   CallAPIServices get service => GetIt.I<CallAPIServices>();
   static bool _isLoading = true;
   static bool _loadSuccess = false;
@@ -42,10 +41,13 @@ class _MyHomePageState extends State<MyHomePage> {
       _isLoading = true;
     });
 
+    // uses a single boolean to check for fetching errors
+    // may need to change to individual booleans for each data call
     _loadSuccess = await service.callBusFaresAPI() &&
         await service.callBusRoutesAPI() &&
         await service.callBusServicesAPI() &&
-        await service.callBusStopsAPI();
+        await service.callBusStopsAPI() &&
+        await service.callMCListAPI();
 
     setState(() {
       _isLoading = false;
@@ -60,32 +62,13 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
   }
 
-  // test ==========================================================
-
-/*  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    Timer(
-      Duration(seconds: 1),
-          () => Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => Homepage()),
-      ),
-    );
-  }*/
-
   @override
   Widget build(BuildContext context) {
 
-    // test ==========================================================
     if(!_isLoading) {
       if(!_loadSuccess)
         return Center(child: Text("ERROR RETRIEVING DATA FROM API: SearchBus"));
       else {
-        // will prompt an error when navigate during build
-        // affects other elements (eg. dropdownlist) on this error
-        // pushReplacement modifies _debugLocked
         Future.delayed(Duration.zero, () async {
           Navigator.pushReplacement(
             context,
@@ -94,9 +77,6 @@ class _MyHomePageState extends State<MyHomePage> {
         });
       }
     }
-
-    // test ==========================================================
-
     return Scaffold(
         body: Stack(
           fit: StackFit.expand,

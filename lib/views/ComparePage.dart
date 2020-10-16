@@ -15,30 +15,11 @@ class ComparePage extends StatefulWidget {
 }
 
 class _ComparePageState extends State<ComparePage> {
-  CallAPIServices get service => GetIt.I<CallAPIServices>();
-  APIResponse<List<BusRoutes>> _apiResponse;
-  bool _isLoading = false;
 
   @override
   void initState() {
-    _fetchNotes();
     super.initState();
   }
-
-  _fetchNotes() async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    _apiResponse = await service.getBusRoutes();
-
-    setState(() {
-      _isLoading = false;
-    });
-  }
-
-
-
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 

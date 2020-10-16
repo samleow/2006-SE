@@ -19,47 +19,11 @@ class SearchBus extends StatefulWidget {
 
 class _SearchBusState extends State<SearchBus> {
   CallAPIServices get service => GetIt.I<CallAPIServices>();
-  //APIResponse<List<BusRoutes>> _getBusRouteData;
-  //APIResponse<List<BusFares>> _getBusFares;
-  //APIResponse<List<BusServices>> _getBusServices;
-  //APIResponse<List<BusStops>> _getBusStops;
-
-/*
-  bool _isLoading = false;
-  // test
-  // very ugly implementation with double static lock
-  static bool _loadSuccess = false;
-  static bool _fetchedData = false;*/
 
   @override
   void initState() {
-    /*if(!_fetchedData) {
-      _fetchData();
-      _fetchedData = true;
-    }*/
     super.initState();
   }
-
-/*  _fetchData() async {
-    setState(() {
-      _isLoading = true;
-    });
-
-*//*    _getBusRouteData = await service.getBusRoutes();
-    _getBusFares = await service.getBusFares();
-    _getBusServices = await service.getBusServices();
-    _getBusStops = await service.getBusStops();*//*
-
-    // test
-    _loadSuccess = await service.callBusFaresAPI() &&
-        await service.callBusRoutesAPI() &&
-        await service.callBusServicesAPI() &&
-        await service.callBusStopsAPI();
-
-    setState(() {
-      _isLoading = false;
-    });
-  }*/
 
   final busNoController = TextEditingController();
   final fromTextController = TextEditingController();
@@ -95,21 +59,8 @@ class _SearchBusState extends State<SearchBus> {
   int dropdownValue = 1;
   String _dist = "0.0";
 
-
-
   @override
   Widget build(BuildContext context) {
-
-
-/*    if (_isLoading) {
-      return Center(child: CircularProgressIndicator());
-    }
-    //if (_getBusRouteData.error && _getBusFares.error) {
-    // test
-    if (!_loadSuccess && _fetchedData) {
-      return Center(child: Text("ERROR RETRIEVING DATA FROM API: SearchBus"));
-    }*/
-
 
     return Scaffold(
       key: scaffoldKey,
@@ -281,7 +232,6 @@ class _SearchBusState extends State<SearchBus> {
 
                 Padding(
                   padding: EdgeInsets.all(10.0),
-                  //child: Text('Hello World!'),
                 ),
                 Divider(
                   color: Colors.black26,
@@ -460,25 +410,6 @@ class _SearchBusState extends State<SearchBus> {
     bool checkToDistance = false;
 
     //Get the distance travelled based on the user input
-    /*for (int i = 0; i < _getBusRouteData.data.length; i++) {
-      if (_getBusRouteData.data[i].direction == 1 || _getBusRouteData.data[i].direction == 2) { // Added direction == 2
-        if (_getBusRouteData.data[i].serviceNo == busNo &&
-            _getBusRouteData.data[i].busStopCode == fromStop) {
-          checkFromDistance = true;
-          fromDistance = _getBusRouteData.data[i].distance.toString();
-        }
-        if (_getBusRouteData.data[i].serviceNo == busNo &&
-            _getBusRouteData.data[i].busStopCode == toStop) {
-          checkToDistance = true;
-          toDistance = _getBusRouteData.data[i].distance.toString();
-        }
-      }
-      //Once got both distance, for loop break
-      if(checkFromDistance&&checkToDistance){
-        break;
-      }
-    }*/
-    // test
     for (int i = 0; i < service.busRoutes.length; i++) {
       if (service.busRoutes[i].direction == 1 || service.busRoutes[i].direction == 2) { // Added direction == 2
         if (service.busRoutes[i].serviceNo == busNo &&
@@ -513,17 +444,6 @@ class _SearchBusState extends State<SearchBus> {
     }
     // loops through the busFare list to get the distance range
     int j=0;
-    /*for (int i = 0; i < _getBusFares.data.length; i++)
-    {
-      if(double.parse(distanceTravelled) <= i+3.2)
-      {
-        j=i;
-        break;
-      }
-    }
-
-    return double.parse(_getBusFares.data[j].BusFarePrice)/100;*/
-    // test
     for (int i = 0; i < service.busFares.length; i++)
     {
       if(double.parse(distanceTravelled) <= i+3.2)
@@ -584,10 +504,7 @@ class _SearchBusState extends State<SearchBus> {
   // Get Bus Numbers
   Future<List> getBusServicesSuggestions(String searchInput) async
   {
-    //print(searchInput);
     // get all BusServices to a List, .toSet() help to remove duplicates in a list
-    //Set<String> busServicesList = _getBusServices.data.map((e) => e.serviceNo).toSet();
-    // test
     Set<String> busServicesList = service.busServices.map((e) => e.serviceNo).toSet();
 
     // contract the List to match the searchInput
@@ -609,8 +526,6 @@ class _SearchBusState extends State<SearchBus> {
   {
 
     //Filter the correct list according to the bus number
-    //Set<String> filterbusStopList = _getBusRouteData.data.map((e) // inside here is actually a loop
-    // test
     Set<String> filterbusStopList = service.busRoutes.map((e) // inside here is actually a loop
     {
       if(e.serviceNo == busNo)
@@ -624,8 +539,6 @@ class _SearchBusState extends State<SearchBus> {
     }).toSet();
 
     // Filter the description
-    //Set<String> busStopDescList = _getBusStops.data.map((e)
-    // test
     Set<String> busStopDescList = service.busStops.map((e)
     {
       for(int i = 0; i< filterbusStopList.length; i++)
@@ -659,13 +572,9 @@ class _SearchBusState extends State<SearchBus> {
   // Get Bus Stop Code
   String getBusStopCode(String busStopDescription)
   {
-    //print(busStopDescription);
-    //int lengthOfBusStop = _getBusStops.data.length;
+    int lengthOfBusStop = service.busStops.length;
     //Filter the correct list according to the bus number
     // The Set will have lots of null and "" but with 1 correct value
-    //Set<String> filterbusStopCode = _getBusStops.data.map((e) // inside here is actually a loop
-    // test
-    int lengthOfBusStop = service.busStops.length;
     Set<String> filterbusStopCode = service.busStops.map((e) // inside here is actually a loop
     {
       for(int i = 0; i<lengthOfBusStop; i++) {
@@ -685,7 +594,6 @@ class _SearchBusState extends State<SearchBus> {
     // to capture the only list value to a string ------- .toString() will not work becos it display {}
     String busStopCode = filterbusStopCode.reduce((value, element) => element);
 
-    //print(busStopCode);
     return busStopCode;
     
   }
