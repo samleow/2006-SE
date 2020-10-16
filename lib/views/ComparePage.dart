@@ -1,13 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/models/BusRoutes.dart';
-import 'package:flutter_app/models/api_response.dart';
 import 'package:flutter_app/views/CompareTrips.dart';
 import 'package:flutter_app/views/ConcessionPage.dart';
-import 'package:get_it/get_it.dart';
-import 'package:flutter_app/services/CallAPIServices.dart';
-
 import 'ConcessionPage.dart';
-// import 'package:flutter_app/views/CompareTrips.dart';
 
 
 class ComparePage extends StatefulWidget {

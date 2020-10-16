@@ -1,13 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app/db/database_helper.dart';
 import 'package:flutter_app/db/dbhelper.dart';
-import 'package:flutter_app/models/BusFares.dart';
-import 'package:flutter_app/models/BusRoutes.dart';
-import 'package:flutter_app/models/BusServices.dart';
-import 'package:flutter_app/models/BusStops.dart';
-import 'package:flutter_app/models/Route.dart';
-import 'package:flutter_app/models/api_response.dart';
 import 'package:flutter_app/services/CallAPIServices.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';

@@ -47,7 +47,9 @@ class _MyHomePageState extends State<MyHomePage> {
         await service.callBusRoutesAPI() &&
         await service.callBusServicesAPI() &&
         await service.callBusStopsAPI() &&
-        await service.callMCListAPI();
+        await service.callMCListAPI() &&
+        await service.callMRTFaresAPI() &&
+        await service.retrieveMRTRoutes();
 
     setState(() {
       _isLoading = false;

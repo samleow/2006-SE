@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/db/dbhelper.dart';
-import 'package:flutter_app/models/MRTFares.dart';
-import 'package:flutter_app/models/MRTRoute.dart';
-import 'package:flutter_app/models/api_response.dart';
 import 'package:flutter_app/services/CallAPIServices.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get_it/get_it.dart';
@@ -15,29 +12,10 @@ class SearchMRT extends StatefulWidget {
 
 class _SearchMRTState extends State<SearchMRT> {
   CallAPIServices get service => GetIt.I<CallAPIServices>();
-  APIResponse<List<MRTFares>> _getMRTFares;
-  List<MRTRoute> _getMRTDataset;
-
-  bool _isLoading = false;
 
   @override
   void initState() {
-    _fetchData();
     super.initState();
-  }
-
-  _fetchData() async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    _getMRTDataset = await service.getMRTData();
-    _getMRTFares= await service.getMRTFares();
-
-
-    setState(() {
-      _isLoading = false;
-    });
   }
 
   final MRTLineTextController = TextEditingController();
@@ -72,12 +50,6 @@ class _SearchMRTState extends State<SearchMRT> {
 
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
-      return Center(child: CircularProgressIndicator());
-    }
-    if ( _getMRTFares.error) {
-      return Center(child: Text(_getMRTFares.errorMessage));
-    }
     return Scaffold(
       key: scaffoldKey,
       body: Form(
@@ -401,16 +373,16 @@ class _SearchMRTState extends State<SearchMRT> {
     bool checkToDistance = false;
 
     //Get the distance travelled based on the user input
-    for (int i = 0; i < _getMRTDataset.length; i++) {
-        if (_getMRTDataset[i].StationCode == MRTLine &&
-            _getMRTDataset[i].MRTStation == fromStop) {
+    for (int i = 0; i < service.mrtRoutes.length; i++) {
+        if (service.mrtRoutes[i].StationCode == MRTLine &&
+            service.mrtRoutes[i].MRTStation == fromStop) {
           checkFromDistance = true;
-          fromDistance = _getMRTDataset[i].Distance.toString();
+          fromDistance = service.mrtRoutes[i].Distance.toString();
         }
-        if (_getMRTDataset[i].StationCode == MRTLine &&
-            _getMRTDataset[i].MRTStation == toStop) {
+        if (service.mrtRoutes[i].StationCode == MRTLine &&
+            service.mrtRoutes[i].MRTStation == toStop) {
           checkToDistance = true;
-          toDistance = _getMRTDataset[i].Distance.toString();
+          toDistance = service.mrtRoutes[i].Distance.toString();
         }
       //Once got both distance, for loop break
       if(checkFromDistance&&checkToDistance){
@@ -434,7 +406,7 @@ class _SearchMRTState extends State<SearchMRT> {
     }
     // loops through the busFare list to get the distance range
     int j=0;
-    for (int i = 0; i < _getMRTFares.data.length; i++)
+    for (int i = 0; i < service.mrtFares.length; i++)
     {
       if(double.parse(distanceTravelled) <= i+3.2)
       {
@@ -442,14 +414,14 @@ class _SearchMRTState extends State<SearchMRT> {
         break;
       }
     }
-    return double.parse(_getMRTFares.data[j].MRTFarePrice)/100;
+    return double.parse(service.mrtFares[j].MRTFarePrice)/100;
   }
 
   Future<List> getBoardingSuggestions(String boardingLocation, String mrtline) async
   {
     //Filter the correct list according to the bus number
     mrtline = convertLineNamesToCodes();
-    Set<String> filterMRTStationList = _getMRTDataset.map((e) // inside here is actually a loop
+    Set<String> filterMRTStationList = service.mrtRoutes.map((e) // inside here is actually a loop
     {
       if(e.StationCode == mrtline)
       {
