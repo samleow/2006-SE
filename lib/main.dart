@@ -4,9 +4,11 @@ import 'package:get_it/get_it.dart';
 import 'package:flutter_app/services/CallAPIServices.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'dart:async';
+import 'package:flutter_app/controllers/SearchRouteController.dart';
 
 void setupLocator() {
   GetIt.instance.registerLazySingleton(() => CallAPIServices());
+  GetIt.instance.registerLazySingleton(() => SearchRouteController());
 }
 
 void main() {

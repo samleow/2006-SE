@@ -4,6 +4,7 @@ import 'package:flutter_app/db/dbhelper.dart';
 import 'package:flutter_app/services/CallAPIServices.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:flutter_app/controllers/SearchRouteController.dart';
 
 class SearchBus extends StatefulWidget {
   @override
@@ -12,6 +13,7 @@ class SearchBus extends StatefulWidget {
 
 class _SearchBusState extends State<SearchBus> {
   CallAPIServices get service => GetIt.I<CallAPIServices>();
+  SearchRouteController get _searchRouteController => GetIt.I<SearchRouteController>();
 
   @override
   void initState() {
@@ -150,7 +152,8 @@ class _SearchBusState extends State<SearchBus> {
                     fromTextController.text = getBusStopCode(suggestion);
 
                     //setState() run the calculation
-                    setState((){_dist=distanceTravelled().toStringAsFixed(2);});
+                    setState((){_dist=_searchRouteController.distanceTravelled(busNoController.text
+                        , fromTextController.text, toTextController.text).toStringAsFixed(2);});
                   },
 
                   //onSaved: (v)=>setState((){_dist=distanceTravelled().toString();}),
@@ -204,7 +207,8 @@ class _SearchBusState extends State<SearchBus> {
                     toDisplayTextController.text = suggestion;
                     toTextController.text = getBusStopCode(suggestion);
                     //setState() run the calculation
-                    setState((){_dist=distanceTravelled().toStringAsFixed(2);});
+                    setState((){_dist=_searchRouteController.distanceTravelled(busNoController.text
+                        , fromTextController.text, toTextController.text).toStringAsFixed(2);});
 
                   },
 
@@ -269,7 +273,7 @@ class _SearchBusState extends State<SearchBus> {
                       ),
                       Expanded(
                           child: Text(
-                              '\$${calculateFares(_dist)}',
+                              '\$${_searchRouteController.calculateFares(_dist)}',
                               textDirection: TextDirection.ltr,
                               textAlign: TextAlign.right,
                               style:TextStyle(
@@ -375,7 +379,9 @@ class _SearchBusState extends State<SearchBus> {
           // if all typeahead text field is not empty
           if(_formKey.currentState.validate())
             {
-              testObject();
+              _searchRouteController.saveRouteToDB(busNoController.text,
+                  fromTextController.text, toTextController.text, dropdownValue);
+              _showSnackBar("Data saved successfully");
             }
 
         },
@@ -385,103 +391,7 @@ class _SearchBusState extends State<SearchBus> {
     );
   }
 
-  //Get the distance travelled
-  double distanceTravelled() {
-    busNo = busNoController.text;
-    fromStop = fromTextController.text;
-    toStop = toTextController.text;
-
-    //Check for nulls
-    if (busNo == '' || fromStop == '' || toStop == '') {
-      //print(0);
-      return 0;
-    }
-
-    String fromDistance = "-1";
-    String toDistance = "-1";
-    bool checkFromDistance = false;
-    bool checkToDistance = false;
-
-    //Get the distance travelled based on the user input
-    for (int i = 0; i < service.busRoutes.length; i++) {
-      if (service.busRoutes[i].direction == 1 || service.busRoutes[i].direction == 2) { // Added direction == 2
-        if (service.busRoutes[i].serviceNo == busNo &&
-            service.busRoutes[i].busStopCode == fromStop) {
-          checkFromDistance = true;
-          fromDistance = service.busRoutes[i].distance.toString();
-        }
-        if (service.busRoutes[i].serviceNo == busNo &&
-            service.busRoutes[i].busStopCode == toStop) {
-          checkToDistance = true;
-          toDistance = service.busRoutes[i].distance.toString();
-        }
-      }
-      //Once got both distance, for loop break
-      if(checkFromDistance&&checkToDistance){
-        break;
-      }
-    }
-
-    // to check if from or to distance is not found
-    if(double.parse(fromDistance) == -1 || double.parse(toDistance) == -1 ) return 0;
-
-    //Get the distance travelled between the two location
-    return double.parse(toDistance) - double.parse(fromDistance);
-  }
-
-  //Find the bus fare prices based on the distance travelled
-  double calculateFares(String distanceTravelled) {
-    
-    if (distanceTravelled == '0.0'){
-      return 0;
-    }
-    // loops through the busFare list to get the distance range
-    int j=0;
-    for (int i = 0; i < service.busFares.length; i++)
-    {
-      if(double.parse(distanceTravelled) <= i+3.2)
-      {
-        j=i;
-        break;
-      }
-    }
-
-    return double.parse(service.busFares[j].BusFarePrice)/100;
-  }
-
-  void testObject() async{
-    // int i = await DatabaseHelper.instance.insert({
-    //   DatabaseHelper.busNo : busNoController.text,
-    //   DatabaseHelper.fromStop: fromTextController.text,
-    //   DatabaseHelper.toStop: toTextController.text,
-    //   DatabaseHelper.fare: 5.0, //hard-coded for now
-    //   DatabaseHelper.tripID: 1 //hard-coded for now
-    // });
-    // print('the inserted id is $i');
-    //
-    // List<Map<String,dynamic>> queryRows = await DatabaseHelper.instance.queryAll();
-    // print(queryRows);
-    busNo = busNoController.text;
-    fromStop = fromTextController.text;
-    toStop = toTextController.text;
-    //fare = '5';
-    //tripID = '1';
-
-    //var route = Routes(1,busNo,fromStop,toStop,5,1);
-    var dbHelper = DBHelper();
-    int i = await dbHelper.saveRoute({
-      DBHelper.busNo : busNoController.text,
-      DBHelper.fromStop: fromTextController.text,
-      DBHelper.toStop: toTextController.text,
-      //Edited into not hard-coded anymore
-      DBHelper.fare: calculateFares(distanceTravelled().toString()), //hard-coded for now
-      DBHelper.tripID: dropdownValue //hard-coded for now
-    });
-
-    _showSnackBar("Data saved successfully");
-    //var route = Routes(i,busNo,fromStop,toStop,fare,dropdownValue);
-  }
-
+  // get trips id for drop down list
   Future<List<dynamic>> getAllTripsID() async {
     var dbHelper = DBHelper();
     List<Map> list = await dbHelper.getAllTripsID();
