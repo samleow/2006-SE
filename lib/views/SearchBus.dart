@@ -24,30 +24,31 @@ class _SearchBusState extends State<SearchBus> {
   //APIResponse<List<BusServices>> _getBusServices;
   //APIResponse<List<BusStops>> _getBusStops;
 
+/*
   bool _isLoading = false;
   // test
   // very ugly implementation with double static lock
   static bool _loadSuccess = false;
-  static bool _fetchedData = false;
+  static bool _fetchedData = false;*/
 
   @override
   void initState() {
-    if(!_fetchedData) {
+    /*if(!_fetchedData) {
       _fetchData();
       _fetchedData = true;
-    }
+    }*/
     super.initState();
   }
 
-  _fetchData() async {
+/*  _fetchData() async {
     setState(() {
       _isLoading = true;
     });
 
-/*    _getBusRouteData = await service.getBusRoutes();
+*//*    _getBusRouteData = await service.getBusRoutes();
     _getBusFares = await service.getBusFares();
     _getBusServices = await service.getBusServices();
-    _getBusStops = await service.getBusStops();*/
+    _getBusStops = await service.getBusStops();*//*
 
     // test
     _loadSuccess = await service.callBusFaresAPI() &&
@@ -58,7 +59,7 @@ class _SearchBusState extends State<SearchBus> {
     setState(() {
       _isLoading = false;
     });
-  }
+  }*/
 
   final busNoController = TextEditingController();
   final fromTextController = TextEditingController();
@@ -98,14 +99,18 @@ class _SearchBusState extends State<SearchBus> {
 
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
+
+
+/*    if (_isLoading) {
       return Center(child: CircularProgressIndicator());
     }
     //if (_getBusRouteData.error && _getBusFares.error) {
     // test
     if (!_loadSuccess && _fetchedData) {
       return Center(child: Text("ERROR RETRIEVING DATA FROM API: SearchBus"));
-    }
+    }*/
+
+
     return Scaffold(
       key: scaffoldKey,
       body: Form( // change Container to Form
