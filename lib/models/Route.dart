@@ -1,18 +1,20 @@
 class Routes {
   int routeID;
-  String busNo;
+  String transportID;
   String fromStop;
   String toStop;
   double fare;
   int tripID;
+  String BUSorMRT;
 
   Routes(
       this.routeID,
-      this.busNo,
+      this.transportID,
       this.fromStop,
       this.toStop,
       this.fare,
-      this.tripID
+      this.tripID,
+      this.BUSorMRT
    );
 
   // Map<String,dynamic> toMap() {
@@ -28,11 +30,12 @@ class Routes {
 
   Routes.fromMap(Map map){
     routeID = map["_routeID"];
-    busNo = map["busNo"];
+    transportID = map["transportID"];
     fromStop = map["fromStop"];
     toStop = map["toStop"];
     fare = map["fare"];
     tripID = map["tripID"];
+    BUSorMRT = map["BUSorMRT"];
   }
   //
   // Map<String,dynamic> toMap(){

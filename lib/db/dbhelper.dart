@@ -9,13 +9,14 @@ class DBHelper{
   static Database _db;
   static final _tablename = 'routeTable';
   static final routeID = '_routeID';
-  static final busNo = 'busNo';
+  static final transportID = 'transportID';
   static final fromStop = 'fromStop';
   static final toStop = 'toStop';
   static final fare = 'fare';
   static final tripID = 'tripID';
   static final _tripsTable = 'tripsTable';
   static final totalFare = 'totalFare';
+  static final BUSorMRT = 'BUSorMRT';
 
   Future<Database> get db async {
     if (_db != null) return _db;
@@ -36,11 +37,12 @@ class DBHelper{
         '''
       CREATE TABLE $_tablename(
       $routeID INTEGER PRIMARY KEY,
-      $busNo TEXT,
+      $transportID TEXT,
       $fromStop TEXT,
       $toStop TEXT,
       $fare DOUBLE,
-      $tripID INTEGER ); 
+      $tripID INTEGER,
+      $BUSorMRT TEXT ); 
       
       '''
     );
@@ -125,7 +127,7 @@ class DBHelper{
     List<Map> list = await dbClient.rawQuery(' SELECT * FROM $_tablename ');
     List<Routes> route = new List();
     for (int i = 0; i < list.length; i++) {
-      route.add(new Routes(list[i]["_routeID"], list[i]["busNo"], list[i]["fromStop"], list[i]["toStop"], list[i]["fare"],list[i]["tripID"]));
+      route.add(new Routes(list[i]["_routeID"], list[i]["transportID"], list[i]["fromStop"], list[i]["toStop"], list[i]["fare"],list[i]["tripID"],list[i]["BUSorMRT"]));
     }
     print('route length is '+ route.length.toString());
     return route;
@@ -136,7 +138,7 @@ class DBHelper{
     List<Map> list = await dbClient.rawQuery(' SELECT * FROM $_tablename WHERE $tripID LIKE "%$id%" ');
     List<Routes> route = new List();
     for (int i = 0; i < list.length; i++) {
-      route.add(new Routes(list[i]["_routeID"], list[i]["busNo"], list[i]["fromStop"], list[i]["toStop"], list[i]["fare"],list[i]["tripID"]));
+      route.add(new Routes(list[i]["_routeID"], list[i]["transportID"], list[i]["fromStop"], list[i]["toStop"], list[i]["fare"],list[i]["tripID"],list[i]["BUSorMRT"]));
     }
     print('route length is '+ route.length.toString());
     return route;

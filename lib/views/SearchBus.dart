@@ -190,7 +190,7 @@ class _SearchBusState extends State<SearchBus> {
                     // validate text field
                     if(value.isEmpty)
                     {
-                      return "Please Enter Aligthting Location";
+                      return "Please Enter Alighting Location";
                     }
                     return null;
                   },
@@ -333,11 +333,11 @@ class _SearchBusState extends State<SearchBus> {
                           if (snapshot.hasData) {
                             return DropdownButton<dynamic>(
                               value: dropdownValue,
-                              //elevation: 12,
-                              //   underline: Container(
-                              //     height: 2,
-                              //     color: Colors.deepPurpleAccent,
-                              //   ),
+                              elevation: 12,
+                                underline: Container(
+                                  height: 2,
+                                  color: Colors.deepPurpleAccent,
+                                ),
                               onChanged: (newValue) {
                                 setState(() {
                                   dropdownValue = newValue;
