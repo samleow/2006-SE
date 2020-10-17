@@ -25,7 +25,7 @@ class _SearchMRTState extends State<SearchMRT> {
   final toTextController = TextEditingController();
   int dropdownValue = 1;
   String _dist = "0.0";
-  List<String> mrtstationline = ["North South Line", "East West Line", "Changi Aiport Branch Line", "North East Line", "Circle Line Extension", "Circle Line", "Downtown Line"]; //hard coded for now
+  List<String> mrtstationline = ["North South Line", "East West Line", "Changi Airport Branch Line", "North East Line", "Circle Line Extension", "Circle Line", "Downtown Line"]; //hard coded for now
   //List<String> mrtstationline = ["NS", "EW", "CG", "NE", "CC", "CE", "DT"];
   String _currentSelectedValue = "North South Line";
 
@@ -75,11 +75,20 @@ class _SearchMRTState extends State<SearchMRT> {
                           ),
                         ),
                       DropdownButton<String>(
+                        elevation: 12,
+                        underline: Container(
+                          height: 2,
+                          color: Colors.deepPurpleAccent,
+                        ),
                         // get api data to display on drop down list
                         items: mrtstationline.map((item) {
                           return DropdownMenuItem<String>(
                             child: Text(item.toString(),
-                                style: TextStyle(color: Colors.blue)),
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.deepPurple,
+                                )),
                             value: item.toString(),
                           );
                         }).toList(),
@@ -286,11 +295,11 @@ class _SearchMRTState extends State<SearchMRT> {
                         if (snapshot.hasData) {
                           return DropdownButton<dynamic>(
                             value: dropdownValue,
-                            //elevation: 12,
-                            //   underline: Container(
-                            //     height: 2,
-                            //     color: Colors.deepPurpleAccent,
-                            //   ),
+                            elevation: 12,
+                              underline: Container(
+                                height: 2,
+                                color: Colors.deepPurpleAccent,
+                              ),
                             onChanged: (newValue) {
                               setState(() {
                                 dropdownValue = newValue;
@@ -301,7 +310,7 @@ class _SearchMRTState extends State<SearchMRT> {
                               return DropdownMenuItem<dynamic>(
                                   value: value,
                                   child: SizedBox(
-                                    width: 100,
+                                    width: 50,
                                     child: Text(value.toString(),
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
@@ -352,7 +361,7 @@ class _SearchMRTState extends State<SearchMRT> {
       return "NS";
     } else if (_currentSelectedValue == "East West Line") {
       return "EW";
-    } else if (_currentSelectedValue == "Changi Aiport Branch Line") {
+    } else if (_currentSelectedValue == "Changi Airport Branch Line") {
       return "CG";
     } else if (_currentSelectedValue == "North East Line") {
       return "NE";

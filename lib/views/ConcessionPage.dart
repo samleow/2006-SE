@@ -183,7 +183,7 @@ class _ComparePageState extends State<ConcessionPage> {
                             children: <Widget>[
                               CheckboxListTile(
                               value: _checkbox[index],
-                                  title: Text("Trip " + (index+1).toString() + "  \$" +snapshot.data.toString(), //+snapshot.data.toString(),
+                                  title: Text("Trip " + (index+1).toString() + "  \$" +snapshot.data.toStringAsFixed(2), //+snapshot.data.toString(),
                                     style: TextStyle(
                                         fontSize: 20.0,
                                         color: Colors.blue),),

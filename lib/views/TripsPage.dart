@@ -26,7 +26,7 @@ class _TripsPageState extends State<TripsPage> {
       ),
       body: Container(
         //width: 280,
-        //padding: EdgeInsets.only(top: 10.0),
+        //padding: EdgeInsets.only(left: 20.0),
         child: Column(
             children: <Widget>[
               Row(
@@ -74,11 +74,11 @@ class _TripsPageState extends State<TripsPage> {
                       if (snapshot.hasData) {
                         return DropdownButton<dynamic>(
                           value: dropdownValue,
-                          //elevation: 12,
-                          //   underline: Container(
-                          //     height: 2,
-                          //     color: Colors.deepPurpleAccent,
-                          //   ),
+                          elevation: 12,
+                            underline: Container(
+                              height: 2,
+                              color: Colors.deepPurpleAccent,
+                            ),
                           onChanged: (newValue) {
                             setState(() {
                               dropdownValue = newValue;
@@ -89,7 +89,7 @@ class _TripsPageState extends State<TripsPage> {
                             return DropdownMenuItem<dynamic>(
                                 value: value,
                                 child: SizedBox(
-                                  width: 100,
+                                  width: 50,
                                   child: Text(value.toString(),
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
@@ -109,19 +109,20 @@ class _TripsPageState extends State<TripsPage> {
                   ),
                   Padding(padding: EdgeInsets.only(bottom: 100)),
                   IconButton(
-                    icon: Icon(Icons.add_circle_outline),
+                    icon: Icon(Icons.add_circle,color: Colors.blue,),
                     iconSize: 35.0,
                     onPressed: () {
                       addTripId();
                     },
                   ),
                   IconButton(
-                    icon: Icon(Icons.delete_forever),
+                    icon: Icon(Icons.delete_forever, color: Colors.red,),
                     iconSize: 35.0,
                     onPressed: () {
                       showAlertDialog(context);
                     },
                   ),
+                  Padding(padding: EdgeInsets.only(right:0)),
                 ],
               ),
         Divider(
@@ -165,20 +166,9 @@ class _TripsPageState extends State<TripsPage> {
                             child: ListTile(
                               title: Text('Route : ' + snapshot.data[index].routeID
                                   .toString()),
-                              subtitle: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Padding(padding: EdgeInsets.all(3.0),),
-                                  Text('Bus No: ' + snapshot.data[index].busNo),
-                                  Text('From : ' + snapshot.data[index].fromStop),
-                                  Text('To : ' + snapshot.data[index].toStop),
-                                  Text('Trip : ' + snapshot.data[index].tripID.toString()),
-                                  Text('Fare: \$' + snapshot.data[index].fare.toString()),
-                                  //Padding(padding: EdgeInsets.all(5.0),),
-                                  //Divider(),
-                                ],
-                              ),
+                              subtitle: displayTripColumn(snapshot, index),
                               isThreeLine: true,
+                              contentPadding: EdgeInsets.only(bottom: 5, left: 20),
                             ),
 
                             background: Container(
@@ -201,10 +191,65 @@ class _TripsPageState extends State<TripsPage> {
                 }
             ),
         ),
+
               ]
         )
       ),
     );
+  }
+
+  Widget displayTripColumn(snapshot, index){
+    if(snapshot.data[index].BUSorMRT == 'Bus') {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Padding(padding: EdgeInsets.all(5.0),),
+          Text('Bus No. :' + snapshot.data[index].transportID),
+          Padding(padding: EdgeInsets.all(1.0),),
+          Text('From : ' + snapshot.data[index].fromStop),
+          Padding(padding: EdgeInsets.all(1.0),),
+          Text('To : ' + snapshot.data[index].toStop),
+          Padding(padding: EdgeInsets.all(1.0),),
+          Text('Trip : ' + snapshot.data[index].tripID.toString()),
+          Padding(padding: EdgeInsets.all(1.0),),
+          Text('Fare: \$' + snapshot.data[index].fare.toString()),
+          //Padding(padding: EdgeInsets.all(5.0),),
+          //Divider(),
+        ],
+      );
+    } else {
+      //inefficient coding
+      String something;
+        if(snapshot.data[index].transportID == "NS"){
+          something =  "North South Line";
+        } else if (snapshot.data[index].transportID == "EW") {
+          something = "East West Line";
+        } else if (snapshot.data[index].transportID == "CG") {
+          something = "Changi Airport Branch Line";
+        } else if (snapshot.data[index].transportID == "NE") {
+          something = "North East Line";
+        } else if (snapshot.data[index].transportID == "CC") {
+          something = "Circle Line";
+        } else if (snapshot.data[index].transportID == "CE") {
+          something = "Circle Line Extension";
+        } else {
+          something =  "Downtown Line";
+        }
+
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Padding(padding: EdgeInsets.all(3.0),),
+          Text('MRT Line: ' + something),
+          Text('From : ' + snapshot.data[index].fromStop),
+          Text('To : ' + snapshot.data[index].toStop),
+          Text('Trip : ' + snapshot.data[index].tripID.toString()),
+          Text('Fare: \$' + snapshot.data[index].fare.toString()),
+          //Padding(padding: EdgeInsets.all(5.0),),
+          //Divider(),
+        ],
+      );
+    }
   }
 
   showAlertDialog(BuildContext context) {

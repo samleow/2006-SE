@@ -2,6 +2,8 @@ import 'package:get_it/get_it.dart';
 import 'package:flutter_app/services/CallAPIServices.dart';
 import 'package:flutter_app/db/dbhelper.dart';
 
+import '../db/dbhelper.dart';
+
 // gets called by get_it
 class SearchRouteController
 {
@@ -128,9 +130,9 @@ class SearchRouteController
   }
 
   // save route to database
-  void saveRouteToDB(String busNo, String fromStop, String toStop, int dropdownValue, bool isMRT) async{
+  void saveRouteToDB(String transportID, String fromStop, String toStop, int dropdownValue, bool isMRT) async{
     // int i = await DatabaseHelper.instance.insert({
-    //   DatabaseHelper.busNo : busNoController.text,
+    //   DatabaseHelper.transportID : transportID.text,
     //   DatabaseHelper.fromStop: fromTextController.text,
     //   DatabaseHelper.toStop: toTextController.text,
     //   DatabaseHelper.fare: 5.0, //hard-coded for now
@@ -143,22 +145,23 @@ class SearchRouteController
     //fare = '5';
     //tripID = '1';
 
-    double _fare = isMRT ? calculateFaresMRT(distanceTravelledMRT(busNo, fromStop, toStop).toString()) :
-      calculateFaresBus(distanceTravelledBus(busNo, fromStop, toStop).toString());
+    double _fare = isMRT ? calculateFaresMRT(distanceTravelledMRT(transportID, fromStop, toStop).toString()) :
+      calculateFaresBus(distanceTravelledBus(transportID, fromStop, toStop).toString());
 
-    //var route = Routes(1,busNo,fromStop,toStop,5,1);
+    //var route = Routes(1,transportID,fromStop,toStop,5,1);
     var dbHelper = DBHelper();
     int i = await dbHelper.saveRoute({
-      DBHelper.busNo : busNo,
+      DBHelper.transportID : transportID,
       DBHelper.fromStop: fromStop,
       DBHelper.toStop: toStop,
       //Edited into not hard-coded anymore
-      DBHelper.fare: _fare, //hard-coded for now
-      DBHelper.tripID: dropdownValue //hard-coded for now
+      DBHelper.fare: _fare,
+      DBHelper.tripID: dropdownValue,
+      DBHelper.BUSorMRT: isMRT ? "MRT" : "Bus"
     });
 
     //_showSnackBar("Data saved successfully");
-    //var route = Routes(i,busNo,fromStop,toStop,fare,dropdownValue);
+    //var route = Routes(i,transportID,fromStop,toStop,fare,dropdownValue);
   }
 
 

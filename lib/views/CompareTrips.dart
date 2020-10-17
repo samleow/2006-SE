@@ -44,13 +44,13 @@ class _CompareTripsState extends State<CompareTrips> {
   Widget buildTripCard(BuildContext context, int index) {
     final trip = numCompare[index];
     return new Container(
-        margin: EdgeInsets.all(24),
+        margin: EdgeInsets.only(top: 24),
         child: Form(
           child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Align(
                       alignment: Alignment.centerLeft,
@@ -91,11 +91,11 @@ class _CompareTripsState extends State<CompareTrips> {
                         if (snapshot.hasData) {
                           return DropdownButton<dynamic>(
                             value: selectedTrip[index],
-                            //elevation: 12,
-                            //   underline: Container(
-                            //     height: 2,
-                            //     color: Colors.deepPurpleAccent,
-                            //   ),
+                            elevation: 12,
+                              underline: Container(
+                                height: 2,
+                                color: Colors.deepPurpleAccent,
+                              ),
                             onChanged: (newValue) {
                               setState(() {
                                 selectedTrip[index] = newValue;
@@ -106,7 +106,7 @@ class _CompareTripsState extends State<CompareTrips> {
                               return DropdownMenuItem<dynamic>(
                                   value: value,
                                   child: SizedBox(
-                                    width: 100,
+                                    width: 50,
                                     child: Text(value.toString(),
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
@@ -137,7 +137,7 @@ class _CompareTripsState extends State<CompareTrips> {
                       builder: (context, snapshot) {
                         if(snapshot.hasData){
                           updateValues(index,snapshot.data);
-                          return Text(snapshot.data.toStringAsFixed(2),
+                          return Text("\$" + snapshot.data.toStringAsFixed(2),
                           style: TextStyle(fontSize: 20));
                         }else if (snapshot.hasError) {
                           return Text("${snapshot.error}");
@@ -167,79 +167,34 @@ class _CompareTripsState extends State<CompareTrips> {
           return new Container(
             //margin: EdgeInsets.all(24),
             child: Form(
-              child: Column(
-                //mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(
-                      height: 300,
-                      child: AnimatedList(
-                        key: _listKey,
-                        initialItemCount: numCompare.length,
-                        itemBuilder: (context, index, animation) {
-                          return buildTripCard(context, index);
-                        },
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Container(
-                            child: Text('Number of days per month : ',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                )),
-                          ),
-                        ),
-                        DropdownButton<int>(
-                          items: list.map((int dropDownIntItem) {
-                            return DropdownMenuItem<int>(
-                              value: dropDownIntItem,
-                              child: SizedBox(
-                                width: 30,
-                                child: Text("${dropDownIntItem}",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    color: Colors.blueAccent,
-                                  ),
-                                ),
-                              ),
-                            );
-                          }
-                          ).toList(),
-                          onChanged: (int newValue) {
-                            setState(() {
-                              //this._currentDaySelected = newValue;
-                              _currentDaySelected = newValue;
-                            });
+              child: Container(
+              margin: const EdgeInsets.only(right: 15, left: 15),
+                child: Column(
+                  //mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(
+                        height: 250,
+                        child: AnimatedList(
+                          key: _listKey,
+                          initialItemCount: numCompare.length,
+                          itemBuilder: (context, index, animation) {
+                            return buildTripCard(context, index);
                           },
-
-
-                          //value: _currentDaySelected,
-                          value: _currentDaySelected,
-
                         ),
-                        SizedBox(
-                          height: 20.0,
-                        ),
-                        Padding(padding: EdgeInsets.only(bottom: 70)),
-                      ],
-                    ),
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Container(
-                              child: Text('Number of Trips per day : ',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                  )),
-                            ),
+                          Text('Number of Days per Month : ',
+                              style: TextStyle(
+                                fontSize: 20,)
                           ),
                           DropdownButton<int>(
+                            elevation: 12,
+                            underline: Container(
+                              height: 2,
+                              color: Colors.deepPurpleAccent,
+                            ),
                             items: list.map((int dropDownIntItem) {
                               return DropdownMenuItem<int>(
                                 value: dropDownIntItem,
@@ -249,7 +204,7 @@ class _CompareTripsState extends State<CompareTrips> {
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontSize: 20,
-                                      color: Colors.blueAccent,
+                                      color: Colors.deepPurple,
                                     ),
                                   ),
                                 ),
@@ -258,22 +213,64 @@ class _CompareTripsState extends State<CompareTrips> {
                             ).toList(),
                             onChanged: (int newValue) {
                               setState(() {
-                                //this._currentTripSelected = newValue;
-
-                                _currentTripSelected = newValue;
+                                //this._currentDaySelected = newValue;
+                                _currentDaySelected = newValue;
                               });
                             },
-
-                            //value: _currentTripSelected,
-                            value: _currentTripSelected,
-
+                            //value: _currentDaySelected,
+                            value: _currentDaySelected,
                           ),
-                          SizedBox(
-                            height: 20.0,
-                          ),
-                          Padding(padding: EdgeInsets.only(bottom: 70)),
-                        ]),
-                  ]),
+                          // SizedBox(
+                          //   height: 20.0,
+                          // ),
+                          //Padding(padding: EdgeInsets.only(bottom: 70)),
+                        ],
+                      ),
+
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text('Number of Trips per day : ',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                )),
+                            DropdownButton<int>(
+                              elevation: 12,
+                              underline: Container(
+                                height: 2,
+                                color: Colors.deepPurpleAccent,
+                              ),
+                              items: list.map((int dropDownIntItem) {
+                                return DropdownMenuItem<int>(
+                                  value: dropDownIntItem,
+                                  child: SizedBox(
+                                    width: 30,
+                                    child: Text("${dropDownIntItem}",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          color: Colors.deepPurple,
+                                        )
+                                    ),
+                                  ),
+                                );
+                              }
+                              ).toList(),
+                              onChanged: (int newValue) {
+                                setState(() {
+                                  //this._currentTripSelected = newValue;
+                                  _currentTripSelected = newValue;
+                                });
+                              },
+
+                              //value: _currentTripSelected,
+                              value: _currentTripSelected,
+
+                            ),
+                          ]),
+                    ]),
+              ),
+
             ),
           );
         },
