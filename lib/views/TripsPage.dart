@@ -23,6 +23,26 @@ class _TripsPageState extends State<TripsPage> {
       key: scaffoldKey,
       appBar: new AppBar(
         title: new Text("AppName (TBC)"),
+        actions: <Widget>[
+          IconButton(
+              icon: Icon(Icons.map),
+              onPressed: (){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Mrtmap()),
+                );
+              }
+          ),
+          IconButton(
+              icon: Icon(Icons.card_membership),
+              onPressed: (){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ConcessionPrice()),
+                );
+              }
+          )
+        ],
       ),
       body: Container(
         //width: 280,
@@ -342,5 +362,42 @@ class _TripsPageState extends State<TripsPage> {
   void _showSnackBar(String text) {
     scaffoldKey.currentState
         .showSnackBar(new SnackBar(content: new Text(text)));
+  }
+}
+
+
+class Mrtmap extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text("Mrt Map"),
+        ),
+        body: Container(
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage('assets/mrt_map.png')
+              )
+          ),
+        )
+    );
+  }
+}
+
+class ConcessionPrice extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text("Concession Prices"),
+        ),
+        body: Container(
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage('assets/Concession.png')
+              )
+          ),
+        )
+    );
   }
 }
