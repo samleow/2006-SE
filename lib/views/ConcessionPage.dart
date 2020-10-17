@@ -4,7 +4,7 @@ import 'package:flutter_app/db/dbhelper.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter_app/services/CallAPIServices.dart';
 import 'package:flutter_app/controllers/CalculateFareController.dart';
-
+//suck dis nuts
 class ConcessionPage extends StatefulWidget {
   _ComparePageState createState() => _ComparePageState();
 }
