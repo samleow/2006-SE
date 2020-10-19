@@ -55,7 +55,12 @@ class _MyHomePageState extends State<MyHomePage> {
         await service.callBusStopsAPI() &&
         await service.callMCListAPI() &&
         await service.callMRTFaresAPI() &&
-        await service.retrieveMRTRoutes();
+        await service.retrieveMRTRoutes() &&
+        service.BusNoContainsBusRoute();
+
+   /* print("Bus Route Length " + service.busRoutes.length.toString());
+    print("Bus Stop Length " + service.busStops.length.toString());
+    print("Bus No Length " + service.busNo.length.toString());*/
 
     setState(() {
       _isLoading = false;

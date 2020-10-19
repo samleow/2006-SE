@@ -7,7 +7,6 @@ class BusStops {
       {this.busStopCode,
         this.roadName,
         this.description,
-
       });
 
   factory BusStops.fromJson(Map<String, dynamic> json) {
