@@ -1,20 +1,26 @@
+import 'BusNo.dart';
+
 class BusStops {
   String busStopCode;
-  String roadName;
   String description;
+  double latitude;
+  double longitude;
+  List<BusNo> busNo;
 
   BusStops(
       {this.busStopCode,
-        this.roadName,
         this.description,
+        this.latitude,
+        this.longitude,
+        this.busNo,
       });
 
   factory BusStops.fromJson(Map<String, dynamic> json) {
     return BusStops (
       busStopCode : json['BusStopCode'],
-      roadName : json['RoadName'],
       description : json['Description'],
-
+      latitude : json['Latitude'],
+      longitude : json['Longitude'],
     );
   }
 }

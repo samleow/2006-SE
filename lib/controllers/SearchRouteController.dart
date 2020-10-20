@@ -48,21 +48,22 @@ class SearchRouteController
 
 
     for (int i = 0; i < service.busNo.length; i++) {
-      //if (service.busRoutes[i].direction == 1 || service.busRoutes[i].direction == 2) { // Added direction == 2
+      if (service.busRoutes[i].direction == 1 || service.busRoutes[i].direction == 2) { // Added direction == 2
         if (service.busNo[i].serviceNo == busNo) {
           for (int j = 0; j < service.busNo[i].busRoutes.length; j++) {
-            if (service.busNo[i].busRoutes[j].busStopCode == fromStop) {
-              print(service.busNo[i].busRoutes[j].busStopCode);
+            if (service.busNo[i].busRoutes[j].busStop.busStopCode == fromStop) {
+              print(service.busNo[i].busRoutes[j].busStop.busStopCode);
               checkFromDistance = true;
               fromDistance = service.busNo[i].busRoutes[j].distance.toString();
             }
-              if (service.busNo[i].busRoutes[j].busStopCode == toStop) {
-                print(service.busNo[i].busRoutes[j].busStopCode);
-                checkToDistance = true;
-                toDistance = service.busNo[i].busRoutes[j].distance.toString();
+            if (service.busNo[i].busRoutes[j].busStop.busStopCode == toStop) {
+              print(service.busNo[i].busRoutes[j].busStop.busStopCode);
+              checkToDistance = true;
+              toDistance = service.busNo[i].busRoutes[j].distance.toString();
             }
           }
         }
+      }
       //Once got both distance, for loop break
       if(checkFromDistance&&checkToDistance){
         break;

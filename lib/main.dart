@@ -49,18 +49,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
     // uses a single boolean to check for fetching errors
     // may need to change to individual booleans for each data call
-    _loadSuccess = await service.callBusFaresAPI() &&
-        await service.callBusRoutesAPI() &&
+    _loadSuccess = await service.callBusStopsAPI() &&
         await service.callBusServicesAPI() &&
-        await service.callBusStopsAPI() &&
+        await service.callBusRoutesAPI() &&
+        await service.callBusFaresAPI() &&
         await service.callMCListAPI() &&
         await service.callMRTFaresAPI() &&
-        await service.retrieveMRTRoutes() &&
-        service.BusNoContainsBusRoute();
-
-   /* print("Bus Route Length " + service.busRoutes.length.toString());
-    print("Bus Stop Length " + service.busStops.length.toString());
-    print("Bus No Length " + service.busNo.length.toString());*/
+        await service.retrieveMRTRoutes();
 
     setState(() {
       _isLoading = false;

@@ -498,7 +498,7 @@ class _SearchBusState extends State<SearchBus> {
       if (service.busNo[i].serviceNo == busNo) {
         for (int j = 0; j < service.busNo[i].busRoutes.length; j++) {
           print("Bus Route Length in the method " + service.busNo[i].busRoutes.length.toString());
-          description.add(service.busNo[i].busRoutes[j].description.toLowerCase());
+          description.add(service.busNo[i].busRoutes[j].busStop.description.toLowerCase());
         }
         break;
       }
@@ -555,9 +555,9 @@ class _SearchBusState extends State<SearchBus> {
     for (int i = 0; i<service.busNo.length; i++) {
       if (service.busNo[i].serviceNo == busNo) {
         for (int j = 0; j < service.busNo[i].busRoutes.length; j++) {
-          if (service.busNo[i].busRoutes[j].description.toLowerCase() == busStopDescription) {
+          if (service.busNo[i].busRoutes[j].busStop.description.toLowerCase() == busStopDescription) {
             //print("Bus Route Length in the method " + service.busNo[i].busRoutes.length.toString());
-            listbusstopcode.add(service.busNo[i].busRoutes[j].busStopCode);
+            listbusstopcode.add(service.busNo[i].busRoutes[j].busStop.busStopCode);
           }
         }
         break;
