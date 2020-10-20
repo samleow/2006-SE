@@ -525,7 +525,7 @@ class _SearchBusState extends State<SearchBus> {
     //var matches = [];
     //matches.addAll(listforbustopcode); // Swap the list busStopDescList(to display description) or filterbusStopList (to display bus stop code)
     description.removeWhere((element) => element == ""); // remove the ""
-    description.retainWhere((s) => s.contains((boardingLocation.titleCase))); // added .titleCase for auto caps after every space
+    description.retainWhere((s) => s.contains((boardingLocation.toLowerCase().titleCase))); // added .toLowerCase() then convert .titleCase for auto caps after every space
 
     // if SearchInput is clear
     if(description == "") // Swap the list busStopDescList(to display description) or filterbusStopList (to display bus stop code)

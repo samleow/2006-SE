@@ -395,7 +395,7 @@ class _SearchMRTState extends State<SearchMRT> {
     List<String> matches = List();
     matches.addAll(filterMRTStationList);
     matches.removeWhere((element) => element == ""); // remove the ""
-    matches.retainWhere((s) => s.contains((boardingLocation.titleCase)));
+    matches.retainWhere((s) => s.contains((boardingLocation.toLowerCase().titleCase))); // added .toLowerCase() then convert .titleCase for auto caps after every space
 
     // if SearchInput is clear
     if(filterMRTStationList == "") // Swap the list busStopDescList(to display description) or filterbusStopList (to display bus stop code)
