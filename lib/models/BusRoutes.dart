@@ -1,25 +1,24 @@
+import 'BusStops.dart';
+
 class BusRoutes {
-  String serviceNo;
   int stopSequence;
-  String busStopCode;
   var distance;  // need var for the double
   int direction;
+  BusStops busStop;
 
-  BusRoutes(
-      {this.serviceNo,
+
+  BusRoutes({
         this.stopSequence,
-        this.busStopCode,
         this.distance,
         this.direction,
-  });
+      });
+
 
   factory BusRoutes.fromJson(Map<String, dynamic> json) {
     return BusRoutes (
-    serviceNo : json['ServiceNo'],
-    stopSequence : json['StopSequence'],
-    busStopCode : json['BusStopCode'],
-    distance : json['Distance'],
-    direction : json['Direction'],
+      stopSequence : json['StopSequence'],
+      distance : json['Distance'],
+      direction : json['Direction'],
     );
   }
 }
