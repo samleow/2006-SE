@@ -500,5 +500,4 @@ class _SearchBusState extends State<SearchBus> {
     return busStopCode;
     
   }
-
 }

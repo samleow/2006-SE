@@ -155,8 +155,39 @@ class DBHelper{
     return await dbClient.delete(_tablename,where:'$routeID = ?',whereArgs:[id]);
   }
 
+  // Future<int> deleteTrip(int id) async{
+  //   var dbClient = await db;
+  //   List<Map> list = await dbClient.rawQuery('SELECT MAX($tripID) FROM $_tripsTable');
+  //   //print(list) ;
+  //   if(id == 1){
+  //     return await dbClient.delete(_tablename,where:'$tripID = ?',whereArgs:[id]);
+  //   } else {
+  //     await dbClient.delete(_tripsTable,where:'$tripID = ?',whereArgs:[id]);
+  //     return await dbClient.delete(_tablename,where:'$tripID = ?',whereArgs:[id]);
+  //   }
+
+
   Future<int> deleteTrip(int id) async{
     var dbClient = await db;
+    List<Map> maxTripId = await getMaxTripId();
+    List<dynamic> newMaxTripId = maxTripId.map((m)=>m['MAX(tripID)']).toList();
+    print("max value is " + newMaxTripId[0].toString());
+    List<Map> minTripId = await getMinTripId();
+    List<dynamic> newMinTripId = minTripId.map((m)=>m['MIN(tripID)']).toList();
+    print("min value is " + newMinTripId[0].toString());
+
+    if(newMaxTripId[0] == newMinTripId[0]){
+      return await dbClient.delete(_tablename,where:'$tripID = ?',whereArgs:[id]);
+    } else if(id == newMaxTripId[0]) {
+      await dbClient.delete(_tripsTable, where: '$tripID = ?', whereArgs: [id]);
+      return await dbClient.delete(_tablename, where: '$tripID = ?', whereArgs: [id]);
+    } else {
+      await dbClient.delete(_tripsTable,where:'$tripID = ?',whereArgs:[id]);
+      await dbClient.delete(_tablename,where:'$tripID = ?',whereArgs:[id]);
+      await dbClient.rawQuery('UPDATE $_tripsTable SET $tripID = $tripID - 1 WHERE $tripID NOT IN (1);');
+      await dbClient.rawQuery('UPDATE $_tablename SET $tripID = $tripID - 1 WHERE $tripID NOT IN (1);');
+      return 1000000;
+    }
 
     if(id == 1){
       return await dbClient.delete(_tablename,where:'$tripID = ?',whereArgs:[id]);
@@ -164,5 +195,17 @@ class DBHelper{
       await dbClient.delete(_tripsTable,where:'$tripID = ?',whereArgs:[id]);
       return await dbClient.delete(_tablename,where:'$tripID = ?',whereArgs:[id]);
     }
+  }
+
+  Future<List<Map>> getMaxTripId() async{
+    var dbClient = await db;
+    List<Map> list = await dbClient.rawQuery('SELECT MAX($tripID) FROM $_tripsTable');
+    return list;
+  }
+
+  Future<List<Map>> getMinTripId() async{
+    var dbClient = await db;
+    List<Map> list = await dbClient.rawQuery('SELECT MIN($tripID) FROM $_tripsTable');
+    return list;
   }
 }

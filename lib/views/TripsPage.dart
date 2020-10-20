@@ -336,6 +336,7 @@ class _TripsPageState extends State<TripsPage> {
   void deleteTrip(int id) async {
     var dbHelper = DBHelper();
     int i = await dbHelper.deleteTrip(id);
+    setState(() {});
     print(i.toString() + ' record is deleted');
   }
 
