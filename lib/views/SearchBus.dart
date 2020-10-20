@@ -5,6 +5,7 @@ import 'package:flutter_app/services/CallAPIServices.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:flutter_app/controllers/SearchRouteController.dart';
+import 'package:recase/recase.dart';
 
 class SearchBus extends StatefulWidget {
   @override
@@ -479,6 +480,10 @@ class _SearchBusState extends State<SearchBus> {
   {
     int direction = 1;
     List<String> description = List();
+
+    // ReCase rc = new ReCase(boardingLocation);
+    // print(rc.titleCase);
+
     //var listforbusstopdescription = [];
     //Filter the correct list according to the bus number
     // Set<String> filterbusStopList = service.busNo.map((e)// inside here is actually a loop
@@ -498,7 +503,7 @@ class _SearchBusState extends State<SearchBus> {
       if (service.busNo[i].serviceNo == busNo) {
         for (int j = 0; j < service.busNo[i].busRoutes.length; j++) {
           print("Bus Route Length in the method " + service.busNo[i].busRoutes.length.toString());
-          description.add(service.busNo[i].busRoutes[j].busStop.description.toLowerCase());
+          description.add(service.busNo[i].busRoutes[j].busStop.description);
         }
         break;
       }
@@ -520,7 +525,7 @@ class _SearchBusState extends State<SearchBus> {
     //var matches = [];
     //matches.addAll(listforbustopcode); // Swap the list busStopDescList(to display description) or filterbusStopList (to display bus stop code)
     description.removeWhere((element) => element == ""); // remove the ""
-    description.retainWhere((s) => s.contains((boardingLocation)));
+    description.retainWhere((s) => s.contains((boardingLocation.titleCase))); // added .titleCase for auto caps after every space
 
     // if SearchInput is clear
     if(description == "") // Swap the list busStopDescList(to display description) or filterbusStopList (to display bus stop code)
@@ -555,7 +560,7 @@ class _SearchBusState extends State<SearchBus> {
     for (int i = 0; i<service.busNo.length; i++) {
       if (service.busNo[i].serviceNo == busNo) {
         for (int j = 0; j < service.busNo[i].busRoutes.length; j++) {
-          if (service.busNo[i].busRoutes[j].busStop.description.toLowerCase() == busStopDescription) {
+          if (service.busNo[i].busRoutes[j].busStop.description == busStopDescription) {
             //print("Bus Route Length in the method " + service.busNo[i].busRoutes.length.toString());
             listbusstopcode.add(service.busNo[i].busRoutes[j].busStop.busStopCode);
           }
