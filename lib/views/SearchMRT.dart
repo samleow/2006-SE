@@ -4,6 +4,7 @@ import 'package:flutter_app/services/CallAPIServices.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter_app/controllers/SearchRouteController.dart';
+import 'package:recase/recase.dart';
 
 class SearchMRT extends StatefulWidget {
   @override
@@ -394,7 +395,7 @@ class _SearchMRTState extends State<SearchMRT> {
     List<String> matches = List();
     matches.addAll(filterMRTStationList);
     matches.removeWhere((element) => element == ""); // remove the ""
-    matches.retainWhere((s) => s.contains((boardingLocation)));
+    matches.retainWhere((s) => s.contains((boardingLocation.toLowerCase().titleCase))); // added .toLowerCase() then convert .titleCase for auto caps after every space
 
     // if SearchInput is clear
     if(filterMRTStationList == "") // Swap the list busStopDescList(to display description) or filterbusStopList (to display bus stop code)

@@ -11,12 +11,14 @@ class SearchRouteController
 
   //Get the distance travelled
   double distanceTravelledBus(String busNo, String fromStop, String toStop) {
-
     //Check for nulls
     if (busNo == '' || fromStop == '' || toStop == '') {
       //print(0);
-      return 0;
+      return 0.0;
     }
+    print(busNo);
+    print(fromStop);
+    print(toStop);
 
     String fromDistance = "-1";
     String toDistance = "-1";
@@ -24,8 +26,9 @@ class SearchRouteController
     bool checkToDistance = false;
 
     //Get the distance travelled based on the user input
-    for (int i = 0; i < service.busRoutes.length; i++) {
-      if (service.busRoutes[i].direction == 1 || service.busRoutes[i].direction == 2) { // Added direction == 2
+   /* for (int i = 0; i < service.busRoutes.length; i++) {
+      if (service.busRoutes[i].direction == 1 ||
+          service.busRoutes[i].direction == 2) { // Added direction == 2
         if (service.busRoutes[i].serviceNo == busNo &&
             service.busRoutes[i].busStopCode == fromStop) {
           checkFromDistance = true;
@@ -38,6 +41,30 @@ class SearchRouteController
         }
       }
       //Once got both distance, for loop break
+      if (checkFromDistance && checkToDistance) {
+        break;
+      }*/
+
+
+
+    for (int i = 0; i < service.busNo.length; i++) {
+      if (service.busRoutes[i].direction == 1 || service.busRoutes[i].direction == 2) { // Added direction == 2
+        if (service.busNo[i].serviceNo == busNo) {
+          for (int j = 0; j < service.busNo[i].busRoutes.length; j++) {
+            if (service.busNo[i].busRoutes[j].busStop.busStopCode == fromStop) {
+              print(service.busNo[i].busRoutes[j].busStop.busStopCode);
+              checkFromDistance = true;
+              fromDistance = service.busNo[i].busRoutes[j].distance.toString();
+            }
+            if (service.busNo[i].busRoutes[j].busStop.busStopCode == toStop) {
+              print(service.busNo[i].busRoutes[j].busStop.busStopCode);
+              checkToDistance = true;
+              toDistance = service.busNo[i].busRoutes[j].distance.toString();
+            }
+          }
+        }
+      }
+      //Once got both distance, for loop break
       if(checkFromDistance&&checkToDistance){
         break;
       }
@@ -47,13 +74,16 @@ class SearchRouteController
     if(double.parse(fromDistance) == -1 || double.parse(toDistance) == -1 ) return 0;
 
     //Get the distance travelled between the two location
-    return double.parse(toDistance) - double.parse(fromDistance);
+    double distance = double.parse(toDistance) - double.parse(fromDistance);
+    if(distance < 0){
+      distance*=-1;
+    }
+    return distance;
   }
 
   //Find the bus fare prices based on the distance travelled
   double calculateFaresBus(String distanceTravelled) {
-
-    if (distanceTravelled == '0.0'){
+    if (double.parse(distanceTravelled) == 0){
       return 0;
     }
     // loops through the busFare list to get the distance range
@@ -66,7 +96,6 @@ class SearchRouteController
         break;
       }
     }
-
     return double.parse(service.busFares[j].BusFarePrice)/100;
   }
 

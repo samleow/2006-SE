@@ -49,10 +49,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
     // uses a single boolean to check for fetching errors
     // may need to change to individual booleans for each data call
-    _loadSuccess = await service.callBusFaresAPI() &&
-        await service.callBusRoutesAPI() &&
+    _loadSuccess = await service.callBusStopsAPI() &&
         await service.callBusServicesAPI() &&
-        await service.callBusStopsAPI() &&
+        await service.callBusRoutesAPI() &&
+        await service.callBusFaresAPI() &&
         await service.callMCListAPI() &&
         await service.callMRTFaresAPI() &&
         await service.retrieveMRTRoutes();
