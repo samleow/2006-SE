@@ -38,6 +38,22 @@ class _CompareTripsState extends State<CompareTrips> {
     return totalFares;
   }
 
+  Future<String> fetchBothRoutesByTripIdFromDatabase(int id1, int id2) async {
+    var dbHelper = DBHelper();
+    List<Map> list = await dbHelper.getBothFaresByTripsID(id1,id2);
+    var listOfFares1 = list[0]['SUM(fare)'];
+    if(listOfFares1 == null){
+      listOfFares1 = 0.0;
+    }
+    var listOfFares2 = list[1]['SUM(fare)'];
+    if(listOfFares2 == null){
+      listOfFares2 = 0.0;
+    }
+    //print('list of fares is ' + listOfFares1.toString() + ' ' + listOfFares2.toString());
+    return _compareFareController.comparePrice(listOfFares1, listOfFares2,
+        _currentDaySelected, _currentTripSelected);;
+  }
+
   void updateValues(int index,double totalFare){
     selectedPrice[index] = totalFare;
 
@@ -231,7 +247,7 @@ class _CompareTripsState extends State<CompareTrips> {
                       Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            Text('Number of Trips per day : ',
+                            Text('Number of Trips per Day : ',
                                 style: TextStyle(
                                   fontSize: 20,
                                 )),
@@ -270,6 +286,36 @@ class _CompareTripsState extends State<CompareTrips> {
                             ),
                           ]),
                       Padding(padding: EdgeInsets.only(bottom: 30)),
+                      FutureBuilder(
+                        future: fetchBothRoutesByTripIdFromDatabase(selectedTrip[0], selectedTrip[1]),
+                        builder:(context, snapshot){
+                          if(snapshot.hasData){
+                            return Expanded(
+                              child: Align(
+                                alignment: FractionalOffset.bottomCenter,
+                                child: MaterialButton(
+                                    onPressed: () => {},
+                                    child: Container(
+                                      margin: const EdgeInsets.only(left: 10.0, right: 10, bottom: 30),
+                                      padding: const EdgeInsets.all(20.0),
+                                      decoration: myBoxDecoration(), //
+                                      child: Text(snapshot.data.toString(),
+                                          style: TextStyle(
+                                          color: Colors.deepPurpleAccent,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold)),
+                                    )
+                                ),
+                              ),
+                            );
+                          }else if (snapshot.hasError) {
+                            return Text("${snapshot.error}");
+                          } else if(snapshot.data == null){
+                            return Text("No comparison");
+                          }
+                          return CircularProgressIndicator();
+                          }
+                      )
                       // Expanded(
                       //   child: Align(
                       //     alignment: FractionalOffset.bottomCenter,
@@ -291,38 +337,29 @@ class _CompareTripsState extends State<CompareTrips> {
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          return showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  title: Text("Message"),
-                  content: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text(_compareFareController.comparePrice(
-                          selectedPrice[0], selectedPrice[1],
-                          _currentDaySelected, _currentTripSelected)),
-                    ],
-                  ),
-                );
-              }
-          );
-        },
-        child: Icon(Icons.navigate_next),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     return showDialog(
+      //         context: context,
+      //         builder: (context) {
+      //           return AlertDialog(
+      //             title: Text("Message"),
+      //             content: Column(
+      //               mainAxisSize: MainAxisSize.min,
+      //               children: <Widget>[
+      //                 Text(_compareFareController.comparePrice(
+      //                     selectedPrice[0], selectedPrice[1],
+      //                     _currentDaySelected, _currentTripSelected)),
+      //               ],
+      //             ),
+      //           );
+      //         }
+      //     );
+      //   },
+      //   child: Icon(Icons.navigate_next),
+      // ),
     );
   }
-
-  // Widget getTextWidget (){
-  //   return Text(_compareFareController.comparePrice(selectedPrice[0], selectedPrice[1],
-  //       _currentDaySelected, _currentTripSelected),
-  //       style: TextStyle(
-  //           color: Colors.deepPurpleAccent,
-  //           fontSize: 20,
-  //           fontWeight: FontWeight.bold));
-  // }
 
   BoxDecoration myBoxDecoration() {
     return BoxDecoration(

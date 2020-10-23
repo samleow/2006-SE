@@ -317,19 +317,8 @@ class _ComparePageState extends State<ConcessionPage> {
             margin: EdgeInsets.all(24),
             child: Form(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    SizedBox(
-                      height: 300,
-                      child: AnimatedList(
-                        key: _listKey,
-                        initialItemCount: tripListLength,
-                        itemBuilder: (context, index, animation) {
-                          return buildTripCard(context, index);
-                        },
-                      ),
-                    ),
-                    SizedBox(height: 20.0,),
                     DropdownButton<String>(
                       // get api data to display on drop down list
                       items: service.mcList.map((item) {
@@ -349,6 +338,18 @@ class _ComparePageState extends State<ConcessionPage> {
                       value: _currentCardholder,
 
                     ),
+                    SizedBox(
+                      height: 300,
+                      child: AnimatedList(
+                        key: _listKey,
+                        initialItemCount: tripListLength,
+                        itemBuilder: (context, index, animation) {
+                          return buildTripCard(context, index);
+                        },
+                      ),
+                    ),
+
+
                   ],
                 )
             ),

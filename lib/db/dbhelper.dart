@@ -150,6 +150,16 @@ class DBHelper{
     return list;
   }
 
+  Future<List<Map>> getBothFaresByTripsID(int id1, int id2) async{
+    var dbClient = await db;
+    List<Map> list1 = await dbClient.rawQuery('SELECT SUM(fare) FROM $_tablename WHERE $tripID LIKE  "%$id1%"');
+    List<Map> list2 = await dbClient.rawQuery('SELECT SUM(fare) FROM $_tablename WHERE $tripID LIKE  "%$id2%"');
+    List<Map> list3 = new List<Map>();
+    list3 = [list1[0],list2[0]];
+    print('list3 is' + list3.toString());
+    return list3;
+  }
+
   Future<int> deleteRoute(int id) async{
     var dbClient = await db;
     return await dbClient.delete(_tablename,where:'$routeID = ?',whereArgs:[id]);

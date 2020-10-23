@@ -3,24 +3,27 @@ class CompareFareController
 {
   // compare Price
   String comparePrice(double fprice, double sprice, int numDay, int numTrips) {
+    if(fprice == 0 && sprice == 0){
+      return "Both Trips are Empty!";
+    }
     if(fprice == 0){
-      return "First trip is empty";
+      return "First Trip is Empty!";
     }
     if(sprice == 0){
-      return "Second trip is empty";
+      return "Second Trip is Empty!";
     }
     if (fprice < sprice) {
       double diffprice = sprice - fprice;
       diffprice = diffprice * numDay * numTrips;
-      return "First Trip is cheaper, you saved \$${diffprice.toStringAsFixed(2)}";
+      return "First Trip is Cheaper! \nYou will Save: \$${diffprice.toStringAsFixed(2)}";
     }
     if (fprice > sprice){
       double diffprices = fprice - sprice;
       diffprices = diffprices * numDay * numTrips;
-      return "Second Trip is cheaper, difference is \$${diffprices.toStringAsFixed(2)}";
+      return "Second Trip is Cheaper!\nYou will Save: \$${diffprices.toStringAsFixed(2)}";
     }
     else{
-      return "Both trip is the same price";
+      return "Both Trips have the Same Price!";
     }
   }
 }
