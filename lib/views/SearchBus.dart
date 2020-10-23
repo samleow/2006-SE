@@ -432,7 +432,7 @@ class _SearchBusState extends State<SearchBus> {
             {
               _searchRouteController.saveRouteToDB(busNoController.text,
                   fromTextController.text, toTextController.text, dropdownValue, false);
-              _showSnackBar("Data saved successfully");
+              _showSnackBar("Trip saved successfully");
             }
 
         },

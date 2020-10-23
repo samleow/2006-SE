@@ -11,6 +11,7 @@ class CompareTrips extends StatefulWidget {
   _CompareTripsState createState() => _CompareTripsState();
 }
 
+
 class _CompareTripsState extends State<CompareTrips> {
   CompareFareController get _compareFareController => GetIt.I<CompareFareController>();
 
@@ -24,7 +25,7 @@ class _CompareTripsState extends State<CompareTrips> {
   int _currentDaySelected =1; // <-- the number of list must be followed by the number of trips
   int _currentTripSelected =1; // <-- the number of list must be followed by the number of trips
 
-  List <double> selectedPrice =[2.10, 4.00]; //<-- temp storage to save the dropdown selected Price
+  List <double> selectedPrice =[1, 1]; //<-- temp storage to save the dropdown selected Price
   List<int> selectedTrip = [1, 1]; //<-- this is temp storage for dropdownlist to separate onchange
   double totalFares;
   int dropdownValue;
@@ -39,6 +40,7 @@ class _CompareTripsState extends State<CompareTrips> {
 
   void updateValues(int index,double totalFare){
     selectedPrice[index] = totalFare;
+
   }
 
   Widget buildTripCard(BuildContext context, int index) {
@@ -155,7 +157,6 @@ class _CompareTripsState extends State<CompareTrips> {
                   thickness: 1,),
               ]),
         )
-
     );
   }
 
@@ -168,7 +169,7 @@ class _CompareTripsState extends State<CompareTrips> {
             //margin: EdgeInsets.all(24),
             child: Form(
               child: Container(
-              margin: const EdgeInsets.only(right: 15, left: 15),
+                margin: const EdgeInsets.only(right: 15, left: 15),
                 child: Column(
                   //mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
@@ -268,6 +269,21 @@ class _CompareTripsState extends State<CompareTrips> {
 
                             ),
                           ]),
+                      Padding(padding: EdgeInsets.only(bottom: 30)),
+                      // Expanded(
+                      //   child: Align(
+                      //     alignment: FractionalOffset.bottomCenter,
+                      //     child: MaterialButton(
+                      //         onPressed: () => {},
+                      //         child: Container(
+                      //           margin: const EdgeInsets.all(30.0),
+                      //           padding: const EdgeInsets.all(20.0),
+                      //           decoration: myBoxDecoration(), //
+                      //           child: getTextWidget(),
+                      //         )
+                      //     ),
+                      //   ),
+                      // ),
                     ]),
               ),
 
@@ -285,7 +301,8 @@ class _CompareTripsState extends State<CompareTrips> {
                   content: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      Text(_compareFareController.comparePrice(selectedPrice[0], selectedPrice[1],
+                      Text(_compareFareController.comparePrice(
+                          selectedPrice[0], selectedPrice[1],
                           _currentDaySelected, _currentTripSelected)),
                     ],
                   ),
@@ -295,7 +312,27 @@ class _CompareTripsState extends State<CompareTrips> {
         },
         child: Icon(Icons.navigate_next),
       ),
+    );
+  }
 
+  // Widget getTextWidget (){
+  //   return Text(_compareFareController.comparePrice(selectedPrice[0], selectedPrice[1],
+  //       _currentDaySelected, _currentTripSelected),
+  //       style: TextStyle(
+  //           color: Colors.deepPurpleAccent,
+  //           fontSize: 20,
+  //           fontWeight: FontWeight.bold));
+  // }
+
+  BoxDecoration myBoxDecoration() {
+    return BoxDecoration(
+      border: Border.all(
+          width: 1.0,
+        color: Colors.blueAccent,
+      ),
+      borderRadius: BorderRadius.all(
+          Radius.circular(10.0) //
+      ),
     );
   }
 

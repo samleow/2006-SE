@@ -212,10 +212,20 @@ class _ComparePageState extends State<ConcessionPage> {
                                       ),
                                       Text("Number of days per month"),
                                       DropdownButton<int>(
+                                        elevation: 12,
+                                        underline: Container(
+                                          height: 2,
+                                          color: Colors.deepPurpleAccent,
+                                        ),
                                         items: list.map((int dropDownIntItem) {
                                           return DropdownMenuItem<int>(
                                             value: dropDownIntItem,
-                                            child: Text(dropDownIntItem.toString()),
+                                            child: Text(dropDownIntItem.toString(),
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  fontSize: 20,
+                                                  color: Colors.deepPurple,
+                                                )),
                                           );
                                         }
                                         ).toList(),
@@ -233,10 +243,20 @@ class _ComparePageState extends State<ConcessionPage> {
                                       ),
                                       Text("Number of Trips per day"),
                                       DropdownButton<int>(
+                                        elevation: 12,
+                                        underline: Container(
+                                          height: 2,
+                                          color: Colors.deepPurpleAccent,
+                                        ),
                                         items: list.map((int dropDownIntItem) {
                                           return DropdownMenuItem<int>(
                                             value: dropDownIntItem,
-                                            child: Text(dropDownIntItem.toString()),
+                                            child: Text(dropDownIntItem.toString(),
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  fontSize: 20,
+                                                  color: Colors.deepPurple,
+                                                )),
                                           );
                                         }
                                         ).toList(),
