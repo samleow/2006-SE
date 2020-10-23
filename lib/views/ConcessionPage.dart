@@ -348,7 +348,33 @@ class _ComparePageState extends State<ConcessionPage> {
                         },
                       ),
                     ),
-
+                    Expanded(
+                      child: Align(
+                        //alignment: FractionalOffset.bottomCenter,
+                        child: MaterialButton(
+                            onPressed: () => {},
+                            child: Container(
+                              margin: const EdgeInsets.only(
+                                  left: 10.0, right: 10, bottom: 0),
+                              padding: const EdgeInsets.all(20.0),
+                              decoration: myBoxDecoration(), //
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Text('Total Fares:\$ ${_calculateFareController.calculatedTotalPrice(
+                                      _price, _currentDaySelected, _currentTripSelected, tripListLength)}'),
+                                  Text('${_currentCardholder}: \$ ${_calculateFareController.getConcessionPrice(
+                                      _currentCardholder)}'),
+                                  Text(_calculateFareController.comparePrice(
+                                      _calculateFareController.getConcessionPrice(_currentCardholder),
+                                      double.parse(_calculateFareController.calculatedTotalPrice(
+                                          _price, _currentDaySelected, _currentTripSelected, tripListLength)))),
+                                ],
+                              ),
+                            )
+                        ),
+                      ),
+                    )
 
                   ],
                 )
@@ -356,31 +382,43 @@ class _ComparePageState extends State<ConcessionPage> {
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          return showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  title: Text("Message"),
-                  content: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text('Total Fares:\$ ${_calculateFareController.calculatedTotalPrice(
-                          _price, _currentDaySelected, _currentTripSelected, tripListLength)}'),
-                      Text('${_currentCardholder}: \$ ${_calculateFareController.getConcessionPrice(
-                          _currentCardholder)}'),
-                      Text(_calculateFareController.comparePrice(
-                          _calculateFareController.getConcessionPrice(_currentCardholder),
-                          double.parse(_calculateFareController.calculatedTotalPrice(
-                              _price, _currentDaySelected, _currentTripSelected, tripListLength)))),
-                    ],
-                  ),
-                );
-              }
-          );
-        },
-        child: Icon(Icons.navigate_next),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     return showDialog(
+      //         context: context,
+      //         builder: (context) {
+      //           return AlertDialog(
+      //             title: Text("Message"),
+      //             content: Column(
+      //               mainAxisSize: MainAxisSize.min,
+      //               children: <Widget>[
+      //                 Text('Total Fares:\$ ${_calculateFareController.calculatedTotalPrice(
+      //                     _price, _currentDaySelected, _currentTripSelected, tripListLength)}'),
+      //                 Text('${_currentCardholder}: \$ ${_calculateFareController.getConcessionPrice(
+      //                     _currentCardholder)}'),
+      //                 Text(_calculateFareController.comparePrice(
+      //                     _calculateFareController.getConcessionPrice(_currentCardholder),
+      //                     double.parse(_calculateFareController.calculatedTotalPrice(
+      //                         _price, _currentDaySelected, _currentTripSelected, tripListLength)))),
+      //               ],
+      //             ),
+      //           );
+      //         }
+      //     );
+      //   },
+      //   child: Icon(Icons.navigate_next),
+      // ),
+    );
+  }
+
+  BoxDecoration myBoxDecoration() {
+    return BoxDecoration(
+      border: Border.all(
+        width: 1.0,
+        color: Colors.blueAccent,
+      ),
+      borderRadius: BorderRadius.all(
+          Radius.circular(10.0) //
       ),
     );
   }
