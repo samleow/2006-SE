@@ -89,7 +89,7 @@ class _MapPageState extends State<MapPage> {
           CameraUpdate.newCameraPosition(
             CameraPosition(
               target: LatLng(position.latitude, position.longitude),
-              zoom: 25.0,
+              zoom: 18.0,
             ),
           ),
         );
@@ -288,6 +288,7 @@ class _MapPageState extends State<MapPage> {
                           child: Icon(Icons.my_location),
                         ),
                         onTap: () {
+                          _getCurrentLocation();
                           mapController.animateCamera(
                             CameraUpdate.newCameraPosition(
                               CameraPosition(
