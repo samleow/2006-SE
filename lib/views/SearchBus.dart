@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/db/dbhelper.dart';
+import 'package:flutter_app/models/BusStops.dart';
 import 'package:flutter_app/services/CallAPIServices.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:flutter_app/controllers/SearchRouteController.dart';
@@ -15,6 +17,60 @@ class SearchBus extends StatefulWidget {
 class _SearchBusState extends State<SearchBus> {
   CallAPIServices get service => GetIt.I<CallAPIServices>();
   SearchRouteController get _searchRouteController => GetIt.I<SearchRouteController>();
+
+  /*final Geolocator _geolocator = Geolocator();
+  Position _currentPosition;
+  String _currentAddress;
+
+  // Method for retrieving the current location
+  // Method for retrieving the current location
+  _getCurrentLocation() async {
+    await Geolocator
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .then((Position position) async {
+      setState(() {
+        // Store the position in the variable
+        _currentPosition = position;
+        print('CURRENT POS: $_currentPosition');
+      });
+    }).catchError((e) {
+      print(e);
+    });
+  }
+
+  List<BusStops> _busStopsNear = [];
+
+  uture<double> distanceBetween(Position point1, Position point2) {
+    return Geolocator().distanceBetween(
+      point1.latitude,
+      point1.longitude,
+      point2.latitude,
+      point2.longitude,
+    );
+  }
+
+  position: Position(
+  latitude: json['coords']['lat'],
+  longitude: json['coords']['lon'],
+  ),
+
+  Future<List> getNearestStops() {
+
+      busStoplocation = Position(latitude: service.busStops.)
+
+      // calculating distance (meters) between current position and bus stop coords
+      double distance = await locationServicesProvider.distanceBetween(
+          userPosition, busStop.position);
+
+      int rangedistance = 500;
+      // add it if bus stop is within 500 meters
+      if (distance < rangedistance) {
+        // add to bus stops near me list
+        _busStopsNear.add(busStop);
+      }
+    }
+  }*/
+
 
   @override
   void initState() {
