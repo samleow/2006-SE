@@ -49,7 +49,9 @@ class SearchRouteController
 
     for (int i = 0; i < service.busNo.length; i++) {
       if (service.busRoutes[i].direction == 1 || service.busRoutes[i].direction == 2) { // Added direction == 2
+
         if (service.busNo[i].serviceNo == busNo) {
+
           for (int j = 0; j < service.busNo[i].busRoutes.length; j++) {
             if (service.busNo[i].busRoutes[j].busStop.busStopCode == fromStop) {
               print(service.busNo[i].busRoutes[j].busStop.busStopCode);

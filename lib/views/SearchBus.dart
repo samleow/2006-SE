@@ -76,9 +76,11 @@ class _SearchBusState extends State<SearchBus> {
   @override
   void initState() {
     super.initState();
+
   }
 
   final busNoController = TextEditingController();
+  final busNoDisplayController = TextEditingController();
   final fromTextController = TextEditingController();
   final toTextController = TextEditingController();
   final fromDisplayTextController = TextEditingController();
@@ -88,6 +90,7 @@ class _SearchBusState extends State<SearchBus> {
   void dispose() {
     // Clean up the controller when the widget is disposed.
     busNoController.dispose();
+    busNoDisplayController.dispose();
     fromTextController.dispose();
     toTextController.dispose();
     fromDisplayTextController.dispose();
@@ -131,13 +134,18 @@ class _SearchBusState extends State<SearchBus> {
                 ),
                 TypeAheadFormField(
                   textFieldConfiguration: TextFieldConfiguration(
-                      controller: busNoController,
+                      controller: busNoDisplayController,
                       decoration: const InputDecoration(
                         labelText: 'Bus Service no.',
                         hintText: 'Search for Bus Service no.',
                         border: OutlineInputBorder(),
                         prefixIcon: Icon(Icons.search),
                       ),
+                    onChanged: (text){
+                      busNoController.text = text;
+                      setState((){_dist=_searchRouteController.distanceTravelledBus(busNoController.text
+                          , fromTextController.text, toTextController.text).toStringAsFixed(2);});
+                    }
                   ),
                   validator: (String value){
                     // validate text field
@@ -156,8 +164,12 @@ class _SearchBusState extends State<SearchBus> {
                     );
                   },
                   onSuggestionSelected: (suggestion) {
+                    busNoDisplayController.text = suggestion;
                     busNoController.text = suggestion;
+                    setState((){_dist=_searchRouteController.distanceTravelledBus(busNoController.text
+                        , fromTextController.text, toTextController.text).toStringAsFixed(2);});
                   },
+
 
                   //onSaved: (v)=>setState((){_dist=distanceTravelled().toString();}),
                 ),
@@ -236,6 +248,11 @@ class _SearchBusState extends State<SearchBus> {
                       border: OutlineInputBorder(),
                       prefixIcon: Icon(Icons.directions_bus),
                     ),
+                    onChanged: (text){
+                       fromTextController.text = getBusStopCode(text.toString().toLowerCase().titleCase, busNoController.text);
+                       setState((){_dist=_searchRouteController.distanceTravelledBus(busNoController.text
+                           , fromTextController.text, toTextController.text).toStringAsFixed(2);});
+                    },
                     //maxLength: 5,
                     //keyboardType: TextInputType.number,
                   ),
@@ -292,6 +309,13 @@ class _SearchBusState extends State<SearchBus> {
                       border: OutlineInputBorder(),
                       prefixIcon: Icon(Icons.directions_bus),
                     ),
+                      onChanged: (text){
+                        toTextController.text = getBusStopCode(text.toString().toLowerCase().titleCase, busNoController.text);
+                        //print(toTextController);
+                        setState((){_dist=_searchRouteController.distanceTravelledBus(busNoController.text
+                            , fromTextController.text, toTextController.text).toStringAsFixed(2);});
+                        //print(_dist);
+                      },
                     //maxLength: 5,
                     //keyboardType: TextInputType.number,
                   ),
@@ -609,17 +633,17 @@ class _SearchBusState extends State<SearchBus> {
     //   }
     // }).toSet();
     //print(service.busNo[0].serviceNo);
-    print("Bus No Length in the method " + service.busNo.length.toString());
+    //print("Bus No Length in the method " + service.busNo.length.toString());
     for (int i = 0; i<service.busNo.length; i++) {
       if (service.busNo[i].serviceNo == busNo) {
         for (int j = 0; j < service.busNo[i].busRoutes.length; j++) {
-          print("Bus Route Length in the method " + service.busNo[i].busRoutes.length.toString());
+          //print("Bus Route Length in the method " + service.busNo[i].busRoutes.length.toString());
           description.add(service.busNo[i].busRoutes[j].busStop.description);
         }
         break;
       }
     }
-    print(description);
+    //print(description);
 
     // // Filter the description
     //   for(int i = 0; i< listforbustopcode.length; i++) {
@@ -644,7 +668,7 @@ class _SearchBusState extends State<SearchBus> {
       // clear the matching list
       description.clear();
     }
-    print(description.length);
+    //print(description.length);
     return description;
   }
 

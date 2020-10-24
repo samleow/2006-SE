@@ -24,6 +24,10 @@ class _SearchMRTState extends State<SearchMRT> {
   final MRTLineTextController = TextEditingController();
   final fromTextController = TextEditingController();
   final toTextController = TextEditingController();
+
+  final fromDisplayTextController = TextEditingController();
+  final toDisplayTextController = TextEditingController();
+
   int dropdownValue = 1;
   String _dist = "0.0";
   List<String> mrtstationline = ["North South Line", "East West Line", "Changi Airport Branch Line", "North East Line", "Circle Line Extension", "Circle Line", "Downtown Line"]; //hard coded for now
@@ -38,6 +42,8 @@ class _SearchMRTState extends State<SearchMRT> {
     MRTLineTextController.dispose();
     fromTextController.dispose();
     toTextController.dispose();
+    fromDisplayTextController.dispose();
+    toDisplayTextController.dispose();
     super.dispose();
   }
 
@@ -99,6 +105,8 @@ class _SearchMRTState extends State<SearchMRT> {
                             this._currentSelectedValue = stncode;
                             fromTextController.clear();
                             toTextController.clear();
+                            fromDisplayTextController.clear();
+                            toDisplayTextController.clear();
                           });
                         },
                         // display the selected value on UI
@@ -113,14 +121,23 @@ class _SearchMRTState extends State<SearchMRT> {
                     ),
                       TypeAheadFormField(
                         textFieldConfiguration: TextFieldConfiguration(
-                          controller: fromTextController,
+                          controller: fromDisplayTextController,
                           decoration: const InputDecoration(
                             labelText: 'Boarding at',
                             hintText: 'Enter Station Name',
                             border: OutlineInputBorder(),
                             prefixIcon: Icon(Icons.train),
                           ),
+                          onChanged: (text) {
+                            //print(text.toString().toLowerCase().titleCase);
+                            fromTextController.text = text.toString().toLowerCase().titleCase;
+                            //setState() run the calculation
+                            setState((){_dist=_searchRouteController.distanceTravelledMRT(convertLineNamesToCodes(),
+                                fromTextController.text,toTextController.text).toString();});
+                          },
+
                         ),
+
                         validator: (String value){
                           // validate text field
                           if(value.isEmpty)
@@ -138,6 +155,7 @@ class _SearchMRTState extends State<SearchMRT> {
                           );
                         },
                         onSuggestionSelected: (suggestion) {
+                          fromDisplayTextController.text = suggestion;
                           fromTextController.text = suggestion;
                           //setState() run the calculation
                           setState((){_dist=_searchRouteController.distanceTravelledMRT(convertLineNamesToCodes(),
@@ -164,13 +182,19 @@ class _SearchMRTState extends State<SearchMRT> {
                     ),
                       TypeAheadFormField(
                         textFieldConfiguration: TextFieldConfiguration(
-                          controller: toTextController,
+                          controller: toDisplayTextController,
                           decoration: const InputDecoration(
                             labelText: 'Alighting at',
                             hintText: 'Enter Station Name',
                             border: OutlineInputBorder(),
                             prefixIcon: Icon(Icons.train),
                           ),
+                          onChanged: (text) {
+                            toTextController.text = text.toString().toLowerCase().titleCase;
+                            //setState() run the calculation
+                            setState((){_dist=_searchRouteController.distanceTravelledMRT(convertLineNamesToCodes(),
+                                fromTextController.text,toTextController.text).toString();});
+                          },
                         ),
                         validator: (String value){
                           // validate text field
@@ -189,6 +213,7 @@ class _SearchMRTState extends State<SearchMRT> {
                           );
                         },
                         onSuggestionSelected: (suggestion) {
+                          toDisplayTextController.text = suggestion;
                           toTextController.text = suggestion;
                           //setState() run the calculation
                           setState((){_dist=_searchRouteController.distanceTravelledMRT(convertLineNamesToCodes(),
