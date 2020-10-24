@@ -22,6 +22,8 @@ class _CompareTripsState extends State<CompareTrips> {
   List<double> _originalDBPrice = [2.10, 4.00, 5.00, 1.00]; // <-- the number of list must be followed buy the number of trips from DB
 
   var list = new List<int>.generate(10, (i) => i + 1);
+  var listMonth = new List<int>.generate(31, (i) => i + 1);
+
   int _currentDaySelected =1; // <-- the number of list must be followed by the number of trips
   int _currentTripSelected =1; // <-- the number of list must be followed by the number of trips
 
@@ -169,7 +171,7 @@ class _CompareTripsState extends State<CompareTrips> {
                   ],
                 ),
                 Divider(
-                  color: Colors.blueAccent,
+                  color: Colors.black26,
                   thickness: 1,),
               ]),
         )
@@ -212,7 +214,7 @@ class _CompareTripsState extends State<CompareTrips> {
                               height: 2,
                               color: Colors.deepPurpleAccent,
                             ),
-                            items: list.map((int dropDownIntItem) {
+                            items: listMonth.map((int dropDownIntItem) {
                               return DropdownMenuItem<int>(
                                 value: dropDownIntItem,
                                 child: SizedBox(
@@ -247,7 +249,7 @@ class _CompareTripsState extends State<CompareTrips> {
                       Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            Text('Number of Trips per Day : ',
+                            Text('Number of Times per Day : ',
                                 style: TextStyle(
                                   fontSize: 20,
                                 )),
@@ -296,10 +298,12 @@ class _CompareTripsState extends State<CompareTrips> {
                                 child: MaterialButton(
                                     onPressed: () => {},
                                     child: Container(
+                                      width: double.infinity,
                                       margin: const EdgeInsets.only(left: 10.0, right: 10, bottom: 30),
                                       padding: const EdgeInsets.all(20.0),
                                       decoration: myBoxDecoration(), //
                                       child: Text(snapshot.data.toString(),
+                                          textAlign: TextAlign.center,
                                           style: TextStyle(
                                           color: Colors.deepPurpleAccent,
                                           fontSize: 20,

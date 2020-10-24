@@ -54,6 +54,7 @@ class _ComparePageState extends State<ConcessionPage> {
     return totalFares;
   }
 
+  var listMonth = new List<int>.generate(31, (i) => i + 1);
   var list = new List<int>.generate(10, (i) => i + 1);
   // int _currentDaySelected = 1,
   //     _currentTripSelected = 1;
@@ -183,10 +184,11 @@ class _ComparePageState extends State<ConcessionPage> {
                             children: <Widget>[
                               CheckboxListTile(
                               value: _checkbox[index],
-                                  title: Text("Trip " + (index+1).toString() + "  \$" +snapshot.data.toStringAsFixed(2), //+snapshot.data.toString(),
+                                  title: Text("Trip " + (index+1).toString() + ":  \$" +snapshot.data.toStringAsFixed(2), //+snapshot.data.toString(),
                                     style: TextStyle(
                                         fontSize: 20.0,
-                                        color: Colors.blue),),
+                                        color: Colors.blueAccent
+                                    ),),
                                   onChanged: (bool value) {
                                     setState(() {
                                       _checkbox[index] = value;
@@ -210,62 +212,78 @@ class _ComparePageState extends State<ConcessionPage> {
                                       SizedBox(
                                         height: 20.0,
                                       ),
-                                      Text("Number of days per month"),
-                                      DropdownButton<int>(
-                                        elevation: 12,
-                                        underline: Container(
-                                          height: 2,
-                                          color: Colors.deepPurpleAccent,
-                                        ),
-                                        items: list.map((int dropDownIntItem) {
-                                          return DropdownMenuItem<int>(
-                                            value: dropDownIntItem,
-                                            child: Text(dropDownIntItem.toString(),
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  fontSize: 20,
-                                                  color: Colors.deepPurple,
-                                                )),
-                                          );
-                                        }
-                                        ).toList(),
-                                        onChanged: (int newValue) {
-                                          setState(() {
-                                            _currentDaySelected[index] = newValue;
-                                          });
-                                        },
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Text("Number of Days per Month : ",
+                                            style: TextStyle(
+                                            fontSize: 15,
+                                            //color: Colors.deepPurple,
+                                            )
+                                          ),
+                                          DropdownButton<int>(
+                                            elevation: 12,
+                                            underline: Container(
+                                              height: 2,
+                                              color: Colors.deepPurpleAccent,
+                                            ),
+                                            items: listMonth.map((int dropDownIntItem) {
+                                              return DropdownMenuItem<int>(
+                                                value: dropDownIntItem,
+                                                child: Text(dropDownIntItem.toString(),
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                      fontSize: 20,
+                                                      color: Colors.deepPurple,
+                                                    )),
+                                              );
+                                            }
+                                            ).toList(),
+                                            onChanged: (int newValue) {
+                                              setState(() {
+                                                _currentDaySelected[index] = newValue;
+                                              });
+                                            },
 
-                                        value: _currentDaySelected[index],
+                                            value: _currentDaySelected[index],
 
+                                          ),
+                                        ],
                                       ),
-                                      SizedBox(
-                                        height: 20.0,
-                                      ),
-                                      Text("Number of Trips per day"),
-                                      DropdownButton<int>(
-                                        elevation: 12,
-                                        underline: Container(
-                                          height: 2,
-                                          color: Colors.deepPurpleAccent,
-                                        ),
-                                        items: list.map((int dropDownIntItem) {
-                                          return DropdownMenuItem<int>(
-                                            value: dropDownIntItem,
-                                            child: Text(dropDownIntItem.toString(),
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  fontSize: 20,
-                                                  color: Colors.deepPurple,
-                                                )),
-                                          );
-                                        }
-                                        ).toList(),
-                                        onChanged: (int newValue) {
-                                          setState(() {
-                                            _currentTripSelected[index] = newValue;
-                                          });
-                                        },
-                                        value: _currentTripSelected[index],
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Text("Number of Times per Day : ",
+                                              style: TextStyle(
+                                                fontSize: 15,
+                                                //color: Colors.deepPurple,
+                                              )),
+                                          DropdownButton<int>(
+                                            elevation: 12,
+                                            underline: Container(
+                                              height: 2,
+                                              color: Colors.deepPurpleAccent,
+                                            ),
+                                            items: list.map((int dropDownIntItem) {
+                                              return DropdownMenuItem<int>(
+                                                value: dropDownIntItem,
+                                                child: Text(dropDownIntItem.toString(),
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                      fontSize: 20,
+                                                      color: Colors.deepPurple,
+                                                    )),
+                                              );
+                                            }
+                                            ).toList(),
+                                            onChanged: (int newValue) {
+                                              setState(() {
+                                                _currentTripSelected[index] = newValue;
+                                              });
+                                            },
+                                            value: _currentTripSelected[index],
+                                          ),
+                                        ],
                                       ),
                                     ]
                                 )
@@ -314,17 +332,26 @@ class _ComparePageState extends State<ConcessionPage> {
       body: Builder(
         builder: (_) {
           return new Container(
-            margin: EdgeInsets.all(24),
+            margin: EdgeInsets.only(left: 24, right: 24),
             child: Form(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     DropdownButton<String>(
+                      elevation: 12,
+                      underline: Container(
+                        height: 2,
+                        color: Colors.deepPurpleAccent,
+                      ),
                       // get api data to display on drop down list
                       items: service.mcList.map((item) {
                         return DropdownMenuItem<String>(
                           child: Text(item.cardholders,
-                              style: TextStyle(color: Colors.blue)),
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.deepPurple,)),
+
                           value: item.cardholders,
                         );
                       }).toList(),
@@ -354,27 +381,44 @@ class _ComparePageState extends State<ConcessionPage> {
                         child: MaterialButton(
                             onPressed: () => {},
                             child: Container(
-                              margin: const EdgeInsets.only(
-                                  left: 10.0, right: 10, bottom: 0),
+                              // margin: const EdgeInsets.only(
+                              //     left: 10.0, right: 10, bottom: 0),
+                              width: double.infinity,
                               padding: const EdgeInsets.all(20.0),
                               decoration: myBoxDecoration(), //
                               child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  Text('Total Fares:\$ ${_calculateFareController.calculatedTotalPrice(
-                                      _price, _currentDaySelected, _currentTripSelected, tripListLength)}'),
-                                  Text('${_currentCardholder}: \$ ${_calculateFareController.getConcessionPrice(
-                                      _currentCardholder)}'),
-                                  Text(_calculateFareController.comparePrice(
-                                      _calculateFareController.getConcessionPrice(_currentCardholder),
-                                      double.parse(_calculateFareController.calculatedTotalPrice(
-                                          _price, _currentDaySelected, _currentTripSelected, tripListLength)))),
-                                ],
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Text('Total Fares:\$ ${_calculateFareController.calculatedTotalPrice(
+                                          _price, _currentDaySelected, _currentTripSelected, tripListLength)}',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color: Colors.deepPurpleAccent,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold)),
+                                      Text('${_currentCardholder}: \$ ${_calculateFareController.getConcessionPrice(
+                                          _currentCardholder)}',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color: Colors.deepPurpleAccent,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold)),
+                                      Text(_calculateFareController.comparePrice(
+                                          _calculateFareController.getConcessionPrice(_currentCardholder),
+                                          double.parse(_calculateFareController.calculatedTotalPrice(
+                                              _price, _currentDaySelected, _currentTripSelected, tripListLength))),
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color: Colors.deepPurpleAccent,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold))
+                                    ],
+                                  ),
                               ),
+
                             )
                         ),
                       ),
-                    )
 
                   ],
                 )

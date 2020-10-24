@@ -41,11 +41,12 @@ class CalculateFareController
   String comparePrice(String concessionPrice, double totalPrice) {
     double dConcessionPrice = double.parse(concessionPrice);
     if (totalPrice < dConcessionPrice) {
-      return "Your current Trip is cheaper.";
+      double differentPrice = dConcessionPrice - totalPrice;
+      return "Trip is Cheaper: \$${differentPrice.toStringAsFixed(2)}";
     }
     else {
       double differentPrice = totalPrice - dConcessionPrice;
-      return "You can save \$${differentPrice.toStringAsFixed(2)}";
+      return "Concession is Cheaper: \$${differentPrice.toStringAsFixed(2)}";
     }
   }
 }

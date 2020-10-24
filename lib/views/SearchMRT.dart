@@ -331,10 +331,10 @@ class _SearchMRTState extends State<SearchMRT> {
                       )
                         ]
                     ),
-                    Divider(
-                      color: Colors.black26,
-                        thickness: 1.5,
-                          ),
+                    // Divider(
+                    //   color: Colors.black26,
+                    //     thickness: 1.5,
+                    //       ),
                         ],
                       ),
                   ),

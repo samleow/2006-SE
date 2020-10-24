@@ -7,6 +7,7 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:flutter_app/controllers/SearchRouteController.dart';
 import 'package:recase/recase.dart';
 
+
 class SearchBus extends StatefulWidget {
   @override
   _SearchBusState createState() => _SearchBusState();
@@ -57,6 +58,7 @@ class _SearchBusState extends State<SearchBus> {
 
   @override
   Widget build(BuildContext context) {
+
 
     return Scaffold(
       key: scaffoldKey,
