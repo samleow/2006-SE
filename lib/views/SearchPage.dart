@@ -16,7 +16,7 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('AppName (TBC)'),
+          title: Text('UnFare SG'),
             actions: <Widget>[
               IconButton(
                   icon: Icon(Icons.map),

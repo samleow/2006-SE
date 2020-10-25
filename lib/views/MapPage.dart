@@ -158,6 +158,29 @@ class _MapPageState extends State<MapPage> {
       width: width,
       child: Scaffold(
         key: _scaffoldKey,
+        appBar: AppBar(
+          title: Text("Unfare SG"),
+          actions: <Widget>[
+            IconButton(
+                icon: Icon(Icons.map),
+                onPressed: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Mrtmap()),
+                  );
+                }
+            ),
+            IconButton(
+                icon: Icon(Icons.card_membership),
+                onPressed: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ConcessionPrice()),
+                  );
+                }
+            )
+          ],
+        ),
         body: Stack(
           children: <Widget>[
             // Map View
@@ -310,6 +333,41 @@ class _MapPageState extends State<MapPage> {
           ],
         ),
       ),
+    );
+  }
+}
+class Mrtmap extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text("Mrt Map"),
+        ),
+        body: Container(
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage('assets/mrt_map.png')
+              )
+          ),
+        )
+    );
+  }
+}
+
+class ConcessionPrice extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text("Concession Prices"),
+        ),
+        body: Container(
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage('assets/Concession.png')
+              )
+          ),
+        )
     );
   }
 }

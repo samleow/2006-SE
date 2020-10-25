@@ -23,7 +23,7 @@ class _ComparePageState extends State<ComparePage> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-            title: Text('AppName (TBC)'),
+            title: Text('UnFare SG'),
             actions: <Widget>[
               IconButton(
                   icon: Icon(Icons.map),

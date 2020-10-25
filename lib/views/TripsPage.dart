@@ -22,7 +22,7 @@ class _TripsPageState extends State<TripsPage> {
     return Scaffold(
       key: scaffoldKey,
       appBar: new AppBar(
-        title: new Text("AppName (TBC)"),
+        title: new Text("UnFare SG"),
         actions: <Widget>[
           IconButton(
               icon: Icon(Icons.map),
