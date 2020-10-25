@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/models/BusStops.dart';
 import 'package:flutter_app/views/Homepage.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter_app/services/CallAPIServices.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -42,6 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
   CallAPIServices get service => GetIt.I<CallAPIServices>();
   static bool _isLoading = true;
   static bool _loadSuccess = false;
+
   _fetchData() async {
     setState(() {
       _isLoading = true;
@@ -66,7 +69,6 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     if(_isLoading)
       _fetchData();
-
     super.initState();
   }
 
