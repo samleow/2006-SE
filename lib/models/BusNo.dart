@@ -5,7 +5,8 @@ class BusNo {
   List<BusRoutes> busRoutes;
 
   BusNo({
-    this.serviceNo, this.busRoutes
+    this.serviceNo,
+    this.busRoutes,
   });
 
   factory BusNo.fromJson(Map<String, dynamic> json) {

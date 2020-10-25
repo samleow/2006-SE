@@ -100,6 +100,7 @@ class _SearchBusState extends State<SearchBus> {
                     );
                   },
                   onSuggestionSelected: (suggestion) {
+                    //_toggle();
                     busNoController.text = suggestion;
                   },
 
@@ -203,10 +204,11 @@ class _SearchBusState extends State<SearchBus> {
                   onSuggestionSelected: (suggestion) {
                     fromDisplayTextController.text = suggestion;
                     fromTextController.text = getBusStopCode(suggestion, busNoController.text);
-
                     //setState() run the calculation
-                    setState((){_dist=_searchRouteController.distanceTravelledBus(busNoController.text
-                        , fromTextController.text, toTextController.text).toStringAsFixed(2);});
+                    setState((){
+                      _dist=_searchRouteController.distanceTravelledBus(busNoController.text
+                        , fromTextController.text, toTextController.text).toStringAsFixed(2);
+                    });
                   },
 
                   //onSaved: (v)=>setState((){_dist=distanceTravelled().toString();}),
@@ -429,7 +431,7 @@ class _SearchBusState extends State<SearchBus> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // if all typeahead text field is not empty
-          _toggle();
+          //_toggle();
           if(_formKey.currentState.validate())
             {
               _searchRouteController.saveRouteToDB(busNoController.text,
