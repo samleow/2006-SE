@@ -110,10 +110,8 @@ class _SearchBusState extends State<SearchBus> {
                     );
                   },
                   onSuggestionSelected: (suggestion) {
-                    fromDisplayTextController.text = suggestion;
-                    fromTextController.text = getBusStopCode(suggestion, busNoController.text);
-
-                    //setState() run the calculation
+                    busNoDisplayController.text = suggestion;
+                    busNoController.text = suggestion;
                     setState((){_dist=_searchRouteController.distanceTravelledBus(busNoController.text
                         , fromTextController.text, toTextController.text).toStringAsFixed(2);});
                   },
