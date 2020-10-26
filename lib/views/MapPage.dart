@@ -161,24 +161,6 @@ class _MapPageState extends State<MapPage> {
         appBar: AppBar(
           title: Text("Unfare SG"),
           actions: <Widget>[
-            IconButton(
-                icon: Icon(Icons.map),
-                onPressed: (){
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Mrtmap()),
-                  );
-                }
-            ),
-            IconButton(
-                icon: Icon(Icons.card_membership),
-                onPressed: (){
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ConcessionPrice()),
-                  );
-                }
-            )
           ],
         ),
         body: Stack(

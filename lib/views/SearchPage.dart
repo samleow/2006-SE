@@ -27,14 +27,25 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
                     );
                   }
               ),
-              IconButton(
-                  icon: Icon(Icons.card_membership),
-                  onPressed: (){
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ConcessionPrice()),
-                    );
+              PopupMenuButton(
+                itemBuilder: (content) => [
+                  PopupMenuItem(
+                    value: 1,
+                    child: Text("Help for Bus"),
+                  ),
+                  PopupMenuItem(
+                    value: 2,
+                    child: Text("Help for MRT"),
+                  ),
+                ],
+                onSelected: (int menu){
+                  if (menu == 1){
+                    showAlertDialogBUS(context);
                   }
+                  else if (menu == 2){
+                    showAlertDialogMRT(context);
+                  }
+                },
               )
             ],
           bottom: TabBar(
@@ -95,4 +106,50 @@ class ConcessionPrice extends StatelessWidget {
         )
     );
   }
+}
+
+showAlertDialogBUS(BuildContext context) {
+  Widget yesButton = FlatButton(
+    child: Text("OK"),
+    onPressed:  () {
+      Navigator.of(context).pop();
+    },
+  );
+
+  AlertDialog alert = AlertDialog(
+    title: Text("Bus Page"),
+    content: Text("To calculate the entered route distance and bus fare. Tap onto the blue '+' button to add the entered route into the selected trip number."),
+    actions: [
+      yesButton,
+    ],
+  );
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
+}
+
+showAlertDialogMRT(BuildContext context) {
+  Widget yesButton = FlatButton(
+    child: Text("OK"),
+    onPressed:  () {
+      Navigator.of(context).pop();
+    },
+  );
+
+  AlertDialog alert = AlertDialog(
+    title: Text("MRT Page"),
+    content: Text("To calculate the entered route distance and MRT fare. Tap onto the blue '+' button to add the entered route into the selected trip number."),
+    actions: [
+      yesButton,
+    ],
+  );
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
 }
