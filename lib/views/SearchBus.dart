@@ -53,18 +53,26 @@ class _SearchBusState extends State<SearchBus> {
   String toStop;
   double fare;
   int tripID;
-
   bool enableText = false;
   int radioID = 1;
   String radioButtonItem = '1';
   int dropdownValue = 1;
   String _dist = "0.0";
   bool _visible = false;
+  String _currentFareType = "Adult";
+
+  List getfareType() {
+    List<String> fareType = [];
+    for(int i = 0; i < service.busFares.length; i++){
+      fareType.add(service.busFares[i].fareType);
+      }
+    return fareType;
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
       key: scaffoldKey,
       body: Form( // change Container to Form
@@ -75,6 +83,46 @@ class _SearchBusState extends State<SearchBus> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
+                Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        child: Text('Fare Type: ',
+                            style: TextStyle(
+                              fontSize: 20,
+                            )),
+                      ),
+                    ),
+                    DropdownButton<String>(
+                      elevation: 12,
+                      underline: Container(
+                        height: 2,
+                        color: Colors.deepPurpleAccent,
+                      ),
+                      // get api data to display on drop down list
+                      items: getfareType().map((item) {
+                        return DropdownMenuItem<String>(
+                          child: Text(item,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.deepPurple,)),
+                          value: item,
+                        );
+                      }).toList(),
+                      onChanged: (String fareType) {
+                        setState(() {
+                          // update the selected value on UI
+                          this._currentFareType = fareType;
+                        });
+                      },
+                      // display the selected value on UI
+                      value: _currentFareType,
+                    ),
+                  ],
+                ),
                 Padding(
                   padding: EdgeInsets.all(10.0),
                 ),
@@ -352,7 +400,7 @@ class _SearchBusState extends State<SearchBus> {
                       ),
                       Expanded(
                           child: Text(
-                              '\$${_searchRouteController.calculateFaresBus(_dist)}',
+                              '\$${_searchRouteController.calculateFaresBus(_dist,_currentFareType)}',
                               textDirection: TextDirection.ltr,
                               textAlign: TextAlign.right,
                               style:TextStyle(
@@ -460,7 +508,7 @@ class _SearchBusState extends State<SearchBus> {
           if(_formKey.currentState.validate())
             {
               _searchRouteController.saveRouteToDB(busNoController.text,
-                  fromTextController.text, toTextController.text, dropdownValue, false);
+                  fromTextController.text, toTextController.text, dropdownValue, false, _currentFareType);
               _showSnackBar("Trip saved successfully");
             }
 

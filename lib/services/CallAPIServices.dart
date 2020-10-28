@@ -40,14 +40,33 @@ class CallAPIServices {
   //Calling Gov Data API to retrieve Bus Fares Data
   Future<bool> callBusFaresAPI() {
     return http.get(GovDataAPI +
-        '7a5c22f0-71da-4c24-b419-84322b54ce17&fields=adult_card_fare_per_ride')
+        '7a5c22f0-71da-4c24-b419-84322b54ce17')
         .then((data) {
       if (data.statusCode == 200) {
         final jsonData = json.decode(data.body);
         final jsondatabody = jsonData['result']['records'];
-        for (var item in jsondatabody) {
-          busFares.add(BusFares.fromJson(item));
+        //BusFares disabilities = new BusFares('Disabilities');
+        BusFares adult = new BusFares('Adult');
+        BusFares seniorCitizen = new BusFares('Senior Citizen');
+        BusFares student = new BusFares('Student');
+        //BusFares workfare = new BusFares('Workfare');
+       // disabilities.busFare = [];
+        adult.busFare = [];
+        seniorCitizen.busFare = [];
+        student.busFare = [];
+        //workfare.busFare = [];
+        for (int i = 0; i<jsondatabody.length; i++) {
+         // disabilities.busFare.add(jsondatabody[i]['persons_with_disabilities_card_fare_per_ride']);
+          adult.busFare.add(jsondatabody[i]['adult_card_fare_per_ride']);
+          seniorCitizen.busFare.add(jsondatabody[i]['senior_citizen_card_fare_per_ride']);
+          student.busFare.add(jsondatabody[i]['student_card_fare_per_ride']);
+         // workfare.busFare.add(jsondatabody[i]['workfare_transport_concession_card_fare_per_ride']);
         }
+       // busFares.add(disabilities);
+        busFares.add(adult);
+        busFares.add(seniorCitizen);
+        busFares.add(student);
+       // busFares.add(workfare);
         return true; //APIResponse<List<BusFares>>(data: BusFareData);
       }
       return false; //APIResponse<List<BusFares>>(error: true, errorMessage: 'An error occurred');
@@ -236,13 +255,29 @@ class CallAPIServices {
       if (data.statusCode == 200) {
         final jsonData = json.decode(data.body);
         final jsondatabody = jsonData['result']['records'];
-        //BusFareData.add(BusFares.fromJson(jsondatabody['records']));
-        for (var item in jsondatabody) {
-          if (item['fare_type'] == 'Adult card fare' &&
-              item['applicable_time'] == 'All other timings') {
-            mrtFares.add(MRTFares.fromJson(item));
+        MRTFares adult = new MRTFares('Adult');
+        MRTFares seniorCitizen = new MRTFares('Senior Citizen');
+        MRTFares student = new MRTFares('Student');
+        adult.MRTfare = [];
+        seniorCitizen.MRTfare = [];
+        student.MRTfare = [];
+
+        for (int i = 0; i<jsondatabody.length; i++) {
+          if (jsondatabody[i]['applicable_time'] == 'All other timings') {
+            if(jsondatabody[i]['fare_type'] == 'Adult card fare') {
+              adult.MRTfare.add(jsondatabody[i]['fare_per_ride']);
+            } else if (jsondatabody[i]['fare_type'] == 'Senior citizen card fare') {
+              seniorCitizen.MRTfare.add(jsondatabody[i]['fare_per_ride']);
+            }
+            else if (jsondatabody[i]['fare_type'] == 'Student card fare') {
+              student.MRTfare.add(jsondatabody[i]['fare_per_ride']);
+            }
           }
         }
+
+        mrtFares.add(adult);
+        mrtFares.add(seniorCitizen);
+        mrtFares.add(student);
         return true; // APIResponse<List<MRTFares>>(data: MRTFareData);
       }
       return false; //APIResponse<List<MRTFares>>(error: true, errorMessage: 'An error occurred');

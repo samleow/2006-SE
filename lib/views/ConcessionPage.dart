@@ -67,6 +67,9 @@ class _ComparePageState extends State<ConcessionPage> {
   double totalPrice = 0;
 
   String _currentCardholder = "Primary Student";
+
+  List<String> _concessionType = ['Bus', 'Mrt', 'Hybrid'];
+  String _concessionTypeValue = 'Bus';
   //int _cardholderIndex = 0;
 
   // Widget buildlist(BuildContext context, int index) {
@@ -337,6 +340,51 @@ class _ComparePageState extends State<ConcessionPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Container(
+                            child: Text('Concession Type: ',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                )),
+                          ),
+                        ),
+                        DropdownButton<String>(
+                          elevation: 12,
+                          underline: Container(
+                            height: 2,
+                            color: Colors.deepPurpleAccent,
+                          ),
+                          // get api data to display on drop down list
+                          items: _concessionType.map((item) {
+                            return DropdownMenuItem<String>(
+                              child: Text(item,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.deepPurple,)),
+                              value: item,
+                            );
+                          }).toList(),
+                          onChanged: (String concessionType) {
+                            setState(() {
+                              // update the selected value on UI
+                              this._concessionTypeValue = concessionType;
+                            });
+                          },
+                          // display the selected value on UI
+                          value: _concessionTypeValue,
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(10.0),
+                    ),
+
+
                     DropdownButton<String>(
                       elevation: 12,
                       underline: Container(
@@ -396,7 +444,7 @@ class _ComparePageState extends State<ConcessionPage> {
                                               color: Colors.deepPurpleAccent,
                                               fontSize: 20,
                                               fontWeight: FontWeight.bold)),
-                                      Text('${_currentCardholder}: \$ ${_calculateFareController.getConcessionPrice(
+                                      Text('${_currentCardholder}: \$ ${_calculateFareController.getConcessionPrice(_concessionTypeValue,
                                           _currentCardholder)}',
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
@@ -404,7 +452,7 @@ class _ComparePageState extends State<ConcessionPage> {
                                               fontSize: 20,
                                               fontWeight: FontWeight.bold)),
                                       Text(_calculateFareController.comparePrice(
-                                          _calculateFareController.getConcessionPrice(_currentCardholder),
+                                          _calculateFareController.getConcessionPrice(_concessionTypeValue, _currentCardholder),
                                           double.parse(_calculateFareController.calculatedTotalPrice(
                                               _price, _currentDaySelected, _currentTripSelected, tripListLength))),
                                           textAlign: TextAlign.center,
@@ -415,14 +463,12 @@ class _ComparePageState extends State<ConcessionPage> {
                                     ],
                                   ),
                               ),
-
                             )
                         ),
                       ),
-
                   ],
                 )
-            ),
+            )
           );
         },
       ),

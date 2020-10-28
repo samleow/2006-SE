@@ -25,13 +25,42 @@ class CalculateFareController
   }
 
   // method to get the selected concession hybridPrice
-  String getConcessionPrice(String cardholder) {
+  String getConcessionPrice(String concessionType, String cardholder) {
     String price = "";
-    for (int i = 0; i < service.mcList.length; i++) {
-      if (cardholder == service.mcList[i].cardholders) {
-        price = service.mcList[i]
-            .hybridPrice; // change hybridPrice to get other price list in the api
-        break;
+    if(concessionType == 'Bus') {
+      for (int i = 0; i < service.mcList.length; i++) {
+        if (cardholder == service.mcList[i].cardholders) {
+          if(service.mcList[i].busPrice != 'na'){
+            price = service.mcList[i].busPrice;
+          } else {
+            price = "Not available";
+          }
+          break;
+        }
+      }
+    }
+    if(concessionType == 'Mrt') {
+      for (int i = 0; i < service.mcList.length; i++) {
+        if (cardholder == service.mcList[i].cardholders) {
+          if(service.mcList[i].trainPrice != 'na'){
+            price = service.mcList[i].trainPrice;
+          } else {
+            price = "Not available";
+          }
+          break;
+        }
+      }
+    }
+    if(concessionType == 'Hybrid') {
+      for (int i = 0; i < service.mcList.length; i++) {
+        if (cardholder == service.mcList[i].cardholders) {
+          if(service.mcList[i].hybridPrice != 'na'){
+            price = service.mcList[i].hybridPrice;
+          } else {
+            price = "Not available";
+          }
+          break;
+        }
       }
     }
     return price;
@@ -39,14 +68,21 @@ class CalculateFareController
 
   // compare Price
   String comparePrice(String concessionPrice, double totalPrice) {
-    double dConcessionPrice = double.parse(concessionPrice);
-    if (totalPrice < dConcessionPrice) {
-      double differentPrice = dConcessionPrice - totalPrice;
-      return "Trip is Cheaper: \$${differentPrice.toStringAsFixed(2)}";
+    print("Concession Price: " + concessionPrice);
+    if (concessionPrice != 'Not available') {
+      double dConcessionPrice = double.parse(concessionPrice);
+
+      if (totalPrice < dConcessionPrice) {
+        double differentPrice = dConcessionPrice - totalPrice;
+        return "Trip is Cheaper: \$${differentPrice.toStringAsFixed(2)}";
+      }
+      else {
+        double differentPrice = totalPrice - dConcessionPrice;
+        return "Concession is Cheaper: \$${differentPrice.toStringAsFixed(2)}";
+      }
     }
     else {
-      double differentPrice = totalPrice - dConcessionPrice;
-      return "Concession is Cheaper: \$${differentPrice.toStringAsFixed(2)}";
+      return "Not available to compare";
     }
   }
 }

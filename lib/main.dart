@@ -60,6 +60,26 @@ class _MyHomePageState extends State<MyHomePage> {
         await service.callMRTFaresAPI() &&
         await service.retrieveMRTRoutes();
 
+        print(service.busFares.length);
+        print(service.busFares[0].fareType);
+        print(service.busFares[0].busFare[0]);
+    print(service.mrtFares.length);
+    print(service.mrtFares[0].fareType);
+    print(service.mrtFares[0].MRTfare[0]);
+    // print(service.busFares[0].fareType);
+    // print(service.busFares[0].busFare[1]);
+    // print(service.busFares[1].fareType);
+    // print(service.busFares[1].busFare[0]);
+    // print(service.busFares[2].fareType);
+    // print(service.busFares[2].busFare[0]);
+    // print(service.busFares[3].fareType);
+    // print(service.busFares[3].busFare[0]);
+    // print(service.busFares[4].fareType);
+    // print(service.busFares[4].busFare[0]);
+
+    // print(service.busFares[0].fareType);
+    // print(service.busFares[0].busFare[0]);
+
     setState(() {
       _isLoading = false;
     });
