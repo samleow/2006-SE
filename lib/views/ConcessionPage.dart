@@ -381,7 +381,7 @@ class _ComparePageState extends State<ConcessionPage> {
                       ],
                     ),
                     Padding(
-                      padding: EdgeInsets.all(10.0),
+                      padding: EdgeInsets.all(0.0),
                     ),
 
 
