@@ -84,21 +84,25 @@ class SearchRouteController
   }
 
   //Find the bus fare prices based on the distance travelled
-  double calculateFaresBus(String distanceTravelled) {
+  double calculateFaresBus(String distanceTravelled, String fareType) {
     if (double.parse(distanceTravelled) == 0){
       return 0;
     }
     // loops through the busFare list to get the distance range
-    int j=0;
-    for (int i = 0; i < service.busFares.length; i++)
-    {
-      if(double.parse(distanceTravelled) <= i+3.2)
-      {
-        j=i;
-        break;
+    int fareTypeindex = 0;
+    int index=0;
+    for (int i = 0; i < service.busFares.length; i++) {
+      if (service.busFares[i].fareType == fareType) {
+        fareTypeindex = i;
+        for (int j = 0; j < service.busFares[i].busFare.length; j++) {
+          if (double.parse(distanceTravelled) <= j + 3.2) {
+            index = j;
+            break;
+          }
+        }
       }
     }
-    return double.parse(service.busFares[j].BusFarePrice)/100;
+    return double.parse(service.busFares[fareTypeindex].busFare[index])/100;
   }
 
   double distanceTravelledMRT(String MRTLine, String fromStop, String toStop) {
@@ -143,25 +147,29 @@ class SearchRouteController
     return distance;
   }
 
-  double calculateFaresMRT(String distanceTravelled) {
+  double calculateFaresMRT(String distanceTravelled, String fareType) {
     if (distanceTravelled == '0.0'){
       return 0;
     }
     // loops through the busFare list to get the distance range
-    int j=0;
-    for (int i = 0; i < service.mrtFares.length; i++)
-    {
-      if(double.parse(distanceTravelled) <= i+3.2)
-      {
-        j=i;
-        break;
+    int fareTypeindex = 0;
+    int index=0;
+    for (int i = 0; i < service.mrtFares.length; i++) {
+      if (service.mrtFares[i].fareType == fareType) {
+        fareTypeindex = i;
+        for (int j = 0; j < service.mrtFares[i].MRTfare.length; j++) {
+          if (double.parse(distanceTravelled) <= j + 3.2) {
+            index = j;
+            break;
+          }
+        }
       }
     }
-    return double.parse(service.mrtFares[j].MRTFarePrice)/100;
+    return double.parse(service.mrtFares[fareTypeindex].MRTfare[index])/100;
   }
 
   // save route to database
-  void saveRouteToDB(String transportID, String fromStop, String toStop, int dropdownValue, bool isMRT) async{
+  void saveRouteToDB(String transportID, String fromStop, String toStop, int dropdownValue, bool isMRT, String fareType) async{
     // int i = await DatabaseHelper.instance.insert({
     //   DatabaseHelper.transportID : transportID.text,
     //   DatabaseHelper.fromStop: fromTextController.text,
@@ -176,8 +184,8 @@ class SearchRouteController
     //fare = '5';
     //tripID = '1';
 
-    double _fare = isMRT ? calculateFaresMRT(distanceTravelledMRT(transportID, fromStop, toStop).toString()) :
-      calculateFaresBus(distanceTravelledBus(transportID, fromStop, toStop).toString());
+    double _fare = isMRT ? calculateFaresMRT(distanceTravelledMRT(transportID, fromStop, toStop).toString(), fareType) :
+      calculateFaresBus(distanceTravelledBus(transportID, fromStop, toStop).toString(), fareType);
 
     //var route = Routes(1,transportID,fromStop,toStop,5,1);
     var dbHelper = DBHelper();
@@ -188,7 +196,8 @@ class SearchRouteController
       //Edited into not hard-coded anymore
       DBHelper.fare: _fare,
       DBHelper.tripID: dropdownValue,
-      DBHelper.BUSorMRT: isMRT ? "MRT" : "Bus"
+      DBHelper.BUSorMRT: isMRT ? "MRT" : "Bus",
+      DBHelper.fareType: fareType,
     });
 
     //_showSnackBar("Data saved successfully");

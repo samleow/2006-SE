@@ -6,6 +6,7 @@ class Routes {
   double fare;
   int tripID;
   String BUSorMRT;
+  String fareType;
 
   Routes(
       this.routeID,
@@ -14,7 +15,8 @@ class Routes {
       this.toStop,
       this.fare,
       this.tripID,
-      this.BUSorMRT
+      this.BUSorMRT,
+      this.fareType
    );
 
   // Map<String,dynamic> toMap() {
@@ -36,6 +38,7 @@ class Routes {
     fare = map["fare"];
     tripID = map["tripID"];
     BUSorMRT = map["BUSorMRT"];
+    fareType = map["fareType"];
   }
   //
   // Map<String,dynamic> toMap(){

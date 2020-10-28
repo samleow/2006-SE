@@ -24,23 +24,18 @@ class _TripsPageState extends State<TripsPage> {
       appBar: new AppBar(
         title: new Text("UnFare SG"),
         actions: <Widget>[
-          IconButton(
-              icon: Icon(Icons.map),
-              onPressed: (){
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Mrtmap()),
-                );
+          PopupMenuButton(
+            itemBuilder: (content) => [
+              PopupMenuItem(
+                value: 1,
+                child: Text("Help"),
+              ),
+            ],
+            onSelected: (int menu){
+              if (menu == 1){
+                showAlertDialogHELP(context);
               }
-          ),
-          IconButton(
-              icon: Icon(Icons.card_membership),
-              onPressed: (){
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ConcessionPrice()),
-                );
-              }
+            },
           )
         ],
       ),
@@ -233,6 +228,8 @@ class _TripsPageState extends State<TripsPage> {
           Text('Trip : ' + snapshot.data[index].tripID.toString()),
           Padding(padding: EdgeInsets.all(1.0),),
           Text('Fare: \$' + snapshot.data[index].fare.toString()),
+          Padding(padding: EdgeInsets.all(1.0),),
+          Text('Fare Type: ' + snapshot.data[index].fareType.toString()),
           //Padding(padding: EdgeInsets.all(5.0),),
           //Divider(),
         ],
@@ -265,6 +262,7 @@ class _TripsPageState extends State<TripsPage> {
           Text('To : ' + snapshot.data[index].toStop),
           Text('Trip : ' + snapshot.data[index].tripID.toString()),
           Text('Fare: \$' + snapshot.data[index].fare.toString()),
+          Text('Fare Type: ' + snapshot.data[index].fareType.toString()),
           //Padding(padding: EdgeInsets.all(5.0),),
           //Divider(),
         ],
@@ -401,4 +399,27 @@ class ConcessionPrice extends StatelessWidget {
         )
     );
   }
+}
+
+showAlertDialogHELP(BuildContext context) {
+  Widget yesButton = FlatButton(
+    child: Text("OK"),
+    onPressed:  () {
+      Navigator.of(context).pop();
+    },
+  );
+
+  AlertDialog alert = AlertDialog(
+    title: Text("Trips"),
+    content: Text("To view the added routes information from the saved trips. Tap onto the blue '+' icon to add trips and the red '-' icon to delete selected trips."),
+    actions: [
+      yesButton,
+    ],
+  );
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
 }

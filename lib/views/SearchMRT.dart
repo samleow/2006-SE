@@ -56,6 +56,15 @@ class _SearchMRTState extends State<SearchMRT> {
   String toStop;
   double fare;
   int tripID;
+  String _currentFareType = "Adult";
+
+  List getfareType() {
+    List<String> fareType = [];
+    for(int i = 0; i < service.busFares.length; i++){
+      fareType.add(service.busFares[i].fareType);
+    }
+    return fareType;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +78,49 @@ class _SearchMRTState extends State<SearchMRT> {
               child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                              child: Text('Fare Type: ',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                  )),
+                            ),
+                          ),
+                          DropdownButton<String>(
+                            elevation: 12,
+                            underline: Container(
+                              height: 2,
+                              color: Colors.deepPurpleAccent,
+                            ),
+                            // get api data to display on drop down list
+                            items: getfareType().map((item) {
+                              return DropdownMenuItem<String>(
+                                child: Text(item,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.deepPurple,)),
+                                value: item,
+                              );
+                            }).toList(),
+                            onChanged: (String fareType) {
+                              setState(() {
+                                // update the selected value on UI
+                                this._currentFareType = fareType;
+                              });
+                            },
+                            // display the selected value on UI
+                            value: _currentFareType,
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(10.0),
+                      ),
                     Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: <Widget>[
@@ -284,7 +336,7 @@ class _SearchMRTState extends State<SearchMRT> {
                           ),
                           Expanded(
                               child: Text(
-                                  '\$${_searchRouteController.calculateFaresMRT(_dist)}',
+                                  '\$${_searchRouteController.calculateFaresMRT(_dist, _currentFareType)}',
                                   textDirection: TextDirection.ltr,
                                   textAlign: TextAlign.right,
                                   style:TextStyle(
@@ -371,7 +423,7 @@ class _SearchMRTState extends State<SearchMRT> {
           if(_formKey.currentState.validate())
           {
             _searchRouteController.saveRouteToDB(convertLineNamesToCodes(),
-                fromTextController.text, toTextController.text, dropdownValue, true);
+                fromTextController.text, toTextController.text, dropdownValue, true, _currentFareType);
             _showSnackBar("Data saved successfully");
           }
         },

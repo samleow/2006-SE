@@ -17,6 +17,7 @@ class DBHelper{
   static final _tripsTable = 'tripsTable';
   static final totalFare = 'totalFare';
   static final BUSorMRT = 'BUSorMRT';
+  static final fareType = 'fareType';
 
   Future<Database> get db async {
     if (_db != null) return _db;
@@ -42,7 +43,8 @@ class DBHelper{
       $toStop TEXT,
       $fare DOUBLE,
       $tripID INTEGER,
-      $BUSorMRT TEXT ); 
+      $BUSorMRT TEXT, 
+      $fareType TEXT); 
       
       '''
     );
@@ -127,7 +129,7 @@ class DBHelper{
     List<Map> list = await dbClient.rawQuery(' SELECT * FROM $_tablename ');
     List<Routes> route = new List();
     for (int i = 0; i < list.length; i++) {
-      route.add(new Routes(list[i]["_routeID"], list[i]["transportID"], list[i]["fromStop"], list[i]["toStop"], list[i]["fare"],list[i]["tripID"],list[i]["BUSorMRT"]));
+      route.add(new Routes(list[i]["_routeID"], list[i]["transportID"], list[i]["fromStop"], list[i]["toStop"], list[i]["fare"],list[i]["tripID"],list[i]["BUSorMRT"],list[i]["fareType"]));
     }
     print('route length is '+ route.length.toString());
     return route;
@@ -138,7 +140,7 @@ class DBHelper{
     List<Map> list = await dbClient.rawQuery(' SELECT * FROM $_tablename WHERE $tripID LIKE "%$id%" ');
     List<Routes> route = new List();
     for (int i = 0; i < list.length; i++) {
-      route.add(new Routes(list[i]["_routeID"], list[i]["transportID"], list[i]["fromStop"], list[i]["toStop"], list[i]["fare"],list[i]["tripID"],list[i]["BUSorMRT"]));
+      route.add(new Routes(list[i]["_routeID"], list[i]["transportID"], list[i]["fromStop"], list[i]["toStop"], list[i]["fare"],list[i]["tripID"],list[i]["BUSorMRT"],list[i]["fareType"]));
     }
     print('route length is '+ route.length.toString());
     return route;
