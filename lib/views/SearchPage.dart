@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/views/SearchBus.dart';
 import 'package:flutter_app/views/SearchMRT.dart';
+import 'package:photo_view/photo_view.dart';
 
 
 class SearchPage extends StatefulWidget {
@@ -80,33 +81,15 @@ class Mrtmap extends StatelessWidget {
           title: Text("Mrt Map"),
         ),
         body: Container(
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage('assets/mrt_map.png')
-              )
-          ),
+            child: PhotoView(
+              imageProvider: AssetImage("assets/mrt_map.png"),
+            )
         )
     );
   }
 }
 
-class ConcessionPrice extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text("Concession Prices"),
-        ),
-        body: Container(
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage('assets/Concession.png')
-              )
-          ),
-        )
-    );
-  }
-}
+
 
 showAlertDialogBUS(BuildContext context) {
   Widget yesButton = FlatButton(

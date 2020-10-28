@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/views/CompareTrips.dart';
 import 'package:flutter_app/views/ConcessionPage.dart';
+import 'package:photo_view/photo_view.dart';
 import 'ConcessionPage.dart';
 
 
@@ -80,23 +81,6 @@ class _ComparePageState extends State<ComparePage> {
   }
 }
 
-class Mrtmap extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text("Mrt Map"),
-        ),
-        body: Container(
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage('assets/mrt_map.png')
-              )
-          ),
-        )
-    );
-  }
-}
 
 class ConcessionPrice extends StatelessWidget {
   @override
@@ -106,11 +90,9 @@ class ConcessionPrice extends StatelessWidget {
           title: Text("Concession Prices"),
         ),
         body: Container(
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage('assets/Concession.png')
-              )
-          ),
+            child: PhotoView(
+              imageProvider: AssetImage("assets/Concession.png"),
+            )
         )
     );
   }
