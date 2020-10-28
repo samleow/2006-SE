@@ -22,7 +22,6 @@ class _SearchBusState extends State<SearchBus> {
   @override
   void initState() {
     super.initState();
-
   }
 
   final busNoController = TextEditingController();
@@ -54,6 +53,7 @@ class _SearchBusState extends State<SearchBus> {
   double fare;
   int tripID;
 
+  String _currentCardholder = 'Primary Student';
   bool enableText = false;
   int radioID = 1;
   String radioButtonItem = '1';
@@ -447,6 +447,9 @@ class _SearchBusState extends State<SearchBus> {
                       ),
                     ]
                 ),
+                // Padding(
+                //   padding: EdgeInsets.all(10.0),
+                // ),
               ],
             ),
           ),

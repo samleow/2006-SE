@@ -363,8 +363,8 @@ class _ComparePageState extends State<ConcessionPage> {
                       },
                       // display the selected value on UI
                       value: _currentCardholder,
-
                     ),
+
                     SizedBox(
                       height: 300,
                       child: AnimatedList(
