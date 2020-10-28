@@ -79,7 +79,7 @@ class _SearchMRTState extends State<SearchMRT> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Align(
                             alignment: Alignment.centerLeft,
@@ -118,11 +118,11 @@ class _SearchMRTState extends State<SearchMRT> {
                           ),
                         ],
                       ),
-                      Padding(
-                        padding: EdgeInsets.all(10.0),
-                      ),
+                      // Padding(
+                      //   padding: EdgeInsets.all(10.0),
+                      // ),
                     Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Align(
                           alignment: Alignment.centerLeft,
@@ -352,9 +352,9 @@ class _SearchMRTState extends State<SearchMRT> {
                       padding: EdgeInsets.all(10.0),
                     ),
 
-                  Padding(
-                    padding: EdgeInsets.all(10.0),
-                  ),
+                  // Padding(
+                  //   padding: EdgeInsets.all(10.0),
+                  // ),
 
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

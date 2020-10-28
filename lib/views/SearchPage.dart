@@ -93,7 +93,7 @@ class Mrtmap extends StatelessWidget {
 
 showAlertDialogBUS(BuildContext context) {
   Widget yesButton = FlatButton(
-    child: Text("OK"),
+    child: Text("Close"),
     onPressed:  () {
       Navigator.of(context).pop();
     },
@@ -101,7 +101,10 @@ showAlertDialogBUS(BuildContext context) {
 
   AlertDialog alert = AlertDialog(
     title: Text("Bus Page"),
-    content: Text("To calculate the entered route distance and bus fare. Tap onto the blue '+' button to add the entered route into the selected trip number."),
+    content: Text("Find your Bus Route's distance and Bus Fares" +
+        "\n\n1) Enter your favourite Bus' information with the various options" +
+        "\n\n2) Select a Trip number of your liking" +
+        "\n\n3) Insert this route into your favourite Trip"),
     actions: [
       yesButton,
     ],
@@ -116,7 +119,7 @@ showAlertDialogBUS(BuildContext context) {
 
 showAlertDialogMRT(BuildContext context) {
   Widget yesButton = FlatButton(
-    child: Text("OK"),
+    child: Text("Close"),
     onPressed:  () {
       Navigator.of(context).pop();
     },
@@ -124,7 +127,11 @@ showAlertDialogMRT(BuildContext context) {
 
   AlertDialog alert = AlertDialog(
     title: Text("MRT Page"),
-    content: Text("To calculate the entered route distance and MRT fare. Tap onto the blue '+' button to add the entered route into the selected trip number."),
+    //content: Text("To calculate the entered route distance and MRT fare. Tap onto the blue '+' button to add the entered route into the selected trip number."),
+    content: Text("Find your MRT Route's distance and MRT Fares" +
+        "\n\n1) Enter your favourite MRT' information with the various options" +
+        "\n\n2) Select a Trip number of your liking" +
+        "\n\n3) Insert this route into your favourite Trip"),
     actions: [
       yesButton,
     ],

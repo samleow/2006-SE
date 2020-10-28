@@ -85,7 +85,7 @@ class _SearchBusState extends State<SearchBus> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Align(
                       alignment: Alignment.centerLeft,
@@ -476,7 +476,7 @@ class _SearchBusState extends State<SearchBus> {
                                 return DropdownMenuItem<dynamic>(
                                     value: value,
                                     child: SizedBox(
-                                      width: 100,
+                                      width: 50,
                                       child: Text(value.toString(),
                                           textAlign: TextAlign.center,
                                           style: TextStyle(

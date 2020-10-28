@@ -341,7 +341,7 @@ class _ComparePageState extends State<ConcessionPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Align(
                           alignment: Alignment.centerLeft,
@@ -442,14 +442,14 @@ class _ComparePageState extends State<ConcessionPage> {
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                               color: Colors.deepPurpleAccent,
-                                              fontSize: 20,
+                                              fontSize: 15,
                                               fontWeight: FontWeight.bold)),
                                       Text('${_currentCardholder}: \$ ${_calculateFareController.getConcessionPrice(_concessionTypeValue,
                                           _currentCardholder)}',
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                               color: Colors.deepPurpleAccent,
-                                              fontSize: 20,
+                                              fontSize: 15,
                                               fontWeight: FontWeight.bold)),
                                       Text(_calculateFareController.comparePrice(
                                           _calculateFareController.getConcessionPrice(_concessionTypeValue, _currentCardholder),

@@ -403,7 +403,7 @@ class ConcessionPrice extends StatelessWidget {
 
 showAlertDialogHELP(BuildContext context) {
   Widget yesButton = FlatButton(
-    child: Text("OK"),
+    child: Text("Close"),
     onPressed:  () {
       Navigator.of(context).pop();
     },
@@ -411,7 +411,14 @@ showAlertDialogHELP(BuildContext context) {
 
   AlertDialog alert = AlertDialog(
     title: Text("Trips"),
-    content: Text("To view the added routes information from the saved trips. Tap onto the blue '+' icon to add trips and the red '-' icon to delete selected trips."),
+    //content: Text("To view the added routes information from the saved trips. Tap onto the blue '+' icon to add trips and the red '-' icon to delete selected trips."),
+    content: Text("View various Routes saved in each Trip" +
+        "\n\n--Manage Trips--" +
+            "\n\n- Tap onto the '+' icon to create a new Trip"
+            "\n\n- Tap onto the 'x' icon to delete current Trip and its Routes"+
+        "\n\n\n"
+        "\n\n--Manage Routes--" +
+            "\n\n- Swipe on the Route you wish to delete"),
     actions: [
       yesButton,
     ],

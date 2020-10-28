@@ -43,7 +43,7 @@ class _ComparePageState extends State<ComparePage> {
                   ),
                   PopupMenuItem(
                     value: 2,
-                    child: Text("Help for Concession"),
+                    child: Text("Help for Concession Pass"),
                   )
                 ],
                 onSelected: (int menu){
@@ -100,7 +100,7 @@ class ConcessionPrice extends StatelessWidget {
 
 showAlertDialogConcession(BuildContext context) {
   Widget yesButton = FlatButton(
-    child: Text("OK"),
+    child: Text("Close"),
     onPressed:  () {
       Navigator.of(context).pop();
     },
@@ -108,7 +108,10 @@ showAlertDialogConcession(BuildContext context) {
 
   AlertDialog alert = AlertDialog(
     title: Text("Concession Pass"),
-    content: Text("To compare the selected trips against the selected concession pass. Tap onto the trips to be used for comparison."),
+    content: Text("Compare selected trips against Monthly Concession"
+        "\n\n1) Select your relevant Concession information"
+        "\n\n2) Tick on the Trips you wish to be included in the comparison"
+        "\n\n3) Our app will display how much you save by taking the cheaper option"),
     actions: [
       yesButton,
     ],
@@ -123,7 +126,7 @@ showAlertDialogConcession(BuildContext context) {
 
 showAlertDialogTrips(BuildContext context) {
   Widget yesButton = FlatButton(
-    child: Text("OK"),
+    child: Text("Close"),
     onPressed:  () {
       Navigator.of(context).pop();
     },
@@ -131,7 +134,10 @@ showAlertDialogTrips(BuildContext context) {
 
   AlertDialog alert = AlertDialog(
     title: Text("Trips"),
-    content: Text("To compare 2 selected trips to find out which trip is cheaper."),
+    content: Text("Compare the monthly price of 2 Trips"
+        "\n\n1) Select 2 Trips to compare"
+        "\n\n2) Enter how frequently you go on that trip"
+        "\n\n3) Our app will display how much you can save by taking the cheaper option!"),
     actions: [
       yesButton,
     ],

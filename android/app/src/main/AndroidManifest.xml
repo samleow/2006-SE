@@ -11,7 +11,7 @@
 
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="TestAPP"
+        android:label="UnFare SG"
         android:icon="@drawable/logo">
 
         <meta-data android:name="com.google.android.geo.API_KEY"

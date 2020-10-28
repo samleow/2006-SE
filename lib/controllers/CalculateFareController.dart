@@ -33,7 +33,7 @@ class CalculateFareController
           if(service.mcList[i].busPrice != 'na'){
             price = service.mcList[i].busPrice;
           } else {
-            price = "Not available";
+            price = "N/A";
           }
           break;
         }
@@ -45,7 +45,7 @@ class CalculateFareController
           if(service.mcList[i].trainPrice != 'na'){
             price = service.mcList[i].trainPrice;
           } else {
-            price = "Not available";
+            price = "N/A";
           }
           break;
         }
@@ -57,7 +57,7 @@ class CalculateFareController
           if(service.mcList[i].hybridPrice != 'na'){
             price = service.mcList[i].hybridPrice;
           } else {
-            price = "Not available";
+            price = "N/A";
           }
           break;
         }
@@ -69,7 +69,7 @@ class CalculateFareController
   // compare Price
   String comparePrice(String concessionPrice, double totalPrice) {
     print("Concession Price: " + concessionPrice);
-    if (concessionPrice != 'Not available') {
+    if (concessionPrice != 'N/A') {
       double dConcessionPrice = double.parse(concessionPrice);
 
       if (totalPrice < dConcessionPrice) {
