@@ -266,13 +266,9 @@ class _SearchBusState extends State<SearchBus> {
                       prefixIcon: Icon(Icons.directions_bus),
                     ),
                     onChanged: (text){
-
                       fromTextController.text = text;
-
                        fromTextController.text = getBusStopCodeOnChange(text.toString().toLowerCase().titleCase, busNoController.text);
-                       setState((){
-
-                         _dist=_searchRouteController.distanceTravelledBus(busNoController.text
+                       setState((){_dist=_searchRouteController.distanceTravelledBus(busNoController.text
                            , fromTextController.text, toTextController.text).toStringAsFixed(2);});
                     },
                     //maxLength: 5,
@@ -551,7 +547,7 @@ class _SearchBusState extends State<SearchBus> {
             {
               _searchRouteController.saveRouteToDB(busNoController.text,
                   fromTextController.text, toTextController.text, dropdownValue, false, _currentFareType);
-              _showSnackBar("Trip saved successfully");
+              _showSnackBar("Data saved successfully");
             }
         },
         tooltip: 'Show me the Values',
