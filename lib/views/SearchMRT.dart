@@ -214,9 +214,9 @@ class _SearchMRTState extends State<SearchMRT> {
 
                         validator: (String value){
                           // validate text field
-                          if(value.isEmpty)
+                          if(value.isEmpty || InputCheck(value) == false)
                           {
-                            return "Please Enter MRT Station";
+                            return "Please Enter Valid MRT Station";
                           }
                           return null;
                         },
@@ -272,9 +272,9 @@ class _SearchMRTState extends State<SearchMRT> {
                         ),
                         validator: (String value){
                           // validate text field
-                          if(value.isEmpty)
+                          if(value.isEmpty || InputCheck(value) == false)
                           {
-                            return "Please Enter MRT Station";
+                            return "Please Enter Valid MRT Station";
                           }
                           return null;
                         },
@@ -504,6 +504,20 @@ class _SearchMRTState extends State<SearchMRT> {
       matches.clear();
     }
     return matches;
+  }
+
+  // check individual from input
+  bool InputCheck(String Input) {
+    bool InputCheck = false;
+    for (int i = 0; i<service.mrtRoutes.length; i++) {
+      if (service.mrtRoutes[i].StationCode == convertLineNamesToCodes()) {
+          if(Input.toLowerCase() == service.mrtRoutes[i].MRTStation.toLowerCase())
+          {
+            InputCheck = true;
+          }
+        }
+      }
+    return InputCheck;
   }
 
   Future<List<dynamic>> getAllTripsID() async {
