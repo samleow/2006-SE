@@ -166,9 +166,9 @@ class _SearchBusState extends State<SearchBus> {
                   ),
                   validator: (String value){
                     // validate text field
-                    if(value.isEmpty)
+                    if(value.isEmpty || !busNoCheck(value))
                       {
-                        return "Please Enter Bus Number";
+                        return "Please Enter Valid Bus Number";
                       }
                     return null;
                   },
@@ -266,8 +266,13 @@ class _SearchBusState extends State<SearchBus> {
                       prefixIcon: Icon(Icons.directions_bus),
                     ),
                     onChanged: (text){
-                       fromTextController.text = getBusStopCode(text.toString().toLowerCase().titleCase, busNoController.text);
-                       setState((){_dist=_searchRouteController.distanceTravelledBus(busNoController.text
+
+                      fromTextController.text = text;
+
+                       fromTextController.text = getBusStopCodeOnChange(text.toString().toLowerCase().titleCase, busNoController.text);
+                       setState((){
+
+                         _dist=_searchRouteController.distanceTravelledBus(busNoController.text
                            , fromTextController.text, toTextController.text).toStringAsFixed(2);});
                     },
                     //maxLength: 5,
@@ -275,9 +280,9 @@ class _SearchBusState extends State<SearchBus> {
                   ),
                   validator: (String value){
                     // validate text field
-                    if(value.isEmpty)
+                    if(value.isEmpty || fromInputCheck(busNoController.text, value) == false)
                     {
-                      return "Please Enter Boarding Location";
+                      return "Please Enter Valid Boarding Location";
                     }
                     return null;
                   },
@@ -328,7 +333,8 @@ class _SearchBusState extends State<SearchBus> {
                       prefixIcon: Icon(Icons.directions_bus),
                     ),
                       onChanged: (text){
-                        toTextController.text = getBusStopCode(text.toString().toLowerCase().titleCase, busNoController.text);
+                        toTextController.text = text;
+                        toTextController.text = getBusStopCodeOnChange(text.toString().toLowerCase().titleCase, busNoController.text);
                         //print(toTextController);
                         setState((){_dist=_searchRouteController.distanceTravelledBus(busNoController.text
                             , fromTextController.text, toTextController.text).toStringAsFixed(2);});
@@ -339,9 +345,9 @@ class _SearchBusState extends State<SearchBus> {
                   ),
                   validator: (String value){
                     // validate text field
-                    if(value.isEmpty)
+                    if(value.isEmpty|| fromInputCheck(busNoController.text, value) == false)
                     {
-                      return "Please Enter Alighting Location";
+                      return "Please Enter Valid Alighting Location";
                     }
                     return null;
                   },
@@ -541,7 +547,7 @@ class _SearchBusState extends State<SearchBus> {
         onPressed: () {
           // if all typeahead text field is not empty
           //_toggle();
-          if(_formKey.currentState.validate())
+          if(_formKey.currentState.validate() && checkUserInput(busNoController.text, fromTextController.text, toTextController.text))
             {
               _searchRouteController.saveRouteToDB(busNoController.text,
                   fromTextController.text, toTextController.text, dropdownValue, false, _currentFareType);
@@ -565,6 +571,86 @@ class _SearchBusState extends State<SearchBus> {
   void _showSnackBar(String text) {
     scaffoldKey.currentState
         .showSnackBar(new SnackBar(content: new Text(text)));
+  }
+
+  bool checkUserInput(String busNo, String fromInput, String toInput)
+  {
+    bool busCheck = false;
+    bool fromInputCheck = false;
+    bool toInputCheck = false;
+
+
+    for (int i = 0; i<service.busNo.length; i++) {
+      if (service.busNo[i].serviceNo.toLowerCase() == busNo.toLowerCase()) {
+          busCheck = true;
+          //return busCheck;
+        for(int j = 0; j< service.busNo[i].busRoutes.length; j++)
+          {
+            //print(service.busNo[i].busRoutes[j].busStop.description);
+            if(fromInput == service.busNo[i].busRoutes[j].busStop.busStopCode)
+              {
+                fromInputCheck = true;
+              }
+            if(toInput == service.busNo[i].busRoutes[j].busStop.busStopCode)
+              {
+                toInputCheck = true;
+              }
+          }
+      }
+    }
+
+    if(busCheck == true && fromInputCheck == true && toInputCheck == true)
+      {
+        return true;
+      }
+    else {
+      return false;
+    }
+  }
+
+  // check individual bus number
+  bool busNoCheck(String busNo) {
+    bool busCheck = false;
+
+
+    for (int i = 0; i < service.busNo.length; i++) {
+      if (service.busNo[i].serviceNo.toLowerCase() == busNo.toLowerCase()) {
+        busCheck = true;
+      }
+    }
+    return busCheck;
+  }
+
+
+  // check individual from input
+  bool fromInputCheck(String busNo, String fromInput)
+  {
+
+    bool busCheck = false;
+    bool fromInputCheck = false;
+
+    for (int i = 0; i<service.busNo.length; i++) {
+      if (service.busNo[i].serviceNo.toLowerCase() == busNo.toLowerCase()) {
+        busCheck = true;
+
+        for(int j = 0; j< service.busNo[i].busRoutes.length; j++)
+        {
+          //print(service.busNo[i].busRoutes[j].busStop.description);
+          if(fromInput.toLowerCase() == service.busNo[i].busRoutes[j].busStop.description.toLowerCase())
+          {
+            fromInputCheck = true;
+          }
+        }
+      }
+    }
+
+    if(busCheck == true && fromInputCheck == true)
+    {
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 
   // Get Bus Numbers
@@ -737,14 +823,39 @@ class _SearchBusState extends State<SearchBus> {
     listbusstopcode.removeWhere((element) => element == null); // remove null ""
 
     // to capture the only list value to a string ------- .toString() will not work becos it display {}
-    String busStopCode = listbusstopcode.reduce((value, element) => element);
+    String busStopCode = "";
+    busStopCode = listbusstopcode.reduce((value, element) => element);
+
+    //print("LALA"+busStopCode);
     return busStopCode;
   }
 
-  void _toggle() {
-    setState(() {
-      _visible = !_visible;
-    });
+
+  // Get Bus Stop Code
+  String getBusStopCodeOnChange(String busStopDescription, String busNo)
+  {
+    String busStopCode = "";
+
+    List<String> listbusstopcode = [];
+    for (int i = 0; i<service.busNo.length; i++) {
+      if (service.busNo[i].serviceNo == busNo) {
+        for (int j = 0; j < service.busNo[i].busRoutes.length; j++) {
+          if (service.busNo[i].busRoutes[j].busStop.description == busStopDescription) {
+            //print("Bus Route Length in the method " + service.busNo[i].busRoutes.length.toString());
+            busStopCode = service.busNo[i].busRoutes[j].busStop.busStopCode;
+          }
+        }
+        break;
+      }
+    }
+    //listbusstopcode.removeWhere((element) => element == ""); // remove ""
+    //listbusstopcode.removeWhere((element) => element == null); // remove null ""
+
+    // to capture the only list value to a string ------- .toString() will not work becos it display {}
+
+    //busStopCode = listbusstopcode.reduce((value, element) => element);
+
+    return busStopCode;
   }
 
   void UpdateFareTypeDatabase(int i) async {

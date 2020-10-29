@@ -329,6 +329,7 @@ class _ComparePageState extends State<ConcessionPage> {
     }
     return Scaffold (
       appBar: new AppBar(
+        automaticallyImplyLeading: false,
         title: new Text('Total Price: \$ ${_calculateFareController.calculatedTotalPrice(
             _price, _currentDaySelected, _currentTripSelected, tripListLength)}'),
       ),
@@ -449,7 +450,7 @@ class _ComparePageState extends State<ConcessionPage> {
                               // margin: const EdgeInsets.only(
                               //     left: 10.0, right: 10, bottom: 0),
                               width: double.infinity,
-                              padding: const EdgeInsets.all(20.0),
+                              //padding: const EdgeInsets.all(20.0),
                               decoration: myBoxDecoration(), //
                               child: FutureBuilder(
                                 future: getFareTypeFromDB(),
