@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/services/CallAPIServices.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:recase/recase.dart';
 
 
 class MapPage extends StatefulWidget {
@@ -17,14 +19,16 @@ class _MapPageState extends State<MapPage> {
   GoogleMapController mapController;
 
   Position _currentPosition;
+  Position _BusStopPosition;
   String _currentAddress;
 
-  final startAddressController = TextEditingController();
-  final destinationAddressController = TextEditingController();
+  final searchController = TextEditingController();
 
   String _startAddress = '';
   String _destinationAddress = '';
   String _placeDistance;
+  double lat;
+  double long;
 
   Set<Marker> markers = {};
 
@@ -94,30 +98,30 @@ class _MapPageState extends State<MapPage> {
           ),
         );
       });
-      await _getAddress();
+      //await _getAddress();
     }).catchError((e) {
       print(e);
     });
   }
 
   // Method for retrieving the address
-  _getAddress() async {
-    try {
-      List<Placemark> p = await placemarkFromCoordinates(
-          _currentPosition.latitude, _currentPosition.longitude);
-
-      Placemark place = p[0];
-
-      setState(() {
-        _currentAddress =
-        "${place.name}, ${place.locality}, ${place.postalCode}, ${place.country}";
-        startAddressController.text = _currentAddress;
-        _startAddress = _currentAddress;
-      });
-    } catch (e) {
-      print(e);
-    }
-  }
+  // _getAddress() async {
+  //   try {
+  //     List<Placemark> p = await placemarkFromCoordinates(
+  //         _currentPosition.latitude, _currentPosition.longitude);
+  //
+  //     Placemark place = p[0];
+  //
+  //     setState(() {
+  //       _currentAddress =
+  //       "${place.name}, ${place.locality}, ${place.postalCode}, ${place.country}";
+  //       startAddressController.text = _currentAddress;
+  //       _startAddress = _currentAddress;
+  //     });
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
 
   Future<bool> getBusStopMarkers() async {
     for (int i = 0; i < service.busStops.length; i++) {
@@ -159,10 +163,7 @@ class _MapPageState extends State<MapPage> {
       child: Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: Text("Unfare SG"),
-          actions: <Widget>[
-          ],
+          title: Text("UnFare SG"),
         ),
         body: Stack(
           children: <Widget>[
@@ -227,8 +228,6 @@ class _MapPageState extends State<MapPage> {
                 ),
               ),
             ),
-            // Show the place input fields & button for
-            // showing the route
             SafeArea(
               child: Align(
                 alignment: Alignment.topCenter,
@@ -247,29 +246,44 @@ class _MapPageState extends State<MapPage> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
-                          Text(
-                            'Places',
-                            style: TextStyle(fontSize: 20.0),
-                          ),
+                          // Text(
+                          //   'Bus Stop',
+                          //   style: TextStyle(fontSize: 20.0),
+                          // ),
                           SizedBox(height: 10),
-                          _textField(
-                              label: 'Start',
-                              hint: 'Choose starting point',
-                              prefixIcon: Icon(Icons.looks_one),
-                              suffixIcon: IconButton(
-                                icon: Icon(Icons.my_location),
-                                onPressed: () {
-                                  startAddressController.text = _currentAddress;
-                                  _startAddress = _currentAddress;
-                                },
-                              ),
-                              controller: startAddressController,
-                              width: width,
-                              locationCallback: (String value) {
-                                setState(() {
-                                  _startAddress = value;
-                                });
-                              }),
+                          TypeAheadFormField(
+                            textFieldConfiguration: TextFieldConfiguration(
+                                controller: searchController,
+                                decoration: const InputDecoration(
+                                  labelText: 'Bus Stop.',
+                                  hintText: 'Search for Bus Stop.',
+                                  border: OutlineInputBorder(),
+                                  prefixIcon: Icon(Icons.search),
+                                ),
+                            ),
+                            suggestionsCallback: (pattern) async{ //pattern is user input
+                              return await getBusStopSuggestions(pattern); // to activate autocomplete list
+                            },
+                            itemBuilder: (context, suggestion) {
+                              return ListTile(
+                                title: Text(suggestion),
+                              );
+                            },
+                            onSuggestionSelected: (suggestion) {
+                              searchController.text = suggestion;
+                              setState((){
+                                _getBusStopLocation(searchController.text);
+                                mapController.animateCamera(
+                                  CameraUpdate.newCameraPosition(
+                                    CameraPosition(
+                                      target: LatLng(lat, long),
+                                      zoom: 18.0,
+                                    ),
+                                  ),
+                                );
+                              });
+                            },
+                          ),
                         ],
                       ),
                     ),
@@ -318,7 +332,44 @@ class _MapPageState extends State<MapPage> {
       ),
     );
   }
+
+  Future<List> getBusStopSuggestions(String userinput) async
+  {
+    List<String> description = List();
+    for (int i = 0; i<service.busStops.length; i++) {
+          description.add(service.busStops[i].description);
+    }
+    //matches.addAll(listforbustopcode); // Swap the list busStopDescList(to display description) or filterbusStopList (to display bus stop code)
+    description.removeWhere((element) => element == ""); // remove the ""
+    description.retainWhere((s) => s.contains((userinput.toLowerCase().titleCase))); // added .toLowerCase() then convert .titleCase for auto caps after every space
+
+    // if SearchInput is clear
+    if(description == "") // Swap the list busStopDescList(to display description) or filterbusStopList (to display bus stop code)
+        {
+      // clear the matching list
+      description.clear();
+    }
+    //print(description.length);
+    return description;
+  }
+
+  _getBusStopLocation(String userinput) async {
+    String findBusStopCode = '';
+    for(int i = 0; i < service.busStops.length; i++){
+      if (userinput == service.busStops[i].description) {
+        findBusStopCode = service.busStops[i].busStopCode;
+        lat = service.busStops[i].latitude;
+        long = service.busStops[i].longitude;
+        break;
+      }
+    }
+    print("Got come to this method");
+  }
 }
+
+
+
+
 class Mrtmap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -354,3 +405,5 @@ class ConcessionPrice extends StatelessWidget {
     );
   }
 }
+
+
