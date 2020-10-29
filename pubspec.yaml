@@ -33,7 +33,7 @@ dependencies:
   csv: ^4.0.3
   recase: ^3.0.0
   geolocator: ^6.1.0
-  flutter_google_maps: ^4.0.0
+  google_maps_flutter: ^1.0.4
   geocoding: ^1.0.5
   nice_button: ^0.1.7
   shared_preferences: ^0.5.12+2

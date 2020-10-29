@@ -23,10 +23,6 @@ class _MapPageState extends State<MapPage> {
   String _currentAddress;
 
   final searchController = TextEditingController();
-
-  String _startAddress = '';
-  String _destinationAddress = '';
-  String _placeDistance;
   double lat;
   double long;
 
@@ -163,6 +159,7 @@ class _MapPageState extends State<MapPage> {
       child: Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           title: Text("UnFare SG"),
         ),
         body: Stack(
