@@ -27,6 +27,12 @@ class CalculateFareController
   // method to get the selected concession hybridPrice
   String getConcessionPrice(String concessionType, String cardholder) {
     String price = "";
+    print('Testing: ' + concessionType);
+    print('cardholder: ' + cardholder.toString());
+    if(cardholder == null){
+      price = '0.00';
+      return price;
+    }
     if(concessionType == 'Bus') {
       for (int i = 0; i < service.mcList.length; i++) {
         if (cardholder == service.mcList[i].cardholders) {
@@ -68,7 +74,8 @@ class CalculateFareController
 
   // compare Price
   String comparePrice(String concessionPrice, double totalPrice) {
-    print("Concession Price: " + concessionPrice);
+    print("Concession Price: " + concessionPrice.toString());
+    print("totalPrice: " + totalPrice.toString());
     if (concessionPrice != 'N/A') {
       double dConcessionPrice = double.parse(concessionPrice);
 

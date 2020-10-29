@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/views/SearchBus.dart';
 import 'package:flutter_app/views/SearchMRT.dart';
+import 'package:flutter_app/views/TypeSelectionPage.dart';
 import 'package:photo_view/photo_view.dart';
 
 
@@ -17,6 +18,7 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
       length: 2,
       child: Scaffold(
         appBar: AppBar(
+            automaticallyImplyLeading: false,
           title: Text('UnFare SG'),
             actions: <Widget>[
               IconButton(
@@ -38,6 +40,10 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
                     value: 2,
                     child: Text("Help for MRT"),
                   ),
+                  PopupMenuItem(
+                    value: 3,
+                    child: Text("Select Fare Type"),
+                  ),
                 ],
                 onSelected: (int menu){
                   if (menu == 1){
@@ -45,6 +51,12 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
                   }
                   else if (menu == 2){
                     showAlertDialogMRT(context);
+                    }
+                  else if (menu == 3){
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => TypeSelectionPage()),
+                      );
                   }
                 },
               )
@@ -88,8 +100,6 @@ class Mrtmap extends StatelessWidget {
     );
   }
 }
-
-
 
 showAlertDialogBUS(BuildContext context) {
   Widget yesButton = FlatButton(

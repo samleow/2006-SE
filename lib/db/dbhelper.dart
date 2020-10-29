@@ -54,7 +54,7 @@ class DBHelper{
         '''      
       CREATE TABLE $_tripsTable(
       $tripID INTEGER PRIMARY KEY,
-      $totalFare DOUBLE);
+      $fareType TEXT);
       '''
     );
     print("Created trips tables");
@@ -62,8 +62,7 @@ class DBHelper{
     await db.execute(
         '''
           INSERT INTO $_tripsTable 
-          VALUES (1,0);
-    
+          VALUES (1,'Adult');
         ''');
     print("Inserted default values into trips tables");
   }
@@ -201,12 +200,54 @@ class DBHelper{
       return 1000000;
     }
 
-    if(id == 1){
-      return await dbClient.delete(_tablename,where:'$tripID = ?',whereArgs:[id]);
-    } else {
-      await dbClient.delete(_tripsTable,where:'$tripID = ?',whereArgs:[id]);
-      return await dbClient.delete(_tablename,where:'$tripID = ?',whereArgs:[id]);
+    // if(id == 1){
+    //   return await dbClient.delete(_tablename,where:'$tripID = ?',whereArgs:[id]);
+    // } else {
+    //   await dbClient.delete(_tripsTable,where:'$tripID = ?',whereArgs:[id]);
+    //   return await dbClient.delete(_tablename,where:'$tripID = ?',whereArgs:[id]);
     }
+
+  //   void updateAdultFareType() async{
+  //   var dbClient = await db;
+  //   await dbClient.delete(_tripsTable);
+  //   await dbClient.rawQuery('INSERT INTO $_tripsTable VALUES (1,"Adult") ');
+  //   await dbClient.delete(_tablename); // Route
+  // }
+  //
+  // void updateSeniorFareType() async{
+  //   var dbClient = await db;
+  //   await dbClient.delete(_tripsTable);
+  //   await dbClient.rawQuery('INSERT INTO $_tripsTable VALUES (1,"Senior Citizen") ');
+  //   await dbClient.delete(_tablename); // Route
+  // }
+  //
+  // void updateStudentFareType() async{
+  //   var dbClient = await db;
+  //   await dbClient.delete(_tripsTable);
+  //   await dbClient.rawQuery('INSERT INTO $_tripsTable VALUES (1,"Student") ');
+  //   await dbClient.delete(_tablename); // Route
+  // }
+
+  void updateFareType(int i) async{
+    var dbClient = await db;
+    await dbClient.delete(_tripsTable);
+    await dbClient.delete(_tablename); // Route
+    print('deleted table values');
+    if(i == 1) {
+      await dbClient.rawQuery('INSERT INTO $_tripsTable VALUES (1,"Adult") ');
+    } else if(i == 2){
+      await dbClient.rawQuery('INSERT INTO $_tripsTable VALUES (1,"Senior Citizen") ');
+    } else
+      await dbClient.rawQuery('INSERT INTO $_tripsTable VALUES (1,"Student") ');
+
+    print('inserted some shit');
+  }
+
+  Future<List<Map>> getFareType() async{
+    var dbClient = await db;
+    List<Map> list = await dbClient.rawQuery('SELECT FareType FROM $_tripsTable WHERE $tripID = 1');
+    print('yo mama ' + list.toString());
+    return list;
   }
 
   Future<List<Map>> getMaxTripId() async{

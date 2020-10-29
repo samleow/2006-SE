@@ -56,15 +56,15 @@ class _SearchMRTState extends State<SearchMRT> {
   String toStop;
   double fare;
   int tripID;
-  String _currentFareType = "Adult";
+  String _currentFareType;
 
-  List getfareType() {
-    List<String> fareType = [];
-    for(int i = 0; i < service.busFares.length; i++){
-      fareType.add(service.busFares[i].fareType);
-    }
-    return fareType;
-  }
+  // List getfareType() {
+  //   List<String> fareType = [];
+  //   for(int i = 0; i < service.busFares.length; i++){
+  //     fareType.add(service.busFares[i].fareType);
+  //   }
+  //   return fareType;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -78,9 +78,11 @@ class _SearchMRTState extends State<SearchMRT> {
               child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
+                      Padding(padding: EdgeInsets.only(top: 10.0),),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
+
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Container(
@@ -90,31 +92,51 @@ class _SearchMRTState extends State<SearchMRT> {
                                   )),
                             ),
                           ),
-                          DropdownButton<String>(
-                            elevation: 12,
-                            underline: Container(
-                              height: 2,
-                              color: Colors.deepPurpleAccent,
-                            ),
-                            // get api data to display on drop down list
-                            items: getfareType().map((item) {
-                              return DropdownMenuItem<String>(
-                                child: Text(item,
-                                    textAlign: TextAlign.center,
+                          // DropdownButton<String>(
+                          //   elevation: 12,
+                          //   underline: Container(
+                          //     height: 2,
+                          //     color: Colors.deepPurpleAccent,
+                          //   ),
+                          //   // get api data to display on drop down list
+                          //   items: getfareType().map((item) {
+                          //     return DropdownMenuItem<String>(
+                          //       child: Text(item,
+                          //           textAlign: TextAlign.center,
+                          //           style: TextStyle(
+                          //             fontSize: 20,
+                          //             color: Colors.deepPurple,)),
+                          //       value: item,
+                          //     );
+                          //   }).toList(),
+                          //   onChanged: (String fareType) {
+                          //     setState(() {
+                          //       // update the selected value on UI
+                          //       this._currentFareType = fareType;
+                          //     });
+                          //   },
+                          //   // display the selected value on UI
+                          //   value: _currentFareType,
+                          // ),
+                          FutureBuilder(
+                            future: getFareTypeFromDB(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                _currentFareType = snapshot.data;
+                                return Text(snapshot.data,
                                     style: TextStyle(
-                                      fontSize: 20,
-                                      color: Colors.deepPurple,)),
-                                value: item,
+                                      fontSize: 25,
+                                      color: Colors.deepPurpleAccent,
+                                      fontWeight: FontWeight.bold,
+                                      decoration: TextDecoration.underline,
+                                    ));
+                              } else if (snapshot.hasError) {
+                                return new Text("${snapshot.error}");
+                              }
+                              return new Container(alignment: AlignmentDirectional.center,
+                                child: new CircularProgressIndicator(),
                               );
-                            }).toList(),
-                            onChanged: (String fareType) {
-                              setState(() {
-                                // update the selected value on UI
-                                this._currentFareType = fareType;
-                              });
                             },
-                            // display the selected value on UI
-                            value: _currentFareType,
                           ),
                         ],
                       ),
@@ -406,6 +428,7 @@ class _SearchMRTState extends State<SearchMRT> {
                         );
                       }
                       )
+
                         ]
                     ),
                     // Divider(
@@ -493,5 +516,13 @@ class _SearchMRTState extends State<SearchMRT> {
   void _showSnackBar(String text) {
     scaffoldKey.currentState
         .showSnackBar(new SnackBar(content: new Text(text)));
+  }
+
+  Future<String> getFareTypeFromDB() async {
+    var dbHelper = DBHelper();
+    List<Map> list = await dbHelper.getFareType();
+    String fareTypeDB = list[0]['fareType'];
+    //print('this sis sjionasiudnhwuidnh' + fareTypeDB.toString());
+    return(fareTypeDB);
   }
 }

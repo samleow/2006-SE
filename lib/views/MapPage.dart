@@ -159,6 +159,7 @@ class _MapPageState extends State<MapPage> {
       child: Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           title: Text("Unfare SG"),
           actions: <Widget>[
           ],

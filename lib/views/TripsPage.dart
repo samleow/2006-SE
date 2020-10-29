@@ -3,6 +3,7 @@ import 'package:flutter_app/db/database_helper.dart';
 import 'package:flutter_app/models/Route.dart';
 import 'package:flutter_app/db/dbhelper.dart';
 import 'package:flutter_app/views/RouteDelete.dart';
+import 'package:flutter_app/views/TypeSelectionPage.dart';
 
 
 class TripsPage extends StatefulWidget {
@@ -22,6 +23,7 @@ class _TripsPageState extends State<TripsPage> {
     return Scaffold(
       key: scaffoldKey,
       appBar: new AppBar(
+        automaticallyImplyLeading: false,
         title: new Text("UnFare SG"),
         actions: <Widget>[
           PopupMenuButton(
@@ -30,10 +32,19 @@ class _TripsPageState extends State<TripsPage> {
                 value: 1,
                 child: Text("Help"),
               ),
+              PopupMenuItem(
+                value: 2,
+                child: Text("Select Fare Type"),
+              ),
             ],
             onSelected: (int menu){
               if (menu == 1){
                 showAlertDialogHELP(context);
+              } else if(menu == 2){
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => TypeSelectionPage()),
+                );
               }
             },
           )
@@ -333,8 +344,9 @@ class _TripsPageState extends State<TripsPage> {
   void addTripId() async {
     var dbHelper = DBHelper();
     int i = await dbHelper.saveTrip({
-      DBHelper.totalFare: 0,
+      DBHelper.fareType: 'lala',
     });
+    print('lala');
     print("TripID created: " + i.toString());
 
     // List<Map> list = await dbHelper.getAllTripsID();

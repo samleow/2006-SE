@@ -65,8 +65,8 @@ class _ComparePageState extends State<ConcessionPage> {
   List<bool> _checkbox = [];
   //double price = 2.10;
   double totalPrice = 0;
-
-  String _currentCardholder = "Primary Student";
+  String _currentFareType;
+  String _currentCardholder;
 
   List<String> _concessionType = ['Bus', 'Mrt', 'Hybrid'];
   String _concessionTypeValue = 'Bus';
@@ -352,6 +352,7 @@ class _ComparePageState extends State<ConcessionPage> {
                                 )),
                           ),
                         ),
+
                         DropdownButton<String>(
                           elevation: 12,
                           underline: Container(
@@ -384,34 +385,50 @@ class _ComparePageState extends State<ConcessionPage> {
                       padding: EdgeInsets.all(0.0),
                     ),
 
-
-                    DropdownButton<String>(
-                      elevation: 12,
-                      underline: Container(
-                        height: 2,
-                        color: Colors.deepPurpleAccent,
-                      ),
-                      // get api data to display on drop down list
-                      items: service.mcList.map((item) {
-                        return DropdownMenuItem<String>(
-                          child: Text(item.cardholders,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.deepPurple,)),
-
-                          value: item.cardholders,
+                    FutureBuilder(
+                      future: getFareTypeFromDB(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          _currentFareType = snapshot.data;
+                          return DropdownButton<String>(
+                            elevation: 12,
+                            underline: Container(
+                              height: 2,
+                              color: Colors.deepPurpleAccent,
+                            ),
+                            hint: Text('Select Concession Type here',
+                              style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.deepPurple,)),
+                            items: getConcessionType(snapshot.data).map((item) {
+                              //print('snapshot data is :' + snapshot.data);
+                              return DropdownMenuItem<String>(
+                                child: Text(item,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.deepPurple,)),
+                                value: item,
+                              );
+                            }).toList(),
+                            onChanged: (String fareType) {
+                              setState(() {
+                                // update the selected value on UI
+                                _currentCardholder = fareType;
+                              });
+                            },
+                            // display the selected value on UI
+                            value: _currentCardholder,
+                          );
+                        } else if (snapshot.hasError) {
+                          return new Text("${snapshot.error}");
+                        }
+                        return new Container(alignment: AlignmentDirectional.center,
+                          child: new CircularProgressIndicator(),
                         );
-                      }).toList(),
-                      onChanged: (String cardholders) {
-                        setState(() {
-                          // update the selected value on UI
-                          this._currentCardholder = cardholders;
-                        });
                       },
-                      // display the selected value on UI
-                      value: _currentCardholder,
                     ),
+
 
                     SizedBox(
                       height: 300,
@@ -434,34 +451,47 @@ class _ComparePageState extends State<ConcessionPage> {
                               width: double.infinity,
                               padding: const EdgeInsets.all(20.0),
                               decoration: myBoxDecoration(), //
-                              child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      Text('Total Fares:\$ ${_calculateFareController.calculatedTotalPrice(
-                                          _price, _currentDaySelected, _currentTripSelected, tripListLength)}',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              color: Colors.deepPurpleAccent,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold)),
-                                      Text('${_currentCardholder}: \$ ${_calculateFareController.getConcessionPrice(_concessionTypeValue,
-                                          _currentCardholder)}',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              color: Colors.deepPurpleAccent,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold)),
-                                      Text(_calculateFareController.comparePrice(
-                                          _calculateFareController.getConcessionPrice(_concessionTypeValue, _currentCardholder),
-                                          double.parse(_calculateFareController.calculatedTotalPrice(
-                                              _price, _currentDaySelected, _currentTripSelected, tripListLength))),
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              color: Colors.deepPurpleAccent,
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold))
-                                    ],
-                                  ),
+                              child: FutureBuilder(
+                                future: getFareTypeFromDB(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData) {
+                                    _currentFareType = snapshot.data;
+                                    return Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        Text('Total Fares:\$ ${_calculateFareController.calculatedTotalPrice(
+                                            _price, _currentDaySelected, _currentTripSelected, tripListLength)}',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                color: Colors.deepPurpleAccent,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.bold)),
+                                        Text('${_currentFareType}: \$ ${_calculateFareController.getConcessionPrice(_concessionTypeValue,
+                                            _currentCardholder)}',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                color: Colors.deepPurpleAccent,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.bold)),
+                                        Text(_calculateFareController.comparePrice(
+                                            _calculateFareController.getConcessionPrice(_concessionTypeValue, _currentCardholder),
+                                            double.parse(_calculateFareController.calculatedTotalPrice(
+                                                _price, _currentDaySelected, _currentTripSelected, tripListLength))),
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                color: Colors.deepPurpleAccent,
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold))
+                                      ],
+                                    );
+                                  } else if (snapshot.hasError) {
+                                    return new Text("${snapshot.error}");
+                                  }
+                                  return new Container(alignment: AlignmentDirectional.center,
+                                    child: new CircularProgressIndicator(),
+                                  );
+                                },
+                              ),
                               ),
                             )
                         ),
@@ -499,6 +529,41 @@ class _ComparePageState extends State<ConcessionPage> {
       //   child: Icon(Icons.navigate_next),
       // ),
     );
+  }
+
+  Future<String> getFareTypeFromDB() async {
+    var dbHelper = DBHelper();
+    List<Map> list = await dbHelper.getFareType();
+    String fareTypeDB = list[0]['fareType'];
+    print('this sis sjionasiudnhwuidnh' + fareTypeDB.toString());
+    return(fareTypeDB);
+  }
+
+  List getConcessionType(String fareType) {
+    //print('hello ' + fareType);
+    List<String> concessionType = [];
+    for(int i = 0; i < service.mcList.length; i++) {
+      if (fareType == 'Adult') {
+        //print("Testing1" + service.mcList[i].cardholders);
+        if (service.mcList[i].cardholders == 'Full-time National Serviceman' || service.mcList[i].cardholders == 'Adult (Monthly Travel Pass)') {
+          //print("Testing2" + service.mcList[i].cardholders);
+          concessionType.add(service.mcList[i].cardholders);
+
+        }
+      } else if (fareType == 'Senior Citizen') {
+        if (service.mcList[i].cardholders == 'Senior Citizen') {
+          //print(service.mcList[i].cardholders);
+          concessionType.add(service.mcList[i].cardholders);
+
+        }
+      } else {
+        if (service.mcList[i].cardholders.contains('Student')) {
+          concessionType.add(service.mcList[i].cardholders);
+        }
+      }
+    }
+    print("Length " + concessionType.toString());
+    return concessionType;
   }
 
   BoxDecoration myBoxDecoration() {

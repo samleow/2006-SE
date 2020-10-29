@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/db/dbhelper.dart';
 import 'package:flutter_app/models/BusStops.dart';
 import 'package:flutter_app/services/CallAPIServices.dart';
+import 'package:flutter_app/views/TypeSelectionPage.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
@@ -60,17 +61,15 @@ class _SearchBusState extends State<SearchBus> {
   int dropdownValue = 1;
   String _dist = "0.0";
   bool _visible = false;
-  String _currentFareType = "Adult";
+  String _currentFareType;
 
-  List getfareType() {
-    List<String> fareType = [];
-    for(int i = 0; i < service.busFares.length; i++){
-      fareType.add(service.busFares[i].fareType);
-      }
-    return fareType;
-  }
-
-
+  // List getfareType() {
+  //   List<String> fareType = [];
+  //   for (int i = 0; i < service.busFares.length; i++) {
+  //     fareType.add(service.busFares[i].fareType);
+  //   }
+  //   return fareType;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -84,6 +83,7 @@ class _SearchBusState extends State<SearchBus> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
+                Padding(padding: EdgeInsets.only(top: 10.0),),
                 Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -93,34 +93,56 @@ class _SearchBusState extends State<SearchBus> {
                         child: Text('Fare Type: ',
                             style: TextStyle(
                               fontSize: 20,
+
                             )),
                       ),
                     ),
-                    DropdownButton<String>(
-                      elevation: 12,
-                      underline: Container(
-                        height: 2,
-                        color: Colors.deepPurpleAccent,
-                      ),
-                      // get api data to display on drop down list
-                      items: getfareType().map((item) {
-                        return DropdownMenuItem<String>(
-                          child: Text(item,
-                              textAlign: TextAlign.center,
+                    // DropdownButton<String>(
+                    //   elevation: 12,
+                    //   underline: Container(
+                    //     height: 2,
+                    //     color: Colors.deepPurpleAccent,
+                    //   ),
+                    //   // get api data to display on drop down list
+                    //   items: getfareType().map((item) {
+                    //     return DropdownMenuItem<String>(
+                    //       child: Text(item,
+                    //           textAlign: TextAlign.center,
+                    //           style: TextStyle(
+                    //             fontSize: 20,
+                    //             color: Colors.deepPurple,)),
+                    //       value: item,
+                    //     );
+                    //   }).toList(),
+                    //   onChanged: (String fareType) {
+                    //     setState(() {
+                    //       // update the selected value on UI
+                    //       this._currentFareType = fareType;
+                    //     });
+                    //   },
+                    //   // display the selected value on UI
+                    //   value: _currentFareType,
+                    // ),
+                    FutureBuilder(
+                      future: getFareTypeFromDB(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          _currentFareType = snapshot.data;
+
+                          return Text(snapshot.data,
                               style: TextStyle(
-                                fontSize: 20,
-                                color: Colors.deepPurple,)),
-                          value: item,
+                            fontSize: 25,
+                            color: Colors.deepPurpleAccent,
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.underline,
+                          ));
+                        } else if (snapshot.hasError) {
+                          return new Text("${snapshot.error}");
+                        }
+                        return new Container(alignment: AlignmentDirectional.center,
+                          child: new CircularProgressIndicator(),
                         );
-                      }).toList(),
-                      onChanged: (String fareType) {
-                        setState(() {
-                          // update the selected value on UI
-                          this._currentFareType = fareType;
-                        });
                       },
-                      // display the selected value on UI
-                      value: _currentFareType,
                     ),
                   ],
                 ),
@@ -494,6 +516,16 @@ class _SearchBusState extends State<SearchBus> {
                           );
                         },
                       ),
+
+                      // FlatButton(
+                      //   child: Text("Go back"),
+                      //   onPressed: (){
+                      //     Navigator.pushReplacement(
+                      //       context,
+                      //       MaterialPageRoute(builder: (context) => TypeSelectionPage()),
+                      //     );
+                      //   },
+                      // ),
                     ]
                 ),
                 // Padding(
@@ -515,7 +547,6 @@ class _SearchBusState extends State<SearchBus> {
                   fromTextController.text, toTextController.text, dropdownValue, false, _currentFareType);
               _showSnackBar("Trip saved successfully");
             }
-
         },
         tooltip: 'Show me the Values',
         child: Icon(Icons.add),
@@ -714,5 +745,18 @@ class _SearchBusState extends State<SearchBus> {
     setState(() {
       _visible = !_visible;
     });
+  }
+
+  void UpdateFareTypeDatabase(int i) async {
+    var dbHelper = DBHelper();
+    await dbHelper.updateFareType(i);
+  }
+
+  Future<String> getFareTypeFromDB() async {
+    var dbHelper = DBHelper();
+    List<Map> list = await dbHelper.getFareType();
+    String fareTypeDB = list[0]['fareType'];
+    //print('this sis sjionasiudnhwuidnh' + fareTypeDB.toString());
+    return(fareTypeDB);
   }
 }

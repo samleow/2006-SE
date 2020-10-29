@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/models/BusStops.dart';
 import 'package:flutter_app/views/Homepage.dart';
+import 'package:flutter_app/views/TypeSelectionPage.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter_app/services/CallAPIServices.dart';
@@ -9,6 +10,7 @@ import 'dart:async';
 import 'package:flutter_app/controllers/SearchRouteController.dart';
 import 'package:flutter_app/controllers/CompareFareController.dart';
 import 'package:flutter_app/controllers/CalculateFareController.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void setupLocator() {
   GetIt.instance.registerLazySingleton(() => CallAPIServices());
@@ -94,21 +96,36 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    Future checkFirstSeen() async{
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      bool _seen = (prefs.getBool('seen') ?? false);
 
-    if(!_isLoading) {
-      if(!_loadSuccess)
-        return Center(child: Text("ERROR RETRIEVING DATA FROM API: SearchBus"));
-      else {
+      if(_seen){
+        print('seen is ' + _seen.toString());
         Future.delayed(Duration.zero, () async {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => Homepage()),
           );
         });
+      } else {
+        await prefs.setBool('seen', true);
+        print('seen is ' + _seen.toString());
+        Future.delayed(Duration.zero, () async {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => TypeSelectionPage()),
+          );
+        });
       }
     }
-
-
+    if(!_isLoading) {
+      if(!_loadSuccess)
+        return Center(child: Text("ERROR RETRIEVING DATA FROM API: SearchBus"));
+      else {
+        checkFirstSeen();
+      }
+    }
 
     return Scaffold(
         body: Stack(
