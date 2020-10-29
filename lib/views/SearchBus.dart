@@ -92,7 +92,7 @@ class _SearchBusState extends State<SearchBus> {
                       child: Container(
                         child: Text('Fare Type: ',
                             style: TextStyle(
-                              fontSize: 20,
+                              fontSize: 19,
 
                             )),
                       ),
@@ -131,7 +131,7 @@ class _SearchBusState extends State<SearchBus> {
 
                           return Text(snapshot.data,
                               style: TextStyle(
-                            fontSize: 25,
+                            fontSize: 22,
                             color: Colors.deepPurpleAccent,
                                 fontWeight: FontWeight.bold,
                                 decoration: TextDecoration.underline,
@@ -400,7 +400,7 @@ class _SearchBusState extends State<SearchBus> {
                       style: TextStyle(
                           color: Colors.grey[800],
                           //fontWeight: FontWeight.bold,
-                          fontSize: 20)
+                          fontSize: 19)
                   ),
                       Expanded(
                           child: Text(
@@ -411,7 +411,7 @@ class _SearchBusState extends State<SearchBus> {
                               color: Colors.grey[800],
                               fontWeight: FontWeight.bold,
                                 decoration: TextDecoration.underline,
-                              fontSize: 20)
+                              fontSize: 19)
                           ))
                   ]
                 ),
@@ -425,7 +425,7 @@ class _SearchBusState extends State<SearchBus> {
                           style: TextStyle(
                               color: Colors.grey[800],
                               //fontWeight: FontWeight.bold,
-                              fontSize: 20)
+                              fontSize: 19)
                       ),
                       Expanded(
                           child: Text(
@@ -436,7 +436,7 @@ class _SearchBusState extends State<SearchBus> {
                                   color: Colors.grey[800],
                                   fontWeight: FontWeight.bold,
                                   decoration: TextDecoration.underline,
-                                  fontSize: 20)
+                                  fontSize: 19)
                           ))
                     ]
                 ),
@@ -453,7 +453,7 @@ class _SearchBusState extends State<SearchBus> {
                                   color: Colors.grey[800],
                                   //fontWeight: FontWeight.bold,
                                   //decoration: TextDecoration.underline,
-                                  fontSize: 20)
+                                  fontSize: 19)
                           ),
 
                       // DropdownButton<int>(
@@ -508,7 +508,7 @@ class _SearchBusState extends State<SearchBus> {
                                       child: Text(value.toString(),
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
-                                            fontSize: 20,
+                                            fontSize: 19,
                                             color: Colors.deepPurple,
                                           )),
                                     ));

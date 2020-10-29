@@ -88,7 +88,7 @@ class _SearchMRTState extends State<SearchMRT> {
                             child: Container(
                               child: Text('Fare Type: ',
                                   style: TextStyle(
-                                    fontSize: 20,
+                                    fontSize: 19,
                                   )),
                             ),
                           ),
@@ -125,7 +125,7 @@ class _SearchMRTState extends State<SearchMRT> {
                                 _currentFareType = snapshot.data;
                                 return Text(snapshot.data,
                                     style: TextStyle(
-                                      fontSize: 25,
+                                      fontSize: 22,
                                       color: Colors.deepPurpleAccent,
                                       fontWeight: FontWeight.bold,
                                       decoration: TextDecoration.underline,
@@ -151,7 +151,7 @@ class _SearchMRTState extends State<SearchMRT> {
                           child: Container(
                             child: Text('MRT Line : ',
                                 style: TextStyle(
-                                  fontSize: 20,
+                                  fontSize: 19,
                                 )),
                           ),
                         ),
@@ -167,7 +167,7 @@ class _SearchMRTState extends State<SearchMRT> {
                             child: Text(item.toString(),
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  fontSize: 20,
+                                  fontSize: 19,
                                   color: Colors.deepPurple,
                                 )),
                             value: item.toString(),
@@ -327,7 +327,7 @@ class _SearchMRTState extends State<SearchMRT> {
                               style: TextStyle(
                                   color: Colors.grey[800],
                                   //fontWeight: FontWeight.bold,
-                                  fontSize: 20)
+                                  fontSize: 19)
                           ),
                           Expanded(
                               child: Text(
@@ -338,7 +338,7 @@ class _SearchMRTState extends State<SearchMRT> {
                                       color: Colors.grey[800],
                                       fontWeight: FontWeight.bold,
                                       decoration: TextDecoration.underline,
-                                      fontSize: 20)
+                                      fontSize: 19)
                               ))
                         ]
                     ),
@@ -354,7 +354,7 @@ class _SearchMRTState extends State<SearchMRT> {
                               style: TextStyle(
                                   color: Colors.grey[800],
                                   //fontWeight: FontWeight.bold,
-                                  fontSize: 20)
+                                  fontSize: 19)
                           ),
                           Expanded(
                               child: Text(
@@ -365,7 +365,7 @@ class _SearchMRTState extends State<SearchMRT> {
                                       color: Colors.grey[800],
                                       fontWeight: FontWeight.bold,
                                       decoration: TextDecoration.underline,
-                                      fontSize: 20)
+                                      fontSize: 19)
                               ))
                         ]
                     ),
@@ -386,7 +386,7 @@ class _SearchMRTState extends State<SearchMRT> {
                           color: Colors.grey[800],
                           //fontWeight: FontWeight.bold,
                           //decoration: TextDecoration.underline,
-                          fontSize: 20)
+                          fontSize: 19)
                   ),
 
                   FutureBuilder(
@@ -414,7 +414,7 @@ class _SearchMRTState extends State<SearchMRT> {
                                     child: Text(value.toString(),
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
-                                          fontSize: 20,
+                                          fontSize: 19,
                                           color: Colors.deepPurple,
                                         )),
                                   ));

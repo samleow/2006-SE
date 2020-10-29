@@ -189,7 +189,7 @@ class _ComparePageState extends State<ConcessionPage> {
                               value: _checkbox[index],
                                   title: Text("Trip " + (index+1).toString() + ":  \$" +snapshot.data.toStringAsFixed(2), //+snapshot.data.toString(),
                                     style: TextStyle(
-                                        fontSize: 20.0,
+                                        fontSize: 19.0,
                                         color: Colors.blueAccent
                                     ),),
                                   onChanged: (bool value) {
@@ -236,7 +236,7 @@ class _ComparePageState extends State<ConcessionPage> {
                                                 child: Text(dropDownIntItem.toString(),
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
-                                                      fontSize: 20,
+                                                      fontSize: 19,
                                                       color: Colors.deepPurple,
                                                     )),
                                               );
@@ -273,7 +273,7 @@ class _ComparePageState extends State<ConcessionPage> {
                                                 child: Text(dropDownIntItem.toString(),
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
-                                                      fontSize: 20,
+                                                      fontSize: 19,
                                                       color: Colors.deepPurple,
                                                     )),
                                               );
@@ -366,7 +366,7 @@ class _ComparePageState extends State<ConcessionPage> {
                               child: Text(item,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    fontSize: 20,
+                                    fontSize: 19,
                                     color: Colors.deepPurple,)),
                               value: item,
                             );
@@ -399,7 +399,7 @@ class _ComparePageState extends State<ConcessionPage> {
                             ),
                             hint: Text('Select Concession Type here',
                               style: TextStyle(
-                              fontSize: 20,
+                              fontSize: 19,
                               color: Colors.deepPurple,)),
                             items: getConcessionType(snapshot.data).map((item) {
                               //print('snapshot data is :' + snapshot.data);
@@ -407,7 +407,7 @@ class _ComparePageState extends State<ConcessionPage> {
                                 child: Text(item,
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                      fontSize: 20,
+                                      fontSize: 19,
                                       color: Colors.deepPurple,)),
                                 value: item,
                               );
@@ -481,7 +481,7 @@ class _ComparePageState extends State<ConcessionPage> {
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                                 color: Colors.deepPurpleAccent,
-                                                fontSize: 20,
+                                                fontSize: 19,
                                                 fontWeight: FontWeight.bold))
                                       ],
                                     );

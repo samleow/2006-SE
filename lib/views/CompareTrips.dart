@@ -77,7 +77,7 @@ class _CompareTripsState extends State<CompareTrips> {
                       child: Container(
                         child: Text('Select Trip : ',
                             style: TextStyle(
-                              fontSize: 20,
+                              fontSize: 19,
                             )),
                       ),
                     ),
@@ -130,7 +130,7 @@ class _CompareTripsState extends State<CompareTrips> {
                                     child: Text(value.toString(),
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
-                                          fontSize: 20,
+                                          fontSize: 19,
                                           color: Colors.deepPurple,
                                         )),
                                   ));
@@ -158,7 +158,7 @@ class _CompareTripsState extends State<CompareTrips> {
                         if(snapshot.hasData){
                           updateValues(index,snapshot.data);
                           return Text("\$" + snapshot.data.toStringAsFixed(2),
-                          style: TextStyle(fontSize: 20));
+                          style: TextStyle(fontSize: 19));
                         }else if (snapshot.hasError) {
                           return Text("${snapshot.error}");
                         } else if(snapshot.data == null){
@@ -206,7 +206,7 @@ class _CompareTripsState extends State<CompareTrips> {
                         children: <Widget>[
                           Text('Number of Days per Month : ',
                               style: TextStyle(
-                                fontSize: 20,)
+                                fontSize: 19,)
                           ),
                           DropdownButton<int>(
                             elevation: 12,
@@ -222,7 +222,7 @@ class _CompareTripsState extends State<CompareTrips> {
                                   child: Text("${dropDownIntItem}",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                      fontSize: 20,
+                                      fontSize: 19,
                                       color: Colors.deepPurple,
                                     ),
                                   ),
@@ -251,7 +251,7 @@ class _CompareTripsState extends State<CompareTrips> {
                           children: <Widget>[
                             Text('Number of Times per Day : ',
                                 style: TextStyle(
-                                  fontSize: 20,
+                                  fontSize: 19,
                                 )),
                             DropdownButton<int>(
                               elevation: 12,
@@ -267,7 +267,7 @@ class _CompareTripsState extends State<CompareTrips> {
                                     child: Text("${dropDownIntItem}",
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
-                                          fontSize: 20,
+                                          fontSize: 19,
                                           color: Colors.deepPurple,
                                         )
                                     ),
@@ -306,7 +306,7 @@ class _CompareTripsState extends State<CompareTrips> {
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                           color: Colors.deepPurpleAccent,
-                                          fontSize: 20,
+                                          fontSize: 19,
                                           fontWeight: FontWeight.bold)),
                                     )
                                 ),

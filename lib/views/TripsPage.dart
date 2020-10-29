@@ -61,7 +61,7 @@ class _TripsPageState extends State<TripsPage> {
                   Padding(padding: EdgeInsets.only(left: 0)),
                   Text('Select trip : ',
                     style: TextStyle(
-                      fontSize:20,
+                      fontSize:19,
                     )),
                   // DropdownButton<int>(
                   //   value: dropdownValue,
@@ -119,7 +119,7 @@ class _TripsPageState extends State<TripsPage> {
                                   child: Text(value.toString(),
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
-                                        fontSize: 20,
+                                        fontSize: 19,
                                         color: Colors.deepPurple,
                                       )),
                                 ));
