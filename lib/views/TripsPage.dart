@@ -297,8 +297,10 @@ class _TripsPageState extends State<TripsPage> {
 
   void addTripId() async {
     var dbHelper = DBHelper();
+    List<Map> list = await dbHelper.getFareType();
+    String fareTypeDB = list[0]['fareType'];
     int i = await dbHelper.saveTrip({
-      //DBHelper.fareType: 'lala',
+      DBHelper.fareType: fareTypeDB,
     });
     setState(() {});
     _showSnackBar("Trip " + i.toString() + " created!");
