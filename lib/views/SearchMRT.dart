@@ -31,10 +31,7 @@ class _SearchMRTState extends State<SearchMRT> {
   int dropdownValue = 1;
   String _dist = "0.0";
   List<String> mrtstationline = ["North South Line", "East West Line", "Changi Airport Branch Line", "North East Line", "Circle Line Extension", "Circle Line", "Downtown Line"]; //hard coded for now
-  //List<String> mrtstationline = ["NS", "EW", "CG", "NE", "CC", "CE", "DT"];
   String _currentSelectedValue = "North South Line";
-
-
 
   @override
   void dispose() {
@@ -50,21 +47,12 @@ class _SearchMRTState extends State<SearchMRT> {
   final scaffoldKey = new GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
 
-  //Routes route = new Routes("", "", "", 0,0);
   String MRTLine;
   String fromStop;
   String toStop;
   double fare;
   int tripID;
   String _currentFareType;
-
-  // List getfareType() {
-  //   List<String> fareType = [];
-  //   for(int i = 0; i < service.busFares.length; i++){
-  //     fareType.add(service.busFares[i].fareType);
-  //   }
-  //   return fareType;
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -92,32 +80,7 @@ class _SearchMRTState extends State<SearchMRT> {
                                   )),
                             ),
                           ),
-                          // DropdownButton<String>(
-                          //   elevation: 12,
-                          //   underline: Container(
-                          //     height: 2,
-                          //     color: Colors.deepPurpleAccent,
-                          //   ),
-                          //   // get api data to display on drop down list
-                          //   items: getfareType().map((item) {
-                          //     return DropdownMenuItem<String>(
-                          //       child: Text(item,
-                          //           textAlign: TextAlign.center,
-                          //           style: TextStyle(
-                          //             fontSize: 20,
-                          //             color: Colors.deepPurple,)),
-                          //       value: item,
-                          //     );
-                          //   }).toList(),
-                          //   onChanged: (String fareType) {
-                          //     setState(() {
-                          //       // update the selected value on UI
-                          //       this._currentFareType = fareType;
-                          //     });
-                          //   },
-                          //   // display the selected value on UI
-                          //   value: _currentFareType,
-                          // ),
+
                           FutureBuilder(
                             future: getFareTypeFromDB(),
                             builder: (context, snapshot) {
@@ -140,9 +103,6 @@ class _SearchMRTState extends State<SearchMRT> {
                           ),
                         ],
                       ),
-                      // Padding(
-                      //   padding: EdgeInsets.all(10.0),
-                      // ),
                     Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -191,7 +151,6 @@ class _SearchMRTState extends State<SearchMRT> {
 
                     Padding(
                       padding: EdgeInsets.all(10.0),
-                      //child: Text('Hello World!'),
                     ),
                       TypeAheadFormField(
                         textFieldConfiguration: TextFieldConfiguration(
@@ -203,7 +162,6 @@ class _SearchMRTState extends State<SearchMRT> {
                             prefixIcon: Icon(Icons.train),
                           ),
                           onChanged: (text) {
-                            //print(text.toString().toLowerCase().titleCase);
                             fromTextController.text = text.toString().toLowerCase().titleCase;
                             //setState() run the calculation
                             setState((){_dist=_searchRouteController.distanceTravelledMRT(convertLineNamesToCodes(),
@@ -211,7 +169,6 @@ class _SearchMRTState extends State<SearchMRT> {
                           },
 
                         ),
-
                         validator: (String value){
                           // validate text field
                           if(value.isEmpty || InputCheck(value) == false)
@@ -236,20 +193,6 @@ class _SearchMRTState extends State<SearchMRT> {
                               fromTextController.text,toTextController.text).toString();});
                         },
                       ),
-
-
-                   /* TextFormField(
-                      controller: fromTextController,
-                      decoration: const InputDecoration(
-                        labelText: 'Boarding at',
-                        hintText: 'Enter MRT Station Name',
-                        border: OutlineInputBorder(),
-                        prefixIcon: Icon(Icons.train)
-                      ),
-                      onChanged: (v)=>setState((){_dist=distanceTravelled().toString();}),
-                    ),*/
-
-
                     Padding(
                       padding: EdgeInsets.all(10.0),
                       //child: Text('Hello World!'),
@@ -294,16 +237,6 @@ class _SearchMRTState extends State<SearchMRT> {
                               fromTextController.text,toTextController.text).toString();});
                         },
                       ),
-                    /*TextFormField(
-                      controller: toTextController,
-                      decoration: const InputDecoration(
-                          labelText: 'Alighting at',
-                          hintText: 'Enter MRT Station Name',
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(Icons.train)
-                      ),
-                      onChanged: (v)=>setState((){_dist=distanceTravelled().toString();}),
-                    ),*/
                     Padding(
                       padding: EdgeInsets.all(10.0),
                       //child: Text('Hello World!'),
@@ -345,7 +278,6 @@ class _SearchMRTState extends State<SearchMRT> {
                     Padding(
                       padding: EdgeInsets.all(10.0),
                     ),
-
                     //calculate fares
                     Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -373,19 +305,12 @@ class _SearchMRTState extends State<SearchMRT> {
                     Padding(
                       padding: EdgeInsets.all(10.0),
                     ),
-
-                  // Padding(
-                  //   padding: EdgeInsets.all(10.0),
-                  // ),
-
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                       Text('Save under trip : ',
                       style: TextStyle(
                           color: Colors.grey[800],
-                          //fontWeight: FontWeight.bold,
-                          //decoration: TextDecoration.underline,
                           fontSize: 19)
                   ),
 
@@ -431,10 +356,6 @@ class _SearchMRTState extends State<SearchMRT> {
 
                         ]
                     ),
-                    // Divider(
-                    //   color: Colors.black26,
-                    //     thickness: 1.5,
-                    //       ),
                         ],
                       ),
                   ),
@@ -536,7 +457,6 @@ class _SearchMRTState extends State<SearchMRT> {
     var dbHelper = DBHelper();
     List<Map> list = await dbHelper.getFareType();
     String fareTypeDB = list[0]['fareType'];
-    //print('this sis sjionasiudnhwuidnh' + fareTypeDB.toString());
     return(fareTypeDB);
   }
 }

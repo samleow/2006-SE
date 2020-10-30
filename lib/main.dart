@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/models/BusStops.dart';
 import 'package:flutter_app/views/Homepage.dart';
 import 'package:flutter_app/views/TypeSelectionPage.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter_app/services/CallAPIServices.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -76,12 +74,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    // Uses Shared Preference to see if user first launch
     Future checkFirstSeen() async{
       SharedPreferences prefs = await SharedPreferences.getInstance();
       bool _seen = (prefs.getBool('seen') ?? false);
 
       if(_seen){
-        print('seen is ' + _seen.toString());
         Future.delayed(Duration.zero, () async {
           Navigator.pushReplacement(
             context,
@@ -90,7 +88,6 @@ class _MyHomePageState extends State<MyHomePage> {
         });
       } else {
         await prefs.setBool('seen', true);
-        print('seen is ' + _seen.toString());
         Future.delayed(Duration.zero, () async {
           Navigator.pushReplacement(
             context,
@@ -99,6 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
         });
       }
     }
+
     if(!_isLoading) {
       if(!_loadSuccess)
         return Center(child: Text("ERROR RETRIEVING DATA FROM API: SearchBus"));
@@ -139,7 +137,8 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
           ],
-        ));
+        )
+    );
   }
 }
 

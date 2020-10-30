@@ -16,7 +16,6 @@ class _ComparePageState extends State<ConcessionPage> {
   int tripListLength = -1;
   final GlobalKey<AnimatedListState> _listKey = GlobalKey();
   double totalFares;
-
   static bool _isLoading = true;
 
   @override
@@ -25,152 +24,19 @@ class _ComparePageState extends State<ConcessionPage> {
     super.initState();
   }
 
-  getTripListLength() async {
-    setState(() {
-      _isLoading = true;
-    });
-    var dbHelper = DBHelper();
-    List<Map> list = await dbHelper.getAllTripsID();
-    tripListLength = list.length;
-    for(int i=0; i<tripListLength; i++)
-    {
-      _currentDaySelected.add(1);
-      _currentTripSelected.add(1);
-      _price.add(0.0);
-      _checkbox.add(false);
-    }
-    print(_currentDaySelected.length);
-    print(_currentTripSelected.length);
-    setState(() {
-      _isLoading = false;
-    });
-  }
-
-  Future<double> fetchRoutesByTripIdFromDatabase(int id) async {
-    var dbHelper = DBHelper();
-    List<Map> list = await dbHelper.getFaresByTripsID(id);
-    totalFares = list[0]['SUM(fare)'];
-    print(totalFares);
-    return totalFares;
-  }
-
   var listMonth = new List<int>.generate(31, (i) => i + 1);
   var list = new List<int>.generate(10, (i) => i + 1);
-  // int _currentDaySelected = 1,
-  //     _currentTripSelected = 1;
 
   List<int> _currentDaySelected =[]; // <-- the number of list must be followed by the number of trips
   List<int> _currentTripSelected =[]; // <-- the number of list must be followed by the number of trips
   List<double> _price = []; // <-- the number of list must be followed by the number of trips
   List<bool> _checkbox = [];
-  //double price = 2.10;
   double totalPrice = 0;
   String _currentFareType;
   String _currentCardholder;
 
   List<String> _concessionType = ['Bus', 'Mrt', 'Hybrid'];
   String _concessionTypeValue = 'Bus';
-  //int _cardholderIndex = 0;
-
-  // Widget buildlist(BuildContext context, int index) {
-  //
-  //   return Scaffold(
-  //
-  //     body: Builder(
-  //       builder: (_) {
-  //         if (_isLoading) {
-  //           return Center(child: CircularProgressIndicator());
-  //         }
-  //         if (_apiResponse.error) {
-  //           return Center(child: Text(_apiResponse.errorMessage));
-  //         }
-  //
-  //         return new Container(
-  //             margin: EdgeInsets.all(20.0),
-  //             child: Center(
-  //               child: Column(
-  //                 children: <Widget>[
-  //                   Text("Trip 1: S" + price.toString()),
-  //                   Text("Number of Day"),
-  //                   DropdownButton<int>(
-  //                     items: list.map((int dropDownIntItem) {
-  //                       return DropdownMenuItem<int>(
-  //                         value: dropDownIntItem,
-  //                         child: Text(dropDownIntItem.toString()),
-  //                       );
-  //                     }
-  //                     ).toList(),
-  //                     onChanged: (int newValue) {
-  //                       setState(() {
-  //
-  //                         _currentDaySelected = newValue;
-  //                       });
-  //                     },
-  //
-  //                     value: _currentDaySelected,
-  //
-  //                   ),
-  //                   SizedBox(
-  //                     height: 20.0,
-  //                   ),
-  //                   Text("Number of Trip"),
-  //                   DropdownButton<int>(
-  //                     items: list.map((int dropDownIntItem) {
-  //                       return DropdownMenuItem<int>(
-  //                         value: dropDownIntItem,
-  //                         child: Text(dropDownIntItem.toString()),
-  //                       );
-  //                     }
-  //                     ).toList(),
-  //                     onChanged: (int newValue) {
-  //                       setState(() {
-  //                         this._currentTripSelected = newValue;
-  //                       });
-  //                     },
-  //
-  //                     value: _currentTripSelected,
-  //
-  //                   ),
-  //                 ],
-  //               ),
-  //             )
-  //
-  //         );
-  //       },
-  //     ),
-
-        // floatingActionButton : FloatingActionButton(
-        //     onPressed: () {
-        //       return showDialog(
-        //           context: context,
-        //           builder: (context) {
-        //             if (_isLoading) {
-        //               return Center(child: CircularProgressIndicator());
-        //             }
-        //             if (_apiResponse.error) {
-        //               return Center(child: Text(_apiResponse.errorMessage));
-        //             }
-        //             return AlertDialog(
-        //               title: Text("Message"),
-        //               content: Column(
-        //                 children: <Widget>[
-        //                   Text('Total Fares:\$ ${totalPrice.toStringAsFixed(2)}'),
-        //                   Text('${_currentCardholder}: \$ ${getConcessionPrice(_currentCardholder, _apiResponse)}'),
-        //                   Text(comparePrice(getConcessionPrice(_currentCardholder, _apiResponse), totalPrice)),
-        //                 ],
-        //               ),
-        //             );
-        //           }
-        //       );
-        //     },
-        //   child: Icon(Icons.navigate_next),
-  //       );
-  // }
-  // calculate Total Price
-  // String calculatedTotalPrice(double price, int numDay, int numTrip) {
-  //   totalPrice = price * numDay * numTrip;
-  //   return totalPrice.toStringAsFixed(2);
-  // }
 
   Widget buildTripCard(BuildContext context, int index) {
     return new Container(
@@ -207,11 +73,6 @@ class _ComparePageState extends State<ConcessionPage> {
                               if(_checkbox[index]) // if statement is to control the Column according to the checkbox
                                 Column(
                                     children: <Widget>[
-                                      // Text("Trip " + tripsList[index].toString() + ": SGD" +
-                                      //     _price[index].toString(),
-                                      //     style: TextStyle(
-                                      //         fontSize: 20.0,
-                                      //         color: Colors.blue)),
                                       SizedBox(
                                         height: 20.0,
                                       ),
@@ -221,7 +82,6 @@ class _ComparePageState extends State<ConcessionPage> {
                                           Text("Number of Days per Month : ",
                                             style: TextStyle(
                                             fontSize: 15,
-                                            //color: Colors.deepPurple,
                                             )
                                           ),
                                           DropdownButton<int>(
@@ -247,9 +107,7 @@ class _ComparePageState extends State<ConcessionPage> {
                                                 _currentDaySelected[index] = newValue;
                                               });
                                             },
-
                                             value: _currentDaySelected[index],
-
                                           ),
                                         ],
                                       ),
@@ -302,19 +160,6 @@ class _ComparePageState extends State<ConcessionPage> {
                       return CircularProgressIndicator();
                     }
                 ),
-
-// FutureBuilder(
-                //   future: fetchRoutesByTripIdFromDatabase(index+1),
-                //   builder: (context, snapshot) {
-                //     if(snapshot.hasData){
-                //       return Text(snapshot.data.toString());
-                //     }else if (snapshot.hasError) {
-                //       return Text("${snapshot.error}");
-                //     }
-                //       return CircularProgressIndicator();
-                //     }
-                // ),
-
               ],
             )
         ),
@@ -402,7 +247,6 @@ class _ComparePageState extends State<ConcessionPage> {
                               fontSize: 19,
                               color: Colors.deepPurple,)),
                             items: getConcessionType(snapshot.data).map((item) {
-                              //print('snapshot data is :' + snapshot.data);
                               return DropdownMenuItem<String>(
                                 child: Text(item,
                                     textAlign: TextAlign.center,
@@ -430,7 +274,6 @@ class _ComparePageState extends State<ConcessionPage> {
                       },
                     ),
 
-
                     SizedBox(
                       height: 300,
                       child: AnimatedList(
@@ -443,7 +286,6 @@ class _ComparePageState extends State<ConcessionPage> {
                     ),
                     Expanded(
                       child: Align(
-                        //alignment: FractionalOffset.bottomCenter,
                         child: MaterialButton(
                             onPressed: () => {},
                             child: Container(
@@ -503,59 +345,53 @@ class _ComparePageState extends State<ConcessionPage> {
           );
         },
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     return showDialog(
-      //         context: context,
-      //         builder: (context) {
-      //           return AlertDialog(
-      //             title: Text("Message"),
-      //             content: Column(
-      //               mainAxisSize: MainAxisSize.min,
-      //               children: <Widget>[
-      //                 Text('Total Fares:\$ ${_calculateFareController.calculatedTotalPrice(
-      //                     _price, _currentDaySelected, _currentTripSelected, tripListLength)}'),
-      //                 Text('${_currentCardholder}: \$ ${_calculateFareController.getConcessionPrice(
-      //                     _currentCardholder)}'),
-      //                 Text(_calculateFareController.comparePrice(
-      //                     _calculateFareController.getConcessionPrice(_currentCardholder),
-      //                     double.parse(_calculateFareController.calculatedTotalPrice(
-      //                         _price, _currentDaySelected, _currentTripSelected, tripListLength)))),
-      //               ],
-      //             ),
-      //           );
-      //         }
-      //     );
-      //   },
-      //   child: Icon(Icons.navigate_next),
-      // ),
     );
   }
+
+  getTripListLength() async {
+    setState(() {
+      _isLoading = true;
+    });
+    var dbHelper = DBHelper();
+    List<Map> list = await dbHelper.getAllTripsID();
+    tripListLength = list.length;
+    for(int i=0; i<tripListLength; i++)
+    {
+      _currentDaySelected.add(1);
+      _currentTripSelected.add(1);
+      _price.add(0.0);
+      _checkbox.add(false);
+    }
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  Future<double> fetchRoutesByTripIdFromDatabase(int id) async {
+    var dbHelper = DBHelper();
+    List<Map> list = await dbHelper.getFaresByTripsID(id);
+    totalFares = list[0]['SUM(fare)'];
+    return totalFares;
+  }
+
 
   Future<String> getFareTypeFromDB() async {
     var dbHelper = DBHelper();
     List<Map> list = await dbHelper.getFareType();
     String fareTypeDB = list[0]['fareType'];
-    print('this sis sjionasiudnhwuidnh' + fareTypeDB.toString());
     return(fareTypeDB);
   }
 
   List getConcessionType(String fareType) {
-    //print('hello ' + fareType);
     List<String> concessionType = [];
     for(int i = 0; i < service.mcList.length; i++) {
       if (fareType == 'Adult') {
-        //print("Testing1" + service.mcList[i].cardholders);
         if (service.mcList[i].cardholders == 'Full-time National Serviceman' || service.mcList[i].cardholders == 'Adult (Monthly Travel Pass)') {
-          //print("Testing2" + service.mcList[i].cardholders);
           concessionType.add(service.mcList[i].cardholders);
-
         }
       } else if (fareType == 'Senior Citizen') {
         if (service.mcList[i].cardholders == 'Senior Citizen') {
-          //print(service.mcList[i].cardholders);
           concessionType.add(service.mcList[i].cardholders);
-
         }
       } else {
         if (service.mcList[i].cardholders.contains('Student')) {
@@ -563,7 +399,6 @@ class _ComparePageState extends State<ConcessionPage> {
         }
       }
     }
-    print("Length " + concessionType.toString());
     return concessionType;
   }
 

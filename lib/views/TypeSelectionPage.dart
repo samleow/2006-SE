@@ -1,12 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/db/dbhelper.dart';
-import 'package:flutter_app/services/CallAPIServices.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:get_it/get_it.dart';
-import 'package:flutter_app/controllers/SearchRouteController.dart';
 import 'package:nice_button/nice_button.dart';
-import 'package:recase/recase.dart';
 import 'package:flutter_app/views/Homepage.dart';
 
 class TypeSelectionPage extends StatefulWidget {
@@ -20,15 +15,6 @@ class _TypeSelectionPageState extends State<TypeSelectionPage> {
 
   @override
   Widget build(BuildContext context) {
-    // return FlatButton(
-    //   child: Text("Next page"),
-    //   onPressed: (){
-    //     Navigator.pushReplacement(
-    //       context,
-    //       MaterialPageRoute(builder: (context) => Homepage()),
-    //     );
-    //   },
-    // );
     var firstColor = Color(0xff5b86e5), secondColor = Color(0xff36d1dc);
 
     return Scaffold(
@@ -118,20 +104,7 @@ class _TypeSelectionPageState extends State<TypeSelectionPage> {
                     showAlertDialog(context,3);
                   },
                 ),
-                // FlatButton(
-                //   child: Text("Student"),
-                //   onPressed: (){
-                //     UpdateFareTypeDatabase(3);
-                //     Future.delayed(Duration(milliseconds: 100), () async {
-                //       Navigator.pushReplacement(
-                //         context,
-                //         MaterialPageRoute(builder: (context) => Homepage()),
-                //       );
-                //     });
-                //   },
-                // ),
-
-              ],
+               ],
             ),
             Align(
               alignment: FractionalOffset.bottomCenter,
@@ -160,9 +133,8 @@ class _TypeSelectionPageState extends State<TypeSelectionPage> {
           ]
       )
     );
-
-
   }
+
   void UpdateFareTypeDatabase(int i) async {
     var dbHelper = DBHelper();
     await dbHelper.updateFareType(i);
@@ -215,7 +187,6 @@ class _TypeSelectionPageState extends State<TypeSelectionPage> {
           );
         }
         );
-        //setState(() {});
       },
     );
 
@@ -254,7 +225,6 @@ class _TypeSelectionPageState extends State<TypeSelectionPage> {
     var dbHelper = DBHelper();
     List<Map> list = await dbHelper.getFareType();
     String fareTypeDB = list[0]['fareType'];
-    //print('this sis sjionasiudnhwuidnh' + fareTypeDB.toString());
     return(fareTypeDB);
   }
 }

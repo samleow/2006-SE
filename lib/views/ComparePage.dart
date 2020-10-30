@@ -93,7 +93,6 @@ class _ComparePageState extends State<ComparePage> {
   }
 }
 
-
 class ConcessionPrice extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

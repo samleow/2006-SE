@@ -1,8 +1,5 @@
-
 import 'package:get_it/get_it.dart';
 import 'package:flutter_app/services/CallAPIServices.dart';
-
-// combine with searchroutecontroller ?
 
 // gets called by get_it
 class CalculateFareController
@@ -17,9 +14,7 @@ class CalculateFareController
     for (int i = 0; i< tripListLength; i++)
     {
       temp = price[i] * numDay[i] * numTrip[i];
-      //print(temp);
       totalPrice += temp;
-      print(totalPrice);
     }
     return totalPrice.toStringAsFixed(2);
   }
@@ -27,8 +22,6 @@ class CalculateFareController
   // method to get the selected concession hybridPrice
   String getConcessionPrice(String concessionType, String cardholder) {
     String price = "";
-    print('Testing: ' + concessionType);
-    print('cardholder: ' + cardholder.toString());
     if(cardholder == null){
       price = '0.00';
       return price;
@@ -74,8 +67,6 @@ class CalculateFareController
 
   // compare Price
   String comparePrice(String concessionPrice, double totalPrice) {
-    print("Concession Price: " + concessionPrice.toString());
-    print("totalPrice: " + totalPrice.toString());
     if (concessionPrice != 'N/A') {
       double dConcessionPrice = double.parse(concessionPrice);
 

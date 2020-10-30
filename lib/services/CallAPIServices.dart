@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:csv/csv.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app/models/BusFares.dart';
 import 'package:flutter_app/models/BusRoutes.dart';
@@ -26,14 +25,6 @@ class CallAPIServices {
   List<MRTFares> mrtFares = [];
   List<MRTRoute> mrtRoutes = [];
 
-
-  // NOTE :
-  // Future methods below returns bool for simple error check
-  // May want to return template class containing bool and string for proper debugging purposes
-  // Similar to api_response template class
-  // Eg. class response<T> { bool error; String error_message; response({this.error = false, this.error_message}); }
-
-
   //one list is to check the user type
   // we do if else statement and if usertype == adult,
   // usertype = adult_card_fare_per_ride which will put inside the API field
@@ -49,24 +40,18 @@ class CallAPIServices {
         BusFares adult = new BusFares('Adult');
         BusFares seniorCitizen = new BusFares('Senior Citizen');
         BusFares student = new BusFares('Student');
-        //BusFares workfare = new BusFares('Workfare');
-       // disabilities.busFare = [];
         adult.busFare = [];
         seniorCitizen.busFare = [];
         student.busFare = [];
         //workfare.busFare = [];
         for (int i = 0; i<jsondatabody.length; i++) {
-         // disabilities.busFare.add(jsondatabody[i]['persons_with_disabilities_card_fare_per_ride']);
           adult.busFare.add(jsondatabody[i]['adult_card_fare_per_ride']);
           seniorCitizen.busFare.add(jsondatabody[i]['senior_citizen_card_fare_per_ride']);
           student.busFare.add(jsondatabody[i]['student_card_fare_per_ride']);
-         // workfare.busFare.add(jsondatabody[i]['workfare_transport_concession_card_fare_per_ride']);
         }
-       // busFares.add(disabilities);
         busFares.add(adult);
         busFares.add(seniorCitizen);
         busFares.add(student);
-       // busFares.add(workfare);
         return true; //APIResponse<List<BusFares>>(data: BusFareData);
       }
       return false; //APIResponse<List<BusFares>>(error: true, errorMessage: 'An error occurred');
@@ -74,42 +59,6 @@ class CallAPIServices {
         .catchError((
         _) => false); //APIResponse<List<BusFares>>(error: true, errorMessage: 'An error occurred, never return API data'));
   }
-
-  //Calling DataMall API to retrieve Bus Routes
-  /*Future<bool> callBusRoutesAPI() {
-    return http.get('http://datamall2.mytransport.sg/ltaodataservice/BusRoutes',
-        headers: {'AccountKey': accountkey}).then((data) {
-      if (data.statusCode == 200) {
-        final jsonData = json.decode(data.body);
-        final jsondatabody = jsonData['value'];
-        for (var item in jsondatabody) {
-          busRoutes.add(BusRoutes.fromJson(item));
-        }
-        return true;//APIResponse<List<BusRoutes>>(data: BusRoutesData);
-      }
-      return false;//APIResponse<List<BusRoutes>>(error: true, errorMessage: 'An error occurred');
-    })
-        .catchError((_) => false);//APIResponse<List<BusRoutes>>(error: true, errorMessage: 'An error occurred, never return API data'));
-  }*/
-
-
-  /*Future<bool> callBusRoutesAPI() {
-    int i = 0;
-    bool stopwhileloop = true;
-    while (stopwhileloop) {
-      return http.get('http://datamall2.mytransport.sg/ltaodataservice/BusRoutes?\$skip=' + i.toString(), headers: {'AccountKey': accountkey}).then((data) {
-        if (data.statusCode == 200 && data.body.length >= 500) {
-          final jsonData = json.decode(data.body);
-          final jsondatabody = jsonData['value'];
-          for (var item in jsondatabody) {
-            busRoutes.add(BusRoutes.fromJson(item));
-          }
-          return true; //APIResponse<List<BusRoutes>>(data: BusRoutesData);
-        } else stopwhileloop = false;
-        return false; //APIResponse<List<BusRoutes>>(error: true, errorMessage: 'An error occurred');
-      }).catchError((_) => false); //APIResponse<List<BusRoutes>>(error: true, errorMessage: 'An error occurred, never return API data'));
-    }
-  }*/
 
   Future<bool> callBusRoutesAPI() async {
     int i = 0;
@@ -300,24 +249,6 @@ class CallAPIServices {
     return true;
   }
 }
-
-
-
-  /*bool BusNoContainsBusRoute() {
-    for (int i = 0; i < busNo.length; i++) {
-      busNo[i].busRoutes = [];
-      for (int j = 0; j < busRoutes.length; j++) { //add in the bus route into the busNo List<busRoute>
-        if (busNo[i].serviceNo == busRoutes[j].serviceNo) {
-          busNo[i].busRoutes.add(busRoutes[j]);
-        }
-      }
-      //busNo = busNo[0].busRoutes.toSet().toList();
-      //[10,[[9123,1,1,serviceno], 123123 ,123123], 67 [123123, 123123, 12312]]
-      //print(busNo.length);
-    }
-    return true;
-  }*/
-
 
 
 

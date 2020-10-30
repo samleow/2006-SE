@@ -48,7 +48,6 @@ class DBHelper{
       
       '''
     );
-    print("Created route tables");
 
     await db.execute(
         '''      
@@ -57,60 +56,18 @@ class DBHelper{
       $fareType TEXT);
       '''
     );
-    print("Created trips tables");
 
     await db.execute(
         '''
           INSERT INTO $_tripsTable 
           VALUES (1,'Adult');
         ''');
-    print("Inserted default values into trips tables");
   }
 
-  // void saveRoute(Routes route) async {
-  //   var dbClient = await db;
-  //   await dbClient.transaction((txn) async {
-  //     return await txn.rawInsert(
-  //         'INSERT INTO $_tablename($busNo, $fromStop, $toStop, $fare, $tripID ) VALUES(' +
-  //             '\'' +
-  //             route.busNo +
-  //             '\'' +
-  //             ',' +
-  //             '\'' +
-  //              route.fromStop +
-  //             '\'' +
-  //             ',' +
-  //             '\'' +
-  //              route.toStop +
-  //             '\'' +
-  //             ',' +
-  //             '\'' +
-  //             route.fare.toString() +
-  //             '\'' +
-  //             ',' +
-  //             '\'' +
-  //             route.tripID.toString() +
-  //             '\'' +
-  //             ')');
-  //   });
-  // }
-
-
   Future<int> saveRoute(Map<String,dynamic> row) async{
-    // Database db =  await instance.database;
-    // return await db.insert(_tablename, row);
     var dbClient = await db;
     return await dbClient.insert(_tablename, row);
   }
-
-  // Future<int> addToTrips(Map<String,dynamic> row) async{
-  //   // Database db =  await instance.database;
-  //   // return await db.insert(_tablename, row);
-  //   var dbClient = await db;
-  //   await dbClient.transaction((txn) async {
-  //
-  //   }
-  // }
 
   Future<int> saveTrip(Map<String,dynamic> row) async{
     var dbClient = await db;
@@ -130,7 +87,6 @@ class DBHelper{
     for (int i = 0; i < list.length; i++) {
       route.add(new Routes(list[i]["_routeID"], list[i]["transportID"], list[i]["fromStop"], list[i]["toStop"], list[i]["fare"],list[i]["tripID"],list[i]["BUSorMRT"],list[i]["fareType"]));
     }
-    print('route length is '+ route.length.toString());
     return route;
   }
 
@@ -141,7 +97,6 @@ class DBHelper{
     for (int i = 0; i < list.length; i++) {
       route.add(new Routes(list[i]["_routeID"], list[i]["transportID"], list[i]["fromStop"], list[i]["toStop"], list[i]["fare"],list[i]["tripID"],list[i]["BUSorMRT"],list[i]["fareType"]));
     }
-    print('route length is '+ route.length.toString());
     return route;
   }
   
@@ -157,7 +112,6 @@ class DBHelper{
     List<Map> list2 = await dbClient.rawQuery('SELECT SUM(fare) FROM $_tablename WHERE $tripID LIKE  "%$id2%"');
     List<Map> list3 = new List<Map>();
     list3 = [list1[0],list2[0]];
-    print('list3 is' + list3.toString());
     return list3;
   }
 
@@ -166,26 +120,12 @@ class DBHelper{
     return await dbClient.delete(_tablename,where:'$routeID = ?',whereArgs:[id]);
   }
 
-  // Future<int> deleteTrip(int id) async{
-  //   var dbClient = await db;
-  //   List<Map> list = await dbClient.rawQuery('SELECT MAX($tripID) FROM $_tripsTable');
-  //   //print(list) ;
-  //   if(id == 1){
-  //     return await dbClient.delete(_tablename,where:'$tripID = ?',whereArgs:[id]);
-  //   } else {
-  //     await dbClient.delete(_tripsTable,where:'$tripID = ?',whereArgs:[id]);
-  //     return await dbClient.delete(_tablename,where:'$tripID = ?',whereArgs:[id]);
-  //   }
-
-
   Future<int> deleteTrip(int id) async{
     var dbClient = await db;
     List<Map> maxTripId = await getMaxTripId();
     List<dynamic> newMaxTripId = maxTripId.map((m)=>m['MAX(tripID)']).toList();
-    print("max value is " + newMaxTripId[0].toString());
     List<Map> minTripId = await getMinTripId();
     List<dynamic> newMinTripId = minTripId.map((m)=>m['MIN(tripID)']).toList();
-    print("min value is " + newMinTripId[0].toString());
 
     if(newMaxTripId[0] == newMinTripId[0]){
       return await dbClient.delete(_tablename,where:'$tripID = ?',whereArgs:[id]);
@@ -199,54 +139,23 @@ class DBHelper{
       await dbClient.rawQuery('UPDATE $_tablename SET $tripID = $tripID - 1 WHERE $tripID NOT IN (1);');
       return 1000000;
     }
-
-    // if(id == 1){
-    //   return await dbClient.delete(_tablename,where:'$tripID = ?',whereArgs:[id]);
-    // } else {
-    //   await dbClient.delete(_tripsTable,where:'$tripID = ?',whereArgs:[id]);
-    //   return await dbClient.delete(_tablename,where:'$tripID = ?',whereArgs:[id]);
     }
-
-  //   void updateAdultFareType() async{
-  //   var dbClient = await db;
-  //   await dbClient.delete(_tripsTable);
-  //   await dbClient.rawQuery('INSERT INTO $_tripsTable VALUES (1,"Adult") ');
-  //   await dbClient.delete(_tablename); // Route
-  // }
-  //
-  // void updateSeniorFareType() async{
-  //   var dbClient = await db;
-  //   await dbClient.delete(_tripsTable);
-  //   await dbClient.rawQuery('INSERT INTO $_tripsTable VALUES (1,"Senior Citizen") ');
-  //   await dbClient.delete(_tablename); // Route
-  // }
-  //
-  // void updateStudentFareType() async{
-  //   var dbClient = await db;
-  //   await dbClient.delete(_tripsTable);
-  //   await dbClient.rawQuery('INSERT INTO $_tripsTable VALUES (1,"Student") ');
-  //   await dbClient.delete(_tablename); // Route
-  // }
 
   void updateFareType(int i) async{
     var dbClient = await db;
     await dbClient.delete(_tripsTable);
     await dbClient.delete(_tablename); // Route
-    print('deleted table values');
     if(i == 1) {
       await dbClient.rawQuery('INSERT INTO $_tripsTable VALUES (1,"Adult") ');
     } else if(i == 2){
       await dbClient.rawQuery('INSERT INTO $_tripsTable VALUES (1,"Senior Citizen") ');
     } else
       await dbClient.rawQuery('INSERT INTO $_tripsTable VALUES (1,"Student") ');
-
-    print('inserted some shit');
   }
 
   Future<List<Map>> getFareType() async{
     var dbClient = await db;
     List<Map> list = await dbClient.rawQuery('SELECT FareType FROM $_tripsTable WHERE $tripID = 1');
-    print('yo mama ' + list.toString());
     return list;
   }
 

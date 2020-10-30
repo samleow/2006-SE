@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/services/CallAPIServices.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -19,8 +18,6 @@ class _MapPageState extends State<MapPage> {
   GoogleMapController mapController;
 
   Position _currentPosition;
-  Position _BusStopPosition;
-  String _currentAddress;
 
   final searchController = TextEditingController();
   double lat;
@@ -84,7 +81,7 @@ class _MapPageState extends State<MapPage> {
         .then((Position position) async {
       setState(() {
         _currentPosition = position;
-        print('CURRENT POS: $_currentPosition');
+        // print('CURRENT POS: $_currentPosition');
         mapController.animateCamera(
           CameraUpdate.newCameraPosition(
             CameraPosition(
@@ -99,25 +96,6 @@ class _MapPageState extends State<MapPage> {
       print(e);
     });
   }
-
-  // Method for retrieving the address
-  // _getAddress() async {
-  //   try {
-  //     List<Placemark> p = await placemarkFromCoordinates(
-  //         _currentPosition.latitude, _currentPosition.longitude);
-  //
-  //     Placemark place = p[0];
-  //
-  //     setState(() {
-  //       _currentAddress =
-  //       "${place.name}, ${place.locality}, ${place.postalCode}, ${place.country}";
-  //       startAddressController.text = _currentAddress;
-  //       _startAddress = _currentAddress;
-  //     });
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
 
   Future<bool> getBusStopMarkers() async {
     for (int i = 0; i < service.busStops.length; i++) {
@@ -243,10 +221,6 @@ class _MapPageState extends State<MapPage> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
-                          // Text(
-                          //   'Bus Stop',
-                          //   style: TextStyle(fontSize: 20.0),
-                          // ),
                           SizedBox(height: 10),
                           TypeAheadFormField(
                             textFieldConfiguration: TextFieldConfiguration(
@@ -346,7 +320,6 @@ class _MapPageState extends State<MapPage> {
       // clear the matching list
       description.clear();
     }
-    //print(description.length);
     return description;
   }
 
@@ -360,7 +333,6 @@ class _MapPageState extends State<MapPage> {
         break;
       }
     }
-    print("Got come to this method");
   }
 }
 

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/db/database_helper.dart';
 import 'package:flutter_app/models/Route.dart';
 import 'package:flutter_app/db/dbhelper.dart';
 import 'package:flutter_app/views/RouteDelete.dart';
@@ -15,7 +14,6 @@ class _TripsPageState extends State<TripsPage> {
 
   final scaffoldKey = new GlobalKey<ScaffoldState>();
   int dropdownValue = 1;
-  //double totalFares = 1.1;
 
   @override
   Widget build(BuildContext context) {
@@ -51,8 +49,6 @@ class _TripsPageState extends State<TripsPage> {
         ],
       ),
       body: Container(
-        //width: 280,
-        //padding: EdgeInsets.only(left: 20.0),
         child: Column(
             children: <Widget>[
               Row(
@@ -63,37 +59,6 @@ class _TripsPageState extends State<TripsPage> {
                     style: TextStyle(
                       fontSize:19,
                     )),
-                  // DropdownButton<int>(
-                  //   value: dropdownValue,
-                  //   //hint: Text('Her'),
-                  //   elevation: 12,
-                  //   underline: Container(
-                  //     height: 2,
-                  //     color: Colors.deepPurpleAccent,
-                  //   ),
-                  //   onChanged: (int newValue) {
-                  //     setState(() {
-                  //       dropdownValue = newValue;
-                  //     });
-                  //   },
-                  //   // hint: Text(
-                  //   //   "Please select a trip!",
-                  //   //   style: TextStyle(
-                  //   //     color: Colors.black,
-                  //   //   ),),
-                  //   items: <int>[1,2,3,4].map<DropdownMenuItem<int>>((int value) {
-                  //     return DropdownMenuItem<int>(
-                  //         value: value,
-                  //         child: SizedBox(
-                  //           width:100,
-                  //           child: Text(value.toString(), textAlign: TextAlign.center,
-                  //           style: TextStyle(
-                  //             fontSize:20,
-                  //               color: Colors.deepPurple,
-                  //           )),
-                  //     ));
-                  //   }).toList(),
-                  // ), //DROPDOWN
                   FutureBuilder(
                     future: getAllTripsID(),
                     builder: (context, snapshot) {
@@ -186,7 +151,6 @@ class _TripsPageState extends State<TripsPage> {
                                   context: context,
                                   builder: (_) => RouteDelete()
                               );
-                              //print(result);
                               return result;
                             },
                             child: ListTile(
@@ -241,41 +205,37 @@ class _TripsPageState extends State<TripsPage> {
           Text('Fare: \$' + snapshot.data[index].fare.toString()),
           Padding(padding: EdgeInsets.all(1.0),),
           Text('Fare Type: ' + snapshot.data[index].fareType.toString()),
-          //Padding(padding: EdgeInsets.all(5.0),),
           //Divider(),
         ],
       );
     } else {
-      //inefficient coding
-      String something;
+      String longForm;
         if(snapshot.data[index].transportID == "NS"){
-          something =  "North South Line";
+          longForm =  "North South Line";
         } else if (snapshot.data[index].transportID == "EW") {
-          something = "East West Line";
+          longForm = "East West Line";
         } else if (snapshot.data[index].transportID == "CG") {
-          something = "Changi Airport Branch Line";
+          longForm = "Changi Airport Branch Line";
         } else if (snapshot.data[index].transportID == "NE") {
-          something = "North East Line";
+          longForm = "North East Line";
         } else if (snapshot.data[index].transportID == "CC") {
-          something = "Circle Line";
+          longForm = "Circle Line";
         } else if (snapshot.data[index].transportID == "CE") {
-          something = "Circle Line Extension";
+          longForm = "Circle Line Extension";
         } else {
-          something =  "Downtown Line";
+          longForm =  "Downtown Line";
         }
 
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Padding(padding: EdgeInsets.all(3.0),),
-          Text('MRT Line: ' + something),
+          Text('MRT Line: ' + longForm),
           Text('From : ' + snapshot.data[index].fromStop),
           Text('To : ' + snapshot.data[index].toStop),
           Text('Trip : ' + snapshot.data[index].tripID.toString()),
           Text('Fare: \$' + snapshot.data[index].fare.toString()),
           Text('Fare Type: ' + snapshot.data[index].fareType.toString()),
-          //Padding(padding: EdgeInsets.all(5.0),),
-          //Divider(),
         ],
       );
     }
@@ -319,17 +279,12 @@ class _TripsPageState extends State<TripsPage> {
   Future<List<Map>> fetchAllRoutes() async{
     var dbHelper = DBHelper();
     List<Map> list = await dbHelper.getAllTripsID();
-    print(list);
     return list;
   }
 
   Future<List<Routes>> fetchRoutesByTripIdFromDatabase(int id) async {
     var dbHelper = DBHelper();
     Future<List<Routes>> route = dbHelper.getRouteByTripID(id);
-
-    // List<Map> list = await dbHelper.getFaresByTripsID(id);
-    // totalFares = list[0]['SUM(fare)'];
-    // print('total fares are: ' + totalFares.toString());
     return route;
   }
 
@@ -338,20 +293,13 @@ class _TripsPageState extends State<TripsPage> {
     int i = await dbHelper.deleteRoute(id);
     setState(() {
     });
-    print(i.toString() + ' record is deleted');
   }
 
   void addTripId() async {
     var dbHelper = DBHelper();
     int i = await dbHelper.saveTrip({
-      DBHelper.fareType: 'lala',
+      //DBHelper.fareType: 'lala',
     });
-    print('lala');
-    print("TripID created: " + i.toString());
-
-    // List<Map> list = await dbHelper.getAllTripsID();
-    // List<dynamic> newList = list.map((m)=>m['tripID']).toList();
-    // print(newList);
     setState(() {});
     _showSnackBar("Trip " + i.toString() + " created!");
   }
@@ -367,7 +315,6 @@ class _TripsPageState extends State<TripsPage> {
     var dbHelper = DBHelper();
     int i = await dbHelper.deleteTrip(id);
     setState(() {});
-    print(i.toString() + ' record is deleted');
   }
 
   void _showSnackBar(String text) {
@@ -375,7 +322,6 @@ class _TripsPageState extends State<TripsPage> {
         .showSnackBar(new SnackBar(content: new Text(text)));
   }
 }
-
 
 class Mrtmap extends StatelessWidget {
   @override

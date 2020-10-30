@@ -13,39 +13,13 @@ class SearchRouteController
   double distanceTravelledBus(String busNo, String fromStop, String toStop) {
     //Check for nulls
     if (busNo == '' || fromStop == '' || toStop == '') {
-      //print(0);
       return 0.0;
     }
-    print(busNo);
-    print(fromStop);
-    print(toStop);
 
     String fromDistance = "-1";
     String toDistance = "-1";
     bool checkFromDistance = false;
     bool checkToDistance = false;
-
-    //Get the distance travelled based on the user input
-   /* for (int i = 0; i < service.busRoutes.length; i++) {
-      if (service.busRoutes[i].direction == 1 ||
-          service.busRoutes[i].direction == 2) { // Added direction == 2
-        if (service.busRoutes[i].serviceNo == busNo &&
-            service.busRoutes[i].busStopCode == fromStop) {
-          checkFromDistance = true;
-          fromDistance = service.busRoutes[i].distance.toString();
-        }
-        if (service.busRoutes[i].serviceNo == busNo &&
-            service.busRoutes[i].busStopCode == toStop) {
-          checkToDistance = true;
-          toDistance = service.busRoutes[i].distance.toString();
-        }
-      }
-      //Once got both distance, for loop break
-      if (checkFromDistance && checkToDistance) {
-        break;
-      }*/
-
-
 
     for (int i = 0; i < service.busNo.length; i++) {
       if (service.busRoutes[i].direction == 1 || service.busRoutes[i].direction == 2) { // Added direction == 2
@@ -54,12 +28,10 @@ class SearchRouteController
 
           for (int j = 0; j < service.busNo[i].busRoutes.length; j++) {
             if (service.busNo[i].busRoutes[j].busStop.busStopCode == fromStop) {
-              print(service.busNo[i].busRoutes[j].busStop.busStopCode);
               checkFromDistance = true;
               fromDistance = service.busNo[i].busRoutes[j].distance.toString();
             }
             if (service.busNo[i].busRoutes[j].busStop.busStopCode == toStop) {
-              print(service.busNo[i].busRoutes[j].busStop.busStopCode);
               checkToDistance = true;
               toDistance = service.busNo[i].busRoutes[j].distance.toString();
             }
@@ -106,10 +78,6 @@ class SearchRouteController
   }
 
   double distanceTravelledMRT(String MRTLine, String fromStop, String toStop) {
-    //MRTLine = convertLineNamesToCodes();
-    //fromStop = fromTextController.text;
-    //toStop = toTextController.text;
-
     //Check for nulls
     if (MRTLine == '' || fromStop == '' || toStop == '') {
       return 0;
@@ -170,20 +138,6 @@ class SearchRouteController
 
   // save route to database
   void saveRouteToDB(String transportID, String fromStop, String toStop, int dropdownValue, bool isMRT, String fareType) async{
-    // int i = await DatabaseHelper.instance.insert({
-    //   DatabaseHelper.transportID : transportID.text,
-    //   DatabaseHelper.fromStop: fromTextController.text,
-    //   DatabaseHelper.toStop: toTextController.text,
-    //   DatabaseHelper.fare: 5.0, //hard-coded for now
-    //   DatabaseHelper.tripID: 1 //hard-coded for now
-    // });
-    // print('the inserted id is $i');
-    //
-    // List<Map<String,dynamic>> queryRows = await DatabaseHelper.instance.queryAll();
-    // print(queryRows);
-    //fare = '5';
-    //tripID = '1';
-
     double _fare = isMRT ? calculateFaresMRT(distanceTravelledMRT(transportID, fromStop, toStop).toString(), fareType) :
       calculateFaresBus(distanceTravelledBus(transportID, fromStop, toStop).toString(), fareType);
 
@@ -199,10 +153,5 @@ class SearchRouteController
       DBHelper.BUSorMRT: isMRT ? "MRT" : "Bus",
       DBHelper.fareType: fareType,
     });
-
-    //_showSnackBar("Data saved successfully");
-    //var route = Routes(i,transportID,fromStop,toStop,fare,dropdownValue);
   }
-
-
 }
