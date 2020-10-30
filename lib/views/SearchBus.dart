@@ -51,8 +51,6 @@ class _SearchBusState extends State<SearchBus> {
   int tripID;
   
   bool enableText = false;
-  int radioID = 1;
-  String radioButtonItem = '1';
   int dropdownValue = 1;
   String _dist = "0.0";
   bool _visible = false;
@@ -150,58 +148,6 @@ class _SearchBusState extends State<SearchBus> {
 
 
                   //onSaved: (v)=>setState((){_dist=distanceTravelled().toString();}),
-                ),
-                Visibility(
-                  visible: _visible,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(padding: EdgeInsets.only(top: 10.0),),
-                        // put here
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Text("Direction: ",
-                                style: TextStyle(
-                                    color: Colors.grey[800],
-                                    fontSize: 20)
-                            ),
-                            Padding(padding: EdgeInsets.only(left: 20.0, right: 20.0),),
-                            Radio(
-                              value: 1,
-                              groupValue: radioID,
-                              onChanged: (val) {
-                                setState(() {
-                                  radioButtonItem = '1';
-                                  radioID = 1;
-                                });
-                              },
-                            ),
-                            Text(
-                              '1',
-                              style: new TextStyle(fontSize: 17.0),
-                            ),
-                            Padding(padding: EdgeInsets.only(left: 20.0, right: 20.0),),
-                            Radio(
-                              value: 2,
-                              groupValue: radioID,
-                              onChanged: (val) {
-                                setState(() {
-                                  radioButtonItem = '2';
-                                  radioID = 2;
-                                });
-                              },
-                            ),
-                            Text(
-                              '2',
-                              style: new TextStyle(
-                                fontSize: 17.0,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ]
-                  )
                 ),
                 Padding(
                   padding: EdgeInsets.all(10.0),
