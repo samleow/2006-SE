@@ -106,6 +106,12 @@ class DBHelper{
     return list;
   }
 
+  Future<List<Map>> getBusOrMRTByTripsID(int id) async{
+    var dbClient = await db;
+    List<Map> list = await dbClient.rawQuery('SELECT DISTINCT $BUSorMRT FROM $_tablename WHERE $tripID LIKE  "%$id%"');
+    return list;
+  }
+
   Future<List<Map>> getBothFaresByTripsID(int id1, int id2) async{
     var dbClient = await db;
     List<Map> list1 = await dbClient.rawQuery('SELECT SUM(fare) FROM $_tablename WHERE $tripID LIKE  "%$id1%"');

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/services/CallAPIServices.dart';
+import 'package:flutter_app/views/TypeSelectionPage.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get_it/get_it.dart';
@@ -90,6 +91,31 @@ class _MapPageState extends State<MapPage> {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           title: Text("UnFare SG"),
+          actions: <Widget>[
+            PopupMenuButton(
+              itemBuilder: (content) => [
+                PopupMenuItem(
+                  value: 1,
+                  child: Text("Help for Map"),
+                ),
+                PopupMenuItem(
+                  value: 2,
+                  child: Text("Select Fare Type"),
+                ),
+              ],
+              onSelected: (int menu){
+                if (menu == 1){
+                  showAlertDialogMap(context);
+                }
+                else if (menu == 2){
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => TypeSelectionPage()),
+                  );
+                }
+              },
+            )
+          ],
         ),
         body: Stack(
           children: <Widget>[
@@ -323,6 +349,32 @@ class ConcessionPrice extends StatelessWidget {
         )
     );
   }
+}
+
+showAlertDialogMap(BuildContext context) {
+  Widget yesButton = FlatButton(
+    child: Text("Close"),
+    onPressed:  () {
+      Navigator.of(context).pop();
+    },
+  );
+
+  AlertDialog alert = AlertDialog(
+    title: Text("Map Page"),
+    content: Text("Find Bus Stop and their Bus Services" +
+        "\n\nClick on My Location icon to zoom in on your Location" +
+        "\n\nClick on a Red Marker to view the Buses available" +
+        "\n\nEnter the Bus Stop name to zoom in on its Location"),
+    actions: [
+      yesButton,
+    ],
+  );
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
 }
 
 

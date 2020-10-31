@@ -35,8 +35,8 @@ class _ComparePageState extends State<ConcessionPage> {
   String _currentFareType;
   String _currentCardholder;
 
-  List<String> _concessionType = ['Bus', 'Mrt', 'Hybrid'];
-  String _concessionTypeValue = 'Bus';
+  List<String> _concessionType = ['Hybrid', 'Bus', 'Mrt'];
+  String _concessionTypeValue = 'Hybrid';
 
   Widget buildTripCard(BuildContext context, int index) {
     return new Container(
@@ -53,29 +53,44 @@ class _ComparePageState extends State<ConcessionPage> {
                             children: <Widget>[
                               CheckboxListTile(
                               value: _checkbox[index],
-                                  title: Text("Trip " + (index+1).toString() + ":  \$" +snapshot.data.toStringAsFixed(2), //+snapshot.data.toString(),
-                                    style: TextStyle(
-                                        fontSize: 19.0,
-                                        color: Colors.blueAccent
-                                    ),),
-                                  onChanged: (bool value) {
+                                subtitle: Text((() {
+                                  if(!((snapshot.data[1] == 1 && _concessionTypeValue == 'Bus') || (snapshot.data[1] == 2 && _concessionTypeValue == 'Mrt')
+                                      ||(_concessionTypeValue == 'Hybrid'))){
+                                    if(_concessionTypeValue == 'Bus')
+                                      return "Trip contains MRT route";
+                                    else if(_concessionTypeValue == 'Mrt')
+                                      return "Trip contains Bus route";
+                                  }
+
+                                  return "";
+                                })(),
+                                  style: TextStyle(
+                                      fontSize: 15.0,
+                                      color: Colors.red,
+                                  ),),
+                                title: Text((() {
+                                    return "Trip " + (index+1).toString() + ":  \$" +snapshot.data[0].toStringAsFixed(2);}
+                      )(),
+                                  style: TextStyle(
+                                    fontSize: 19.0,
+                                    color: Colors.blueAccent
+                                ),),
+                                    onChanged: ((snapshot.data[1] == 1 && _concessionTypeValue == 'Bus') || (snapshot.data[1] == 2 && _concessionTypeValue == 'Mrt')
+                                    ||(_concessionTypeValue == 'Hybrid'))? (value){
                                     setState(() {
                                       _checkbox[index] = value;
                                       if (value == false) {
                                         _price[index] = 0;
                                       }
                                       else {
-                                        _price[index] = snapshot.data; // <-- _originalDBPrice[index] must be from database value
+                                        _price[index] = snapshot.data[0]; // <-- _originalDBPrice[index] must be from database value
                                       }
                                     });
-                                  }
+                                  } : null,
                               ),
                               if(_checkbox[index]) // if statement is to control the Column according to the checkbox
                                 Column(
                                     children: <Widget>[
-                                      SizedBox(
-                                        height: 20.0,
-                                      ),
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: <Widget>[
@@ -220,6 +235,9 @@ class _ComparePageState extends State<ConcessionPage> {
                             setState(() {
                               // update the selected value on UI
                               this._concessionTypeValue = concessionType;
+                              for(int i = 0; i < _checkbox.length;i++){
+                                _checkbox[i] = false;
+                              }
                             });
                           },
                           // display the selected value on UI
@@ -367,11 +385,22 @@ class _ComparePageState extends State<ConcessionPage> {
     });
   }
 
-  Future<double> fetchRoutesByTripIdFromDatabase(int id) async {
+  double finalBusOrMRT;
+
+  Future<List<double>> fetchRoutesByTripIdFromDatabase(int id) async {
     var dbHelper = DBHelper();
-    List<Map> list = await dbHelper.getFaresByTripsID(id);
-    totalFares = list[0]['SUM(fare)'];
-    return totalFares;
+    List<Map> sumFare = await dbHelper.getFaresByTripsID(id);
+    List<Map> busOrMrt = await dbHelper.getBusOrMRTByTripsID(id);
+    totalFares = sumFare[0]['SUM(fare)'];
+    //String stringBusOrMRT = busOrMrt[0]['BUSorMRT'];
+
+    if(busOrMrt.length > 1) {
+      finalBusOrMRT = 3;
+    } else if(busOrMrt[0]['BUSorMRT'] == 'Bus'){
+      finalBusOrMRT = 1;
+    } else
+      finalBusOrMRT = 2;
+    return [totalFares, finalBusOrMRT];
   }
 
 
