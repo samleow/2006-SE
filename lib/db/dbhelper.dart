@@ -128,16 +128,25 @@ class DBHelper{
     List<dynamic> newMinTripId = minTripId.map((m)=>m['MIN(tripID)']).toList();
 
     if(newMaxTripId[0] == newMinTripId[0]){
-      return await dbClient.delete(_tablename,where:'$tripID = ?',whereArgs:[id]);
+      await dbClient.delete(_tablename,where:'$tripID = ?',whereArgs:[id]);
+      return 1;
     } else if(id == newMaxTripId[0]) {
       await dbClient.delete(_tripsTable, where: '$tripID = ?', whereArgs: [id]);
       return await dbClient.delete(_tablename, where: '$tripID = ?', whereArgs: [id]);
     } else {
-      await dbClient.delete(_tripsTable,where:'$tripID = ?',whereArgs:[id]);
-      await dbClient.delete(_tablename,where:'$tripID = ?',whereArgs:[id]);
-      await dbClient.rawQuery('UPDATE $_tripsTable SET $tripID = $tripID - 1 WHERE $tripID NOT IN (1);');
-      await dbClient.rawQuery('UPDATE $_tablename SET $tripID = $tripID - 1 WHERE $tripID NOT IN (1);');
-      return 1000000;
+      if(id ==1){
+        await dbClient.rawQuery('UPDATE $_tripsTable SET $tripID = $tripID - 1;');
+        await dbClient.rawQuery('UPDATE $_tablename SET $tripID = $tripID - 1;');
+        await dbClient.delete(_tripsTable,where:'$tripID = ?',whereArgs:[id-1]);
+        await dbClient.delete(_tablename,where:'$tripID = ?',whereArgs:[id-1]);
+        return -1;
+      } else {
+        await dbClient.delete( _tripsTable, where: '$tripID = ?', whereArgs: [id]);
+        await dbClient.delete(_tablename, where: '$tripID = ?', whereArgs: [id]);
+        await dbClient.rawQuery('UPDATE $_tripsTable SET $tripID = $tripID - 1 WHERE $tripID > $id;');
+        await dbClient.rawQuery('UPDATE $_tablename SET $tripID = $tripID - 1 WHERE $tripID > $id;');
+        return -1;
+      }
     }
     }
 

@@ -53,7 +53,6 @@ class _SearchBusState extends State<SearchBus> {
   bool enableText = false;
   int dropdownValue = 1;
   String _dist = "0.0";
-  bool _visible = false;
   String _currentFareType;
 
   @override

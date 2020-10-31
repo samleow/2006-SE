@@ -111,6 +111,8 @@ class _TripsPageState extends State<TripsPage> {
                     iconSize: 35.0,
                     onPressed: () {
                       showAlertDialog(context);
+                      _showSnackBar("Trip successfully deleted!");
+                      setState(() {});
                     },
                   ),
                   Padding(padding: EdgeInsets.only(right:0)),
@@ -316,6 +318,7 @@ class _TripsPageState extends State<TripsPage> {
   void deleteTrip(int id) async {
     var dbHelper = DBHelper();
     int i = await dbHelper.deleteTrip(id);
+    print(i);
     setState(() {});
   }
 
