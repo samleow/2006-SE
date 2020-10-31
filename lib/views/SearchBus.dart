@@ -176,10 +176,14 @@ class _SearchBusState extends State<SearchBus> {
                     {
                       return "Please Enter Valid Boarding Location";
                     }
+                    else if (checksame(fromTextController.text, toTextController.text))
+                    {
+                      return "Please Enter Different Boarding Location";
+                    }
                     return null;
                   },
                   suggestionsCallback: (pattern) async{ //pattern is user input
-                    return await getBoardingSuggestions(pattern, busNoController.text); // to activate autocomplete list
+                    return await getBoardingSuggestions(pattern, busNoController.text,toTextController.text); // to activate autocomplete list
                   },
                   itemBuilder: (context, suggestion) {
                     return ListTile(
@@ -228,10 +232,14 @@ class _SearchBusState extends State<SearchBus> {
                     {
                       return "Please Enter Valid Alighting Location";
                     }
+                    else if (checksame(fromTextController.text, toTextController.text))
+                      {
+                        return "Please Enter Different Alighting Location";
+                      }
                     return null;
                   },
                   suggestionsCallback: (pattern) async{ //pattern is user input
-                    return await getBoardingSuggestions(pattern, busNoController.text); // to activate autocomplete list
+                    return await getBoardingSuggestions(pattern, busNoController.text,fromTextController.text); // to activate autocomplete list
                   },
                   itemBuilder: (context, suggestion) {
                     return ListTile(
@@ -405,22 +413,18 @@ class _SearchBusState extends State<SearchBus> {
     bool fromInputCheck = false;
     bool toInputCheck = false;
 
-
     for (int i = 0; i<service.busNo.length; i++) {
       if (service.busNo[i].serviceNo.toLowerCase() == busNo.toLowerCase()) {
           busCheck = true;
           //return busCheck;
-        for(int j = 0; j< service.busNo[i].busRoutes.length; j++)
-          {
-            if(fromInput == service.busNo[i].busRoutes[j].busStop.busStopCode)
-              {
-                fromInputCheck = true;
-              }
-            if(toInput == service.busNo[i].busRoutes[j].busStop.busStopCode)
-              {
-                toInputCheck = true;
-              }
+        for(int j = 0; j< service.busNo[i].busRoutes.length; j++) {
+          if (fromInput == service.busNo[i].busRoutes[j].busStop.busStopCode) {
+            fromInputCheck = true;
           }
+          if (toInput == service.busNo[i].busRoutes[j].busStop.busStopCode) {
+            toInputCheck = true;
+          }
+        }
       }
     }
 
@@ -437,7 +441,6 @@ class _SearchBusState extends State<SearchBus> {
   bool busNoCheck(String busNo) {
     bool busCheck = false;
 
-
     for (int i = 0; i < service.busNo.length; i++) {
       if (service.busNo[i].serviceNo.toLowerCase() == busNo.toLowerCase()) {
         busCheck = true;
@@ -449,7 +452,6 @@ class _SearchBusState extends State<SearchBus> {
   // check individual from input
   bool fromInputCheck(String busNo, String fromInput)
   {
-
     bool busCheck = false;
     bool fromInputCheck = false;
 
@@ -476,6 +478,17 @@ class _SearchBusState extends State<SearchBus> {
     }
   }
 
+
+  bool checksame(String fromInput, String toInput)
+  {
+    bool check = false;
+
+    if(fromInput.toLowerCase() == toInput.toLowerCase()) {
+      check = true;
+    }
+    return check;
+  }
+
   // Get Bus Numbers
   Future<List> getBusServicesSuggestions(String searchInput) async
   {
@@ -496,13 +509,15 @@ class _SearchBusState extends State<SearchBus> {
     return matches;
   }
 
-  Future<List> getBoardingSuggestions(String boardingLocation, String busNo) async
+  Future<List> getBoardingSuggestions(String boardingLocation, String busNo, String input) async
   {
-    int direction = 1;
     List<String> description = List();
     for (int i = 0; i<service.busNo.length; i++) {
       if (service.busNo[i].serviceNo == busNo) {
         for (int j = 0; j < service.busNo[i].busRoutes.length; j++) {
+          if (input == service.busNo[i].busRoutes[j].busStop.busStopCode) {
+            continue; //skip
+          }
           description.add(service.busNo[i].busRoutes[j].busStop.description);
         }
         break;
@@ -550,7 +565,6 @@ class _SearchBusState extends State<SearchBus> {
   {
     String busStopCode = "";
 
-    List<String> listbusstopcode = [];
     for (int i = 0; i<service.busNo.length; i++) {
       if (service.busNo[i].serviceNo == busNo) {
         for (int j = 0; j < service.busNo[i].busRoutes.length; j++) {

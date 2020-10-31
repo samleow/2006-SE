@@ -24,7 +24,6 @@ class _SearchMRTState extends State<SearchMRT> {
   final MRTLineTextController = TextEditingController();
   final fromTextController = TextEditingController();
   final toTextController = TextEditingController();
-
   final fromDisplayTextController = TextEditingController();
   final toDisplayTextController = TextEditingController();
 
@@ -175,10 +174,14 @@ class _SearchMRTState extends State<SearchMRT> {
                           {
                             return "Please Enter Valid MRT Station";
                           }
+                          else if (checksame(fromTextController.text, toTextController.text))
+                          {
+                            return "Please Enter Different Boarding Location";
+                          }
                           return null;
                         },
                         suggestionsCallback: (userinput) async{
-                          return await getBoardingSuggestions(userinput, _currentSelectedValue); // to activate autocomplete list
+                          return await getBoardingSuggestions(userinput, _currentSelectedValue, toTextController.text); // to activate autocomplete list
                         },
                         itemBuilder: (context, suggestion) {
                           return ListTile(
@@ -219,10 +222,14 @@ class _SearchMRTState extends State<SearchMRT> {
                           {
                             return "Please Enter Valid MRT Station";
                           }
+                          else if (checksame(fromTextController.text, toTextController.text))
+                          {
+                            return "Please Enter Different Alighting Location";
+                          }
                           return null;
                         },
                         suggestionsCallback: (userinput) async{
-                          return await getBoardingSuggestions(userinput, _currentSelectedValue); // to activate autocomplete list
+                          return await getBoardingSuggestions(userinput, _currentSelectedValue, fromTextController.text); // to activate autocomplete list
                         },
                         itemBuilder: (context, suggestion) {
                           return ListTile(
@@ -396,14 +403,27 @@ class _SearchMRTState extends State<SearchMRT> {
     }
   }
 
-  Future<List> getBoardingSuggestions(String boardingLocation, String mrtline) async
+  bool checksame(String fromInput, String toInput)
+  {
+    bool check = false;
+
+    if(fromInput.toLowerCase() == toInput.toLowerCase()) {
+      check = true;
+    }
+    return check;
+  }
+
+  Future<List> getBoardingSuggestions(String boardingLocation, String mrtLine, String input) async
   {
     //Filter the correct list according to the bus number
-    mrtline = convertLineNamesToCodes();
+    mrtLine = convertLineNamesToCodes();
     Set<String> filterMRTStationList = service.mrtRoutes.map((e) // inside here is actually a loop
     {
-      if(e.StationCode == mrtline)
+      if(e.StationCode == mrtLine)
       {
+        if(e.MRTStation == input) {
+          return "";
+        }
         return e.MRTStation;
       }
       else
