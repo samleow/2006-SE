@@ -43,7 +43,6 @@ class _MapPageState extends State<MapPage> {
           ),
         );
       });
-      //await _getAddress();
     }).catchError((e) {
       print(e);
     });

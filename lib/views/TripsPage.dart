@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/models/Route.dart';
+import 'package:flutter_app/models/Routes.dart';
 import 'package:flutter_app/db/dbhelper.dart';
 import 'package:flutter_app/views/RouteDelete.dart';
 import 'package:flutter_app/views/TypeSelectionPage.dart';
@@ -200,11 +200,7 @@ class _TripsPageState extends State<TripsPage> {
           Padding(padding: EdgeInsets.all(1.0),),
           Text('To : ' + snapshot.data[index].toStop),
           Padding(padding: EdgeInsets.all(1.0),),
-          Text('Trip : ' + snapshot.data[index].tripID.toString()),
-          Padding(padding: EdgeInsets.all(1.0),),
           Text('Fare: \$' + snapshot.data[index].fare.toString()),
-          Padding(padding: EdgeInsets.all(1.0),),
-          Text('Fare Type: ' + snapshot.data[index].fareType.toString()),
           //Divider(),
         ],
       );
@@ -233,9 +229,7 @@ class _TripsPageState extends State<TripsPage> {
           Text('MRT Line: ' + longForm),
           Text('From : ' + snapshot.data[index].fromStop),
           Text('To : ' + snapshot.data[index].toStop),
-          Text('Trip : ' + snapshot.data[index].tripID.toString()),
           Text('Fare: \$' + snapshot.data[index].fare.toString()),
-          Text('Fare Type: ' + snapshot.data[index].fareType.toString()),
         ],
       );
     }

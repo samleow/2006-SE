@@ -213,7 +213,7 @@ class _SearchMRTState extends State<SearchMRT> {
                             toTextController.text = text.toString().toLowerCase().titleCase;
                             //setState() run the calculation
                             setState((){_dist=_searchRouteController.distanceTravelledMRT(convertLineNamesToCodes(),
-                                fromTextController.text,toTextController.text).toString();});
+                                fromTextController.text,toTextController.text).toStringAsFixed(2);});
                           },
                         ),
                         validator: (String value){
@@ -241,7 +241,7 @@ class _SearchMRTState extends State<SearchMRT> {
                           toTextController.text = suggestion;
                           //setState() run the calculation
                           setState((){_dist=_searchRouteController.distanceTravelledMRT(convertLineNamesToCodes(),
-                              fromTextController.text,toTextController.text).toString();});
+                              fromTextController.text,toTextController.text).toStringAsFixed(2);});
                         },
                       ),
                     Padding(
@@ -375,10 +375,10 @@ class _SearchMRTState extends State<SearchMRT> {
           {
             _searchRouteController.saveRouteToDB(convertLineNamesToCodes(),
                 fromTextController.text, toTextController.text, dropdownValue, true, _currentFareType);
-            _showSnackBar("Data saved successfully");
+            _showSnackBar("Route saved successfully");
           }
         },
-        tooltip: 'Show me the Values',
+        tooltip: 'Add Route to Trip',
         child: Icon(Icons.add),
       ),
     );
