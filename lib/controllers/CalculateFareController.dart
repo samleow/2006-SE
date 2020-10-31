@@ -69,7 +69,9 @@ class CalculateFareController
   String comparePrice(String concessionPrice, double totalPrice) {
     if (concessionPrice != 'N/A') {
       double dConcessionPrice = double.parse(concessionPrice);
-
+      if(totalPrice == 0){
+        return "No Trips selected";
+      }
       if (totalPrice < dConcessionPrice) {
         double differentPrice = dConcessionPrice - totalPrice;
         return "Trip is Cheaper: \$${differentPrice.toStringAsFixed(2)}";

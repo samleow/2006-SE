@@ -77,7 +77,6 @@ class _SearchBusState extends State<SearchBus> {
                         child: Text('Fare Type: ',
                             style: TextStyle(
                               fontSize: 19,
-
                             )),
                       ),
                     ),
@@ -86,7 +85,6 @@ class _SearchBusState extends State<SearchBus> {
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           _currentFareType = snapshot.data;
-
                           return Text(snapshot.data,
                               style: TextStyle(
                             fontSize: 22,
@@ -144,9 +142,6 @@ class _SearchBusState extends State<SearchBus> {
                     setState((){_dist=_searchRouteController.distanceTravelledBus(busNoController.text
                         , fromTextController.text, toTextController.text).toStringAsFixed(2);});
                   },
-
-
-                  //onSaved: (v)=>setState((){_dist=distanceTravelled().toString();}),
                 ),
                 Padding(
                   padding: EdgeInsets.all(10.0),
@@ -166,8 +161,6 @@ class _SearchBusState extends State<SearchBus> {
                        setState((){_dist=_searchRouteController.distanceTravelledBus(busNoController.text
                            , fromTextController.text, toTextController.text).toStringAsFixed(2);});
                     },
-                    //maxLength: 5,
-                    //keyboardType: TextInputType.number,
                   ),
                   validator: (String value){
                     // validate text field
@@ -199,13 +192,9 @@ class _SearchBusState extends State<SearchBus> {
                         , fromTextController.text, toTextController.text).toStringAsFixed(2);
                     });
                   },
-
-                  //onSaved: (v)=>setState((){_dist=distanceTravelled().toString();}),
-
                 ),
                 Padding(
                   padding: EdgeInsets.all(10.0),
-                  //child: Text('Hello World!'),
                 ),
                 TypeAheadFormField(
                   textFieldConfiguration: TextFieldConfiguration(
@@ -222,8 +211,6 @@ class _SearchBusState extends State<SearchBus> {
                         setState((){_dist=_searchRouteController.distanceTravelledBus(busNoController.text
                             , fromTextController.text, toTextController.text).toStringAsFixed(2);});
                       },
-                    //maxLength: 5,
-                    //keyboardType: TextInputType.number,
                   ),
                   validator: (String value){
                     // validate text field
@@ -253,9 +240,6 @@ class _SearchBusState extends State<SearchBus> {
                     setState((){_dist=_searchRouteController.distanceTravelledBus(busNoController.text
                         , fromTextController.text, toTextController.text).toStringAsFixed(2);});
                   },
-
-                  //onSaved: (v)=>setState((){_dist=distanceTravelled().toString();}),
-
                 ),
                 Padding(
                   padding: EdgeInsets.all(10.0),
@@ -298,7 +282,6 @@ class _SearchBusState extends State<SearchBus> {
                       Text("Bus Fare Price: ",
                           style: TextStyle(
                               color: Colors.grey[800],
-                              //fontWeight: FontWeight.bold,
                               fontSize: 19)
                       ),
                       Expanded(
@@ -314,11 +297,9 @@ class _SearchBusState extends State<SearchBus> {
                           ))
                     ]
                 ),
-
                 Padding(
                   padding: EdgeInsets.all(10.0),
                 ),
-
                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
@@ -368,9 +349,6 @@ class _SearchBusState extends State<SearchBus> {
                       ),
                     ]
                 ),
-                // Padding(
-                //   padding: EdgeInsets.all(10.0),
-                // ),
               ],
             ),
           ),
@@ -384,10 +362,10 @@ class _SearchBusState extends State<SearchBus> {
             {
               _searchRouteController.saveRouteToDB(busNoController.text,
                   fromTextController.text, toTextController.text, dropdownValue, false, _currentFareType);
-              _showSnackBar("Data saved successfully");
+              _showSnackBar("Route saved successfully");
             }
         },
-        tooltip: 'Show me the Values',
+        tooltip: 'Add Route to Trip',
         child: Icon(Icons.add),
       ),
     );
@@ -477,7 +455,6 @@ class _SearchBusState extends State<SearchBus> {
     }
   }
 
-
   bool checksame(String fromInput, String toInput)
   {
     bool check = false;
@@ -534,6 +511,10 @@ class _SearchBusState extends State<SearchBus> {
     }
     return description;
   }
+
+
+
+
 
   // Get Bus Stop Code
   String getBusStopCode(String busStopDescription, String busNo)

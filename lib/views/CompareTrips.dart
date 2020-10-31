@@ -246,7 +246,7 @@ class _CompareTripsState extends State<CompareTrips> {
                           }else if (snapshot.hasError) {
                             return Text("${snapshot.error}");
                           } else if(snapshot.data == null){
-                            return Text("No comparison");
+                            return Text("No Comparison");
                           }
                           return CircularProgressIndicator();
                           }

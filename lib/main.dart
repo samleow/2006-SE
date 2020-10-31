@@ -31,15 +31,15 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(),
+      home: MainPage(),
     );
   }
 }
-class MyHomePage extends StatefulWidget {
+class MainPage extends StatefulWidget {
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _MainPageState createState() => _MainPageState();
 }
-class _MyHomePageState extends State<MyHomePage> {
+class _MainPageState extends State<MainPage> {
 
   CallAPIServices get service => GetIt.I<CallAPIServices>();
   static bool _isLoading = true;

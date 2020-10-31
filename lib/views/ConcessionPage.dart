@@ -242,7 +242,7 @@ class _ComparePageState extends State<ConcessionPage> {
                               height: 2,
                               color: Colors.deepPurpleAccent,
                             ),
-                            hint: Text('Select Concession Type here',
+                            hint: Text('Select Card-Holder type here',
                               style: TextStyle(
                               fontSize: 19,
                               color: Colors.deepPurple,)),
@@ -386,7 +386,8 @@ class _ComparePageState extends State<ConcessionPage> {
     List<String> concessionType = [];
     for(int i = 0; i < service.mcList.length; i++) {
       if (fareType == 'Adult') {
-        if (service.mcList[i].cardholders == 'Full-time National Serviceman' || service.mcList[i].cardholders == 'Adult (Monthly Travel Pass)') {
+        if (service.mcList[i].cardholders == 'Full-time National Serviceman' || service.mcList[i].cardholders == 'Adult (Monthly Travel Pass)'
+            || service.mcList[i].cardholders == 'University Student') {
           concessionType.add(service.mcList[i].cardholders);
         }
       } else if (fareType == 'Senior Citizen') {
@@ -394,7 +395,7 @@ class _ComparePageState extends State<ConcessionPage> {
           concessionType.add(service.mcList[i].cardholders);
         }
       } else {
-        if (service.mcList[i].cardholders.contains('Student')) {
+        if (service.mcList[i].cardholders.contains('Student') && service.mcList[i].cardholders != 'University Student') {
           concessionType.add(service.mcList[i].cardholders);
         }
       }

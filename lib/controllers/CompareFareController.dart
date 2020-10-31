@@ -15,15 +15,15 @@ class CompareFareController
     if (fprice < sprice) {
       double diffprice = sprice - fprice;
       diffprice = diffprice * numDay * numTrips;
-      return "First Trip is Cheaper! \nYou will Save: \$${diffprice.toStringAsFixed(2)}";
+      return "First Trip is Cheaper! \nYou will save: \$${diffprice.toStringAsFixed(2)}";
     }
     if (fprice > sprice){
       double diffprices = fprice - sprice;
       diffprices = diffprices * numDay * numTrips;
-      return "Second Trip is Cheaper!\nYou will Save: \$${diffprices.toStringAsFixed(2)}";
+      return "Second Trip is Cheaper!\nYou will save: \$${diffprices.toStringAsFixed(2)}";
     }
     else{
-      return "Both Trips have the Same Price!";
+      return "Both Trips have the same Price!";
     }
   }
 }

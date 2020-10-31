@@ -141,13 +141,20 @@ class SearchRouteController
     double _fare = isMRT ? calculateFaresMRT(distanceTravelledMRT(transportID, fromStop, toStop).toString(), fareType) :
       calculateFaresBus(distanceTravelledBus(transportID, fromStop, toStop).toString(), fareType);
 
-    //var route = Routes(1,transportID,fromStop,toStop,5,1);
+    for(int i = 0 ; i < service.busStops.length; i++) {
+      if (fromStop == service.busStops[i].busStopCode) {
+        fromStop = service.busStops[i].description;
+      }
+      if (toStop == service.busStops[i].busStopCode) {
+        toStop = service.busStops[i].description;
+      }
+    }
+
     var dbHelper = DBHelper();
     int i = await dbHelper.saveRoute({
       DBHelper.transportID : transportID,
       DBHelper.fromStop: fromStop,
       DBHelper.toStop: toStop,
-      //Edited into not hard-coded anymore
       DBHelper.fare: _fare,
       DBHelper.tripID: dropdownValue,
       DBHelper.BUSorMRT: isMRT ? "MRT" : "Bus",
