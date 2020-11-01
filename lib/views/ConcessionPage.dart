@@ -54,8 +54,11 @@ class _ComparePageState extends State<ConcessionPage> {
                               CheckboxListTile(
                               value: _checkbox[index],
                                 subtitle: Text((() {
-                                  if(!((snapshot.data[1] == 1 && _concessionTypeValue == 'Bus') || (snapshot.data[1] == 2 && _concessionTypeValue == 'Mrt')
-                                      ||(_concessionTypeValue == 'Hybrid'))){
+                                  if(!(((snapshot.data[1] == 1 && _concessionTypeValue == 'Bus') || (snapshot.data[1] == 2 && _concessionTypeValue == 'Mrt')
+                                      ||(_concessionTypeValue == 'Hybrid'))  && (snapshot.data[1] != 0))){
+                                    if(snapshot.data[1] == 0){
+                                      return "Trip is empty";
+                                    }
                                     if(_concessionTypeValue == 'Bus')
                                       return "Trip contains MRT route";
                                     else if(_concessionTypeValue == 'Mrt')
@@ -69,14 +72,14 @@ class _ComparePageState extends State<ConcessionPage> {
                                       color: Colors.red,
                                   ),),
                                 title: Text((() {
-                                    return "Trip " + (index+1).toString() + ":  \$" +snapshot.data[0].toStringAsFixed(2);}
-                      )(),
+                                    return "Trip " + (index+1).toString() + ":  \$" + snapshot.data[0].toStringAsFixed(2);}
+                                  )(),
                                   style: TextStyle(
                                     fontSize: 19.0,
                                     color: Colors.blueAccent
                                 ),),
-                                    onChanged: ((snapshot.data[1] == 1 && _concessionTypeValue == 'Bus') || (snapshot.data[1] == 2 && _concessionTypeValue == 'Mrt')
-                                    ||(_concessionTypeValue == 'Hybrid'))? (value){
+                                    onChanged: (((snapshot.data[1] == 1 && _concessionTypeValue == 'Bus') || (snapshot.data[1] == 2 && _concessionTypeValue == 'Mrt')
+                                    ||(_concessionTypeValue == 'Hybrid'))  && (snapshot.data[1] != 0))? (value){
                                     setState(() {
                                       _checkbox[index] = value;
                                       if (value == false) {
@@ -391,15 +394,21 @@ class _ComparePageState extends State<ConcessionPage> {
     var dbHelper = DBHelper();
     List<Map> sumFare = await dbHelper.getFaresByTripsID(id);
     List<Map> busOrMrt = await dbHelper.getBusOrMRTByTripsID(id);
+
     totalFares = sumFare[0]['SUM(fare)'];
     //String stringBusOrMRT = busOrMrt[0]['BUSorMRT'];
+    //print(busOrMrt);
 
-    if(busOrMrt.length > 1) {
+    if(busOrMrt.length == 0){
+      finalBusOrMRT = 0;
+      totalFares = 0;
+    } else if(busOrMrt.length > 1) {
       finalBusOrMRT = 3;
     } else if(busOrMrt[0]['BUSorMRT'] == 'Bus'){
       finalBusOrMRT = 1;
-    } else
+    } else if(busOrMrt[0]['BUSorMRT'] == 'MRT'){
       finalBusOrMRT = 2;
+    }
     return [totalFares, finalBusOrMRT];
   }
 

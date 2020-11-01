@@ -108,7 +108,8 @@ class DBHelper{
 
   Future<List<Map>> getBusOrMRTByTripsID(int id) async{
     var dbClient = await db;
-    List<Map> list = await dbClient.rawQuery('SELECT DISTINCT $BUSorMRT FROM $_tablename WHERE $tripID LIKE  "%$id%"');
+    List<Map> list = await dbClient.rawQuery('SELECT DISTINCT $BUSorMRT FROM $_tablename WHERE $tripID LIKE "%$id%"');
+
     return list;
   }
 
