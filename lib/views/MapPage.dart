@@ -281,18 +281,17 @@ class _MapPageState extends State<MapPage> {
     );
   }
 
-  Future<List> getBusStopSuggestions(String userinput) async
+  Future<List> getBusStopSuggestions(String userInput) async
   {
     List<String> description = List();
     for (int i = 0; i<service.busStops.length; i++) {
           description.add(service.busStops[i].description);
     }
-    //matches.addAll(listforbustopcode); // Swap the list busStopDescList(to display description) or filterbusStopList (to display bus stop code)
     description.removeWhere((element) => element == ""); // remove the ""
-    description.retainWhere((s) => s.contains((userinput.toLowerCase().titleCase))); // added .toLowerCase() then convert .titleCase for auto caps after every space
+    description.retainWhere((s) => s.contains((userInput.toLowerCase().titleCase))); // added .toLowerCase() then convert .titleCase for auto caps after every space
 
     // if SearchInput is clear
-    if(description == "") // Swap the list busStopDescList(to display description) or filterbusStopList (to display bus stop code)
+    if(description == "")
         {
       // clear the matching list
       description.clear();
@@ -300,10 +299,10 @@ class _MapPageState extends State<MapPage> {
     return description;
   }
 
-  _getBusStopLocation(String userinput) async {
+  _getBusStopLocation(String userInput) async {
     String findBusStopCode = '';
     for(int i = 0; i < service.busStops.length; i++){
-      if (userinput == service.busStops[i].description) {
+      if (userInput == service.busStops[i].description) {
         findBusStopCode = service.busStops[i].busStopCode;
         lat = service.busStops[i].latitude;
         long = service.busStops[i].longitude;

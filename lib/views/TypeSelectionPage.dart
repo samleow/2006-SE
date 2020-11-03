@@ -47,7 +47,6 @@ class _TypeSelectionPageState extends State<TypeSelectionPage> {
                           return Text(snapshot.data,
                               style: TextStyle(
                                 fontSize: 20,
-                                //color: Colors.deepPurpleAccent,
                                 fontWeight: FontWeight.bold,
                                 decoration: TextDecoration.underline,
                               ));
@@ -164,7 +163,6 @@ class _TypeSelectionPageState extends State<TypeSelectionPage> {
           );
         }
         );
-        //Navigator.of(context).pop();
         setState(() {});
       },
     );

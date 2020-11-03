@@ -368,7 +368,6 @@ showAlertDialogHELP(BuildContext context) {
 
   AlertDialog alert = AlertDialog(
     title: Text("Trips"),
-    //content: Text("To view the added routes information from the saved trips. Tap onto the blue '+' icon to add trips and the red '-' icon to delete selected trips."),
     content: Text("View various Routes saved in each Trip" +
         "\n\n--Manage Trips--" +
             "\n\n- Tap onto the '+' icon to create a new Trip"

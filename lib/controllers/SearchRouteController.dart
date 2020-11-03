@@ -80,7 +80,7 @@ class SearchRouteController
   double distanceTravelledMRT(String MRTLine, String fromStop, String toStop) {
     //Check for nulls
     if (MRTLine == '' || fromStop == '' || toStop == '') {
-      return 0;
+      return 0.0;
     }
     String fromDistance = "-1";
     String toDistance = "-1";
@@ -116,7 +116,7 @@ class SearchRouteController
   }
 
   double calculateFaresMRT(String distanceTravelled, String fareType) {
-    if (distanceTravelled == '0.0'){
+    if (double.parse(distanceTravelled) == 0){
       return 0;
     }
     // loops through the busFare list to get the distance range

@@ -164,7 +164,7 @@ class _SearchMRTState extends State<SearchMRT> {
                             fromTextController.text = text.toString().toLowerCase().titleCase;
                             //setState() run the calculation
                             setState((){_dist=_searchRouteController.distanceTravelledMRT(convertLineNamesToCodes(),
-                                fromTextController.text,toTextController.text).toString();});
+                                fromTextController.text,toTextController.text).toStringAsFixed(2);});
                           },
 
                         ),
@@ -193,12 +193,11 @@ class _SearchMRTState extends State<SearchMRT> {
                           fromTextController.text = suggestion;
                           //setState() run the calculation
                           setState((){_dist=_searchRouteController.distanceTravelledMRT(convertLineNamesToCodes(),
-                              fromTextController.text,toTextController.text).toString();});
+                              fromTextController.text,toTextController.text).toStringAsFixed(2);});
                         },
                       ),
                     Padding(
                       padding: EdgeInsets.all(10.0),
-                      //child: Text('Hello World!'),
                     ),
                       TypeAheadFormField(
                         textFieldConfiguration: TextFieldConfiguration(
@@ -266,7 +265,6 @@ class _SearchMRTState extends State<SearchMRT> {
                           Text("Distance travelled: ",
                               style: TextStyle(
                                   color: Colors.grey[800],
-                                  //fontWeight: FontWeight.bold,
                                   fontSize: 19)
                           ),
                           Expanded(
@@ -292,7 +290,6 @@ class _SearchMRTState extends State<SearchMRT> {
                           Text("MRT Fare Price: ",
                               style: TextStyle(
                                   color: Colors.grey[800],
-                                  //fontWeight: FontWeight.bold,
                                   fontSize: 19)
                           ),
                           Expanded(
@@ -439,7 +436,7 @@ class _SearchMRTState extends State<SearchMRT> {
     matches.retainWhere((s) => s.contains((boardingLocation.toLowerCase().titleCase))); // added .toLowerCase() then convert .titleCase for auto caps after every space
 
     // if SearchInput is clear
-    if(filterMRTStationList == "") // Swap the list busStopDescList(to display description) or filterbusStopList (to display bus stop code)
+    if(filterMRTStationList == "")
         {
       // clear the matching list
       matches.clear();

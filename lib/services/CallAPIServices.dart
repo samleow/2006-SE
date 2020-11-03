@@ -25,9 +25,6 @@ class CallAPIServices {
   List<MRTFares> mrtFares = [];
   List<MRTRoute> mrtRoutes = [];
 
-  //one list is to check the user type
-  // we do if else statement and if usertype == adult,
-  // usertype = adult_card_fare_per_ride which will put inside the API field
   //Calling Gov Data API to retrieve Bus Fares Data
   Future<bool> callBusFaresAPI() {
     return http.get(GovDataAPI +
@@ -43,7 +40,6 @@ class CallAPIServices {
         adult.busFare = [];
         seniorCitizen.busFare = [];
         student.busFare = [];
-        //workfare.busFare = [];
         for (int i = 0; i<jsondatabody.length; i++) {
           adult.busFare.add(jsondatabody[i]['adult_card_fare_per_ride']);
           seniorCitizen.busFare.add(jsondatabody[i]['senior_citizen_card_fare_per_ride']);
@@ -52,19 +48,19 @@ class CallAPIServices {
         busFares.add(adult);
         busFares.add(seniorCitizen);
         busFares.add(student);
-        return true; //APIResponse<List<BusFares>>(data: BusFareData);
+        return true;
       }
-      return false; //APIResponse<List<BusFares>>(error: true, errorMessage: 'An error occurred');
+      return false;
     })
         .catchError((
-        _) => false); //APIResponse<List<BusFares>>(error: true, errorMessage: 'An error occurred, never return API data'));
+        _) => false);
   }
 
   Future<bool> callBusRoutesAPI() async {
     int i = 0;
     var array = [];
     while (true) {
-      final requestURL = "http://datamall2.mytransport.sg/ltaodataservice/BusRoutes?\$skip=" +
+      final requestURL = DataMallAPI + "/BusRoutes?\$skip=" +
           i.toString();
       final response = await http.get(
           requestURL, headers: {'AccountKey': accountkey});
@@ -126,7 +122,7 @@ class CallAPIServices {
   Future<bool> callBusStopsAPI() async {
     int i = 0;
     while (true) {
-      final requestURL = "http://datamall2.mytransport.sg/ltaodataservice/BusStops?\$skip=" +
+      final requestURL = DataMallAPI + "/BusStops?\$skip=" +
           i.toString();
       final response = await http.get(
           requestURL, headers: {'AccountKey': accountkey});
@@ -150,7 +146,7 @@ class CallAPIServices {
   Future<bool> callBusServicesAPI() async {
     int i = 0;
     while (true) {
-      final requestURL = "http://datamall2.mytransport.sg/ltaodataservice/BusServices?\$skip=" +
+      final requestURL = DataMallAPI + "/BusServices?\$skip=" +
           i.toString();
       final response = await http.get(
           requestURL, headers: {'AccountKey': accountkey});
@@ -160,7 +156,6 @@ class CallAPIServices {
           final jsondatabody = responseJson['value'];
           for (var item in jsondatabody) {
             if (item['Direction'] == 1) { // to remove duplicates
-              //busServices.add(BusServices.fromJson(item));
               busNo.add(BusNo.fromJson(item));
             }
           }
@@ -174,7 +169,6 @@ class CallAPIServices {
     return true;
   }
 
-
   //Calling Gov Data API to retrieve Monthly Concession Data
   Future<bool> callMCListAPI() {
     return http.get(GovDataAPI + 'aeb8dce2-93b8-4227-afdd-a0c70d3c0079').then((
@@ -185,17 +179,14 @@ class CallAPIServices {
         for (var item in jsondatabody) {
           mcList.add(MonthlyConcession.fromJson(item));
         }
-        return true; //APIResponse<List<MonthlyConcession>>(data: mclistdata);
+        return true;
       }
-      return false; //APIResponse<List<MonthlyConcession>>(error: true, errorMessage: 'An error occurred');
+      return false;
     })
         .catchError((
-        _) => false); //APIResponse<List<MonthlyConcession>>(error: true, errorMessage: 'An error occurred, never return API data'));
+        _) => false);
   }
 
-  //one list is to check the user type
-  // we do if else statement and if usertype == adult,
-  // usertype = adult_card_fare_per_ride which will put inside the API field
   //Calling Gov Data API to retrieve MRT Fares Data (For now adult only)
   Future<bool> callMRTFaresAPI() {
     return http.get(
@@ -223,19 +214,17 @@ class CallAPIServices {
             }
           }
         }
-
         mrtFares.add(adult);
         mrtFares.add(seniorCitizen);
         mrtFares.add(student);
-        return true; // APIResponse<List<MRTFares>>(data: MRTFareData);
+        return true;
       }
-      return false; //APIResponse<List<MRTFares>>(error: true, errorMessage: 'An error occurred');
+      return false;
     })
         .catchError((
-        _) => false); //APIResponse<List<MRTFares>>(error: true, errorMessage: 'An error occurred, never return API data'));
+        _) => false);
   }
 
-  //List<String> MRTDataset = [];
   Future<bool> retrieveMRTRoutes() async {
     var myData = await rootBundle.loadString("assets/MRTDataset.csv");
     List<List<dynamic>> csvTable = CsvToListConverter().convert(myData);
@@ -243,7 +232,7 @@ class CallAPIServices {
     csvTable.forEach((value) {
       String value1 = value.toString().substring(1, value
           .toString()
-          .length - 1); // remove the first and last bracklets
+          .length - 1); // remove the first and last brackets
       mrtRoutes.add(MRTRoute.fromList(value1.split(',')));
     });
     return true;

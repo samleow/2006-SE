@@ -28,7 +28,6 @@ class _CompareTripsState extends State<CompareTrips> {
   int dropdownValue;
 
   Widget buildTripCard(BuildContext context, int index) {
-    //final trip = numCompare[index];
     return new Container(
         margin: EdgeInsets.only(top: 24),
         child: Form(
@@ -122,12 +121,10 @@ class _CompareTripsState extends State<CompareTrips> {
       body: Builder(
         builder: (_) {
           return new Container(
-            //margin: EdgeInsets.all(24),
             child: Form(
               child: Container(
                 margin: const EdgeInsets.only(right: 15, left: 15),
                 child: Column(
-                  //mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       SizedBox(
                         height: 250,
@@ -174,7 +171,6 @@ class _CompareTripsState extends State<CompareTrips> {
                                 _currentDaySelected = newValue;
                               });
                             },
-                            //value: _currentDaySelected,
                             value: _currentDaySelected,
                           ),
                         ],
@@ -211,7 +207,6 @@ class _CompareTripsState extends State<CompareTrips> {
                               ).toList(),
                               onChanged: (int newValue) {
                                 setState(() {
-                                  //this._currentTripSelected = newValue;
                                   _currentTripSelected = newValue;
                                 });
                               },

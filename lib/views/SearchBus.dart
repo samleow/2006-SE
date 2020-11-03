@@ -257,7 +257,6 @@ class _SearchBusState extends State<SearchBus> {
                       Text("Distance travelled: ",
                       style: TextStyle(
                           color: Colors.grey[800],
-                          //fontWeight: FontWeight.bold,
                           fontSize: 19)
                   ),
                       Expanded(
@@ -504,7 +503,7 @@ class _SearchBusState extends State<SearchBus> {
     description.retainWhere((s) => s.contains((boardingLocation.toLowerCase().titleCase))); // added .toLowerCase() then convert .titleCase for auto caps after every space
 
     // if SearchInput is clear
-    if(description == "") // Swap the list busStopDescList(to display description) or filterbusStopList (to display bus stop code)
+    if(description == "")
     {
       // clear the matching list
       description.clear();

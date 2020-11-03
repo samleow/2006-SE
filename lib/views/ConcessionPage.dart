@@ -310,10 +310,7 @@ class _ComparePageState extends State<ConcessionPage> {
                         child: MaterialButton(
                             onPressed: () => {},
                             child: Container(
-                              // margin: const EdgeInsets.only(
-                              //     left: 10.0, right: 10, bottom: 0),
                               width: double.infinity,
-                              //padding: const EdgeInsets.all(20.0),
                               decoration: myBoxDecoration(), //
                               child: FutureBuilder(
                                 future: getFareTypeFromDB(),
@@ -396,8 +393,6 @@ class _ComparePageState extends State<ConcessionPage> {
     List<Map> busOrMrt = await dbHelper.getBusOrMRTByTripsID(id);
 
     totalFares = sumFare[0]['SUM(fare)'];
-    //String stringBusOrMRT = busOrMrt[0]['BUSorMRT'];
-    //print(busOrMrt);
 
     if(busOrMrt.length == 0){
       finalBusOrMRT = 0;
